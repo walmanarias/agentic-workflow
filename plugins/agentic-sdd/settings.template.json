@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "permissions": {
+    "allow": [
+      "Read", "Edit", "Write", "Grep", "Glob",
+      "Bash(npm run *)", "Bash(pnpm *)", "Bash(yarn *)", "Bash(bun *)", "Bash(npx *)",
+      "Bash(jest *)", "Bash(vitest *)", "Bash(playwright *)", "Bash(tsc *)", "Bash(eslint *)",
+      "Bash(git status*)", "Bash(git diff*)", "Bash(git add*)", "Bash(git commit*)", "Bash(git log*)"
+    ],
+    "deny": [
+      "Read(./.env)", "Read(./.env.*)", "Read(./**/*.pem)", "Read(./**/secrets/**)",
+      "Bash(rm -rf *)", "Bash(git push --force*)"
+    ]
+  },
+  "env": {
+    "AGENTIC_SDD": "1"
+  },
+  "hooks": {
+    "SessionStart": [
+      { "hooks": [ { "type": "command", "command": "bash \"$CLAUDE_PROJECT_DIR/.claude/hooks/scripts/session-start.sh\"" } ] }
+    ],
+    "PreToolUse": [
+      { "matcher": "Edit|Write|MultiEdit", "hooks": [ { "type": "command", "command": "bash \"$CLAUDE_PROJECT_DIR/.claude/hooks/scripts/guard-edits.sh\"" } ] },
+      { "matcher": "Bash", "hooks": [ { "type": "command", "command": "bash \"$CLAUDE_PROJECT_DIR/.claude/hooks/scripts/pre-commit-gate.sh\"" } ] }
+    ],
+    "PostToolUse": [
+      { "matcher": "Edit|Write|MultiEdit", "hooks": [ { "type": "command", "command": "bash \"$CLAUDE_PROJECT_DIR/.claude/hooks/scripts/post-edit-quality.sh\"" } ] }
+    ]
+  }
+}

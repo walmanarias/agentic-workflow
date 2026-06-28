@@ -1,0 +1,177 @@
+# CLAUDE.md — Agentic Workflow Source of Truth
+
+This repository is a **template** that brings a Spec-Driven Development (SDD) + Test-Driven Development (TDD) agentic workflow to any of your projects. It ships as a Claude Code **plugin** (`agentic-sdd`) and as a copyable `.claude/` folder. This file is the single source of truth for how the agents, skills, commands, hooks, and rules fit together.
+
+> Stack this workflow targets: **React, React Native, Node.js (Express / Fastify), NestJS, Next.js, PostgreSQL, MongoDB**, tested with **Jest/Vitest** (unit) and **Playwright / Detox / Supertest / Testcontainers** (E2E/integration).
+
+---
+
+## The core idea
+
+The **spec is the source of truth**. Tests encode the spec. Code satisfies the tests. Work flows in one direction and every line traces back to a numbered acceptance criterion (`AC-n`).
+
+```
+/plan  →  /spec  →  /tdd   →  /implement   →  /e2e  →  /review  →  /ship
+design    spec      RED       GREEN+refactor   E2E     review      ship gate
+(opt)    (truth)   (tests)   (clean code)    (flows)
+```
+
+**Two hard rules, everywhere:**
+1. No production code is written before a failing test exists for that behavior.
+2. Never weaken, skip, or delete a test to make code pass. If a test is wrong, fix it deliberately and say why.
+
+---
+
+## How to use it (the happy path)
+
+Run the whole loop with one command:
+
+```
+/feature add password reset via email with a 15-minute expiring token
+```
+
+`/feature` orchestrates every phase below and stops at approval gates (after the spec, before shipping). Or drive each phase yourself with the individual commands.
+
+---
+
+## Commands
+
+Slash commands are the entry points. Each delegates to the right agent and applies the relevant skill.
+
+| Command | What it does | Delegates to |
+|---|---|---|
+| `/feature <desc>` | Runs the full SDD+TDD loop end to end | all lifecycle agents |
+| `/plan <desc>` | Architecture/design brief + ADRs (for new modules/services) | `architect` |
+| `/spec <desc>` | Writes a testable spec with numbered acceptance criteria | `spec-writer` |
+| `/tdd <spec>` | Writes failing tests (RED) mapped to each `AC-n` | `tdd-test-writer` |
+| `/implement <scope>` | Minimal clean code to pass (GREEN), then refactor | `implementer` + stack expert |
+| `/e2e <flow>` | Reliable end-to-end / integration tests | `e2e-tester` |
+| `/review [scope]` | Clean-code / correctness / security / test review of the diff | `code-reviewer` |
+| `/refactor <target>` | Behavior-preserving cleanup, guarded by tests | `refactorer` |
+| `/ship [feature]` | Pre-merge gate: verifies the Definition of Done | (verification) |
+
+---
+
+## Agents
+
+Agents are specialists Claude calls automatically (or that commands invoke). Two groups:
+
+### Lifecycle agents (the SDD/TDD pipeline)
+
+| Agent | Role | Writes to |
+|---|---|---|
+| `architect` | System design, boundaries, data model, API contracts, trade-offs, ADRs | `docs/design/`, `docs/adr/` |
+| `spec-writer` | Turns a request/design into a testable spec with `AC-n` | `specs/` |
+| `tdd-test-writer` | RED — failing tests that encode each `AC-n`; never writes production code | test files |
+| `implementer` | GREEN → REFACTOR — minimal clean code; never edits tests to pass | source files |
+| `e2e-tester` | Picks the right E2E tool per stack; hermetic, parallel-safe flows | E2E test files |
+| `code-reviewer` | Reviews the diff; findings grouped Blocking / Should-fix / Nit | review output |
+| `refactorer` | Behavior-preserving structural improvements under green tests | source files |
+
+### Stack expert agents (deep knowledge per technology)
+
+| Agent | Use for |
+|---|---|
+| `react-expert` | React web — components, hooks, state, performance, RTL tests |
+| `react-native-expert` | React Native / Expo — screens, navigation, native modules, Detox/Maestro |
+| `node-backend-expert` | Express / Fastify APIs — routing, validation, auth, Supertest |
+| `nestjs-expert` | NestJS — modules, DI, guards/interceptors/pipes, DTOs |
+| `nextjs-expert` | Next.js App Router — Server/Client Components, server actions, caching |
+| `database-expert` | PostgreSQL & MongoDB — schema, indexes, migrations, transactions, query perf |
+
+The `implementer` pulls in whichever stack expert matches the code being changed. You can also call an expert directly (e.g. "use the nestjs-expert to add a guard").
+
+> If you installed the optional **Engineering** plugin, its skills (`code-review`, `testing-strategy`, `architecture`, `system-design`, `debug`, `tech-debt`, `documentation`, `deploy-checklist`, `incident-response`, `standup`) complement these agents for the surrounding workflow.
+
+---
+
+## Skills
+
+Skills are reusable playbooks the agents (and you) apply. They live in `plugins/agentic-sdd/skills/`.
+
+| Skill | When it applies |
+|---|---|
+| `spec-driven-development` | Starting any non-trivial feature — the full loop + spec template |
+| `tdd-workflow` | Any behavior change — Red/Green/Refactor with Jest/Vitest patterns |
+| `e2e-testing` | Adding E2E/integration tests — tool selection + reliability rules |
+| `clean-code` | Writing/reviewing/refactoring — naming, SOLID, smells, checklist |
+| `stack-testing-recipes` | Choosing the right test tool for a specific framework |
+
+---
+
+## Hooks (enforcing quality gates)
+
+Hooks make the rules non-optional. They run on **your machine** and degrade gracefully if a tool isn't installed.
+
+| Hook event | Script | Effect |
+|---|---|---|
+| `SessionStart` | `session-start.sh` | Injects a reminder of the workflow + rules |
+| `PreToolUse` (Edit/Write) | `guard-edits.sh` | **Blocks** writing `.only(` focused tests, `debugger;`, or blanket `eslint-disable` |
+| `PostToolUse` (Edit/Write) | `post-edit-quality.sh` | Runs ESLint `--fix` on the changed file; surfaces remaining errors to fix |
+| `PreToolUse` (Bash `git commit`) | `pre-commit-gate.sh` | **Blocks the commit** unless lint + type-check + tests pass and no focus markers are staged |
+
+Emergency escape: `git commit --no-verify` bypasses the commit gate (use sparingly). The hooks never run network installs — they only use tooling already present in the repo.
+
+---
+
+## Rules
+
+Short, enforceable policies in `plugins/agentic-sdd/rules/` (mirrored to `.claude/rules/` on install). They are referenced by this file and by the agents:
+
+- `00-workflow.md` — SDD + TDD is mandatory; spec is the contract.
+- `10-testing.md` — TDD discipline, behavior-not-internals, the pyramid, coverage.
+- `20-clean-code.md` — naming, SOLID, hexagonal boundaries, no smells.
+- `30-security.md` — input validation, parameterized queries, authz, secrets.
+- `40-git.md` — gated commits, Conventional Commits, focused commits.
+
+---
+
+## Repository layout
+
+```
+agentic-workflow/
+├── CLAUDE.md                      ← you are here (source of truth)
+├── README.md                      ← install + quick start
+├── .claude-plugin/
+│   └── marketplace.json           ← marketplace manifest (for /plugin install)
+├── plugins/
+│   └── agentic-sdd/
+│       ├── .claude-plugin/plugin.json
+│       ├── agents/                ← 13 agents (lifecycle + stack experts)
+│       ├── commands/              ← 9 slash commands
+│       ├── skills/                ← 5 skills (+ references)
+│       ├── hooks/                 ← hooks.json + scripts/
+│       ├── rules/                 ← 5 rule files
+│       └── settings.template.json ← settings used by the copy installer
+└── scripts/
+    └── install.sh                 ← copy the workflow into another repo's .claude/
+```
+
+---
+
+## Installing into your other repos
+
+Two supported ways (pick either; see `README.md` for full detail):
+
+**A. As a plugin (recommended — updatable):**
+```
+/plugin marketplace add walmanarias/agentic-workflow
+/plugin install agentic-sdd@agentic-workflow
+```
+
+**B. As a copied `.claude/` folder (self-contained, no marketplace):**
+```
+bash scripts/install.sh /path/to/your/repo
+```
+This copies `agents/`, `commands/`, `skills/`, `hooks/`, `rules/` into `<repo>/.claude/` and writes a merged `.claude/settings.json` wired to the hooks. Re-run any time to update.
+
+After either method, open the target repo with Claude and run `/feature ...` to start.
+
+---
+
+## Conventions this workflow assumes
+
+- TypeScript-first. ESLint + a `typecheck` (or `tsc --noEmit`) and a `test` script in `package.json` enable the full gate. Missing scripts are skipped, not failed.
+- Specs in `specs/`, designs in `docs/design/`, decisions in `docs/adr/`.
+- Tests co-located as `*.test.ts` / `*.spec.ts` or under `__tests__/`.
+- Each acceptance criterion is referenced by id (`AC-3`) in the test name for traceability.

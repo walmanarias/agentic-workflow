@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-marketplace.json",
+  "name": "agentic-workflow",
+  "description": "Spec-Driven Development + TDD agentic workflow for full-stack TypeScript/JavaScript teams. Lifecycle and stack-expert agents, skills, commands, and enforcing quality-gate hooks.",
+  "owner": {
+    "name": "Walman",
+    "email": "walmanarias@outlook.com"
+  },
+  "version": "1.0.0",
+  "plugins": [
+    {
+      "name": "agentic-sdd",
+      "source": "./plugins/agentic-sdd",
+      "description": "Spec-Driven Development with TDD and E2E. Expert agents for React, React Native, Node/Express/Fastify, NestJS, Next.js, PostgreSQL and MongoDB, plus clean-code review and enforcing hooks."
+    }
+  ]
+}
