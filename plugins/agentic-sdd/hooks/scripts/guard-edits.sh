@@ -8,20 +8,28 @@ file="$(json_get '.tool_input.file_path')"
 content="$(json_get '.tool_input.content')"
 [ -z "$content" ] && content="$(json_get '.tool_input.new_string')"
 [ -z "$file" ] && exit 0
-is_js_file "$file" || exit 0
 
 violations=""
-# Focused tests left in code.
-if is_test_file "$file" && printf '%s' "$content" | grep -Eq '\.only\s*\('; then
-  violations="${violations}- Focused test (.only) detected — it would silently skip the rest of the suite.\n"
+
+if is_js_file "$file"; then
+  if is_test_file "$file" && printf '%s' "$content" | grep -Eq '\.only\s*\('; then
+    violations="${violations}- Focused test (.only) detected — it would silently skip the rest of the suite.\n"
+  fi
+  if printf '%s' "$content" | grep -Eq '(^|[^A-Za-z0-9_])debugger\s*;'; then
+    violations="${violations}- 'debugger;' statement detected — remove before saving.\n"
+  fi
+  if printf '%s' "$content" | grep -Eq 'eslint-disable($|[^-])' && ! printf '%s' "$content" | grep -Eq 'eslint-disable.*--'; then
+    violations="${violations}- Blanket 'eslint-disable' without a reason — disable a specific rule and explain why.\n"
+  fi
 fi
-# Leftover debugger statement.
-if printf '%s' "$content" | grep -Eq '(^|[^A-Za-z0-9_])debugger\s*;'; then
-  violations="${violations}- 'debugger;' statement detected — remove before saving.\n"
-fi
-# Blanket lint suppression without a justification comment.
-if printf '%s' "$content" | grep -Eq 'eslint-disable($|[^-])' && ! printf '%s' "$content" | grep -Eq 'eslint-disable.*--'; then
-  violations="${violations}- Blanket 'eslint-disable' without a reason — disable a specific rule and explain why.\n"
+
+if is_cs_file "$file"; then
+  if printf '%s' "$content" | grep -Eq 'Debugger\s*\.\s*Break\s*\('; then
+    violations="${violations}- 'Debugger.Break()' detected — remove before saving.\n"
+  fi
+  if printf '%s' "$content" | grep -Eq '#pragma\s+warning\s+disable' && ! printf '%s' "$content" | grep -Eq 'disable\s+[A-Z]{2,}[0-9]'; then
+    violations="${violations}- Blanket '#pragma warning disable' (no specific code) — disable a specific analyzer id and explain why.\n"
+  fi
 fi
 
 if [ -n "$violations" ]; then

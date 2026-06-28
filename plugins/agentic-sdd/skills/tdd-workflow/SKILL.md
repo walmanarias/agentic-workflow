@@ -1,6 +1,6 @@
 ---
 name: tdd-workflow
-description: Use when implementing any behavior change to follow strict Test-Driven Development — Red, Green, Refactor — with Jest/Vitest. Trigger on "TDD", "write tests first", "red green refactor", or whenever code is being added/changed and should be driven by tests.
+description: Use when implementing any behavior change to follow strict Test-Driven Development — Red, Green, Refactor — with Jest/Vitest (JS/TS) or xUnit (C#/.NET). Trigger on "TDD", "write tests first", "red green refactor", or whenever code is being added/changed and should be driven by tests.
 ---
 
 # TDD Workflow (Red → Green → Refactor)
@@ -32,4 +32,4 @@ Many small unit tests → fewer integration tests (real DB via Testcontainers) �
 - Never delete assertions or skip tests to go green.
 - Coverage is a floor, not a goal — cover behavior and edge cases, not lines for their own sake.
 
-See `references/jest-patterns.md` for setup, fakes, async, and parameterized-test patterns.
+See `references/jest-patterns.md` (JS/TS) and `references/xunit-patterns.md` (C#/.NET) for setup, fakes, async, and parameterized-test patterns.

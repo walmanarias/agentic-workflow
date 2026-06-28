@@ -15,6 +15,9 @@ Verify whole flows through real interfaces. Complement unit tests; don't duplica
 | Express / Fastify / NestJS API | **Supertest** / **Pactum** | Hit the real app instance; real/containerized DB |
 | Service-to-service contracts | **Pact** | Consumer-driven contract tests |
 | Any DB integration | **Testcontainers** | Ephemeral PostgreSQL/MongoDB, no mocking the DB |
+| ASP.NET Core Web API (.NET) | **WebApplicationFactory + xUnit** | In-memory host + HttpClient; DB via Testcontainers for .NET; arm64-native on macOS |
+| Avalonia desktop (XAML) | **Appium** (+ Avalonia.Headless for unit) | Drives the real window via the accessibility tree; macOS needs Accessibility permission |
+| .NET web / Blazor UI | **Playwright for .NET** | Native Apple Silicon support |
 
 ## Principles
 - **Hermetic:** each test seeds and tears down its own data; isolated DB state (transaction rollback or ephemeral container) so tests are parallel-safe and order-independent.
@@ -23,4 +26,4 @@ Verify whole flows through real interfaces. Complement unit tests; don't duplica
 - **Lean:** cover critical journeys and highest-risk failures (auth, payments, data loss). Push exhaustive cases down to unit tests.
 - **CI-ready:** tag E2E suites to run separately; document required containers/env vars.
 
-See `references/playwright-setup.md` and `references/api-e2e-setup.md`.
+See `references/playwright-setup.md`, `references/api-e2e-setup.md`, and `references/dotnet-e2e-setup.md`.

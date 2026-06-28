@@ -2,7 +2,7 @@
 
 This repository is a **template** that brings a Spec-Driven Development (SDD) + Test-Driven Development (TDD) agentic workflow to any of your projects. It ships as a Claude Code **plugin** (`agentic-sdd`) and as a copyable `.claude/` folder. This file is the single source of truth for how the agents, skills, commands, hooks, and rules fit together.
 
-> Stack this workflow targets: **React, React Native, Node.js (Express / Fastify), NestJS, Next.js, PostgreSQL, MongoDB**, tested with **Jest/Vitest** (unit) and **Playwright / Detox / Supertest / Testcontainers** (E2E/integration).
+> Stack this workflow targets: **React, React Native, Node.js (Express / Fastify), NestJS, Next.js, C# / ASP.NET Core Web APIs, Avalonia (XAML) desktop, PostgreSQL, MongoDB**, tested with **Jest/Vitest** and **xUnit** (unit) and **Playwright / Detox / Supertest / Testcontainers / WebApplicationFactory / Avalonia.Headless / Appium** (E2E/integration). Cross-platform, including **macOS (Tahoe) on Apple Silicon** — .NET work targets modern cross-platform **.NET 8/9** (arm64), not the Windows-only .NET Framework.
 
 ---
 
@@ -77,6 +77,8 @@ Agents are specialists Claude calls automatically (or that commands invoke). Two
 | `node-backend-expert` | Express / Fastify APIs — routing, validation, auth, Supertest |
 | `nestjs-expert` | NestJS — modules, DI, guards/interceptors/pipes, DTOs |
 | `nextjs-expert` | Next.js App Router — Server/Client Components, server actions, caching |
+| `dotnet-expert` | C# / ASP.NET Core Web APIs — clean architecture, EF Core, DI, xUnit (modern .NET on arm64) |
+| `avalonia-expert` | Avalonia / XAML cross-platform desktop — MVVM, compiled bindings, headless + Appium tests |
 | `database-expert` | PostgreSQL & MongoDB — schema, indexes, migrations, transactions, query perf |
 
 The `implementer` pulls in whichever stack expert matches the code being changed. You can also call an expert directly (e.g. "use the nestjs-expert to add a guard").
@@ -106,11 +108,11 @@ Hooks make the rules non-optional. They run on **your machine** and degrade grac
 | Hook event | Script | Effect |
 |---|---|---|
 | `SessionStart` | `session-start.sh` | Injects a reminder of the workflow + rules |
-| `PreToolUse` (Edit/Write) | `guard-edits.sh` | **Blocks** writing `.only(` focused tests, `debugger;`, or blanket `eslint-disable` |
-| `PostToolUse` (Edit/Write) | `post-edit-quality.sh` | Runs ESLint `--fix` on the changed file; surfaces remaining errors to fix |
-| `PreToolUse` (Bash `git commit`) | `pre-commit-gate.sh` | **Blocks the commit** unless lint + type-check + tests pass and no focus markers are staged |
+| `PreToolUse` (Edit/Write) | `guard-edits.sh` | **Blocks** focused tests (`.only`), `debugger;`/`Debugger.Break()`, and blanket `eslint-disable` / `#pragma warning disable` |
+| `PostToolUse` (Edit/Write) | `post-edit-quality.sh` | Runs ESLint `--fix` on changed JS/TS, or `dotnet format` on changed C#/XAML; surfaces remaining errors |
+| `PreToolUse` (Bash `git commit`) | `pre-commit-gate.sh` | **Blocks the commit** unless gates pass: JS = lint + typecheck + tests; .NET = `dotnet format --verify-no-changes` + `build -warnaserror` + `test`; and no focus markers staged |
 
-Emergency escape: `git commit --no-verify` bypasses the commit gate (use sparingly). The hooks never run network installs — they only use tooling already present in the repo.
+The gate is **polyglot** — it runs whichever toolchains the repo actually has (npm scripts and/or a `.sln`/`.csproj`), and silently skips the rest. Emergency escape: `git commit --no-verify` bypasses it (use sparingly). The hooks never run network installs — they only use tooling already present.
 
 ---
 
@@ -137,7 +139,7 @@ agentic-workflow/
 ├── plugins/
 │   └── agentic-sdd/
 │       ├── .claude-plugin/plugin.json
-│       ├── agents/                ← 13 agents (lifecycle + stack experts)
+│       ├── agents/                ← 15 agents (lifecycle + stack experts)
 │       ├── commands/              ← 9 slash commands
 │       ├── skills/                ← 5 skills (+ references)
 │       ├── hooks/                 ← hooks.json + scripts/
@@ -171,7 +173,8 @@ After either method, open the target repo with Claude and run `/feature ...` to 
 
 ## Conventions this workflow assumes
 
-- TypeScript-first. ESLint + a `typecheck` (or `tsc --noEmit`) and a `test` script in `package.json` enable the full gate. Missing scripts are skipped, not failed.
+- **JS/TS repos:** ESLint + a `typecheck` (or `tsc --noEmit`) and a `test` script in `package.json` enable the full gate. Tests co-located as `*.test.ts` / `*.spec.ts` or under `__tests__/`.
+- **.NET repos:** a `.sln` or `.csproj` enables the .NET gate (`dotnet format`, `dotnet build -warnaserror`, `dotnet test`). Nullable reference types on; xUnit + FluentAssertions; tests in a `*.Tests` project. Target `net8.0`/`net9.0` (arm64 on Apple Silicon).
+- Missing toolchains are skipped, not failed — polyglot repos run both gates.
 - Specs in `specs/`, designs in `docs/design/`, decisions in `docs/adr/`.
-- Tests co-located as `*.test.ts` / `*.spec.ts` or under `__tests__/`.
 - Each acceptance criterion is referenced by id (`AC-3`) in the test name for traceability.

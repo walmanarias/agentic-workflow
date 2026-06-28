@@ -69,3 +69,27 @@ run_script() {
 
 is_js_file() { case "$1" in *.ts|*.tsx|*.js|*.jsx|*.mjs|*.cjs|*.mts|*.cts) return 0;; *) return 1;; esac; }
 is_test_file() { case "$1" in *.test.*|*.spec.*|*/__tests__/*) return 0;; *) return 1;; esac; }
+
+# --- .NET helpers ---
+is_cs_file() { case "$1" in *.cs|*.axaml|*.xaml|*.csproj) return 0;; *) return 1;; esac; }
+has_dotnet() { command -v dotnet >/dev/null 2>&1; }
+
+# repo_root: git top-level, else project_root.
+repo_root() { git rev-parse --show-toplevel 2>/dev/null || project_root; }
+
+# dotnet_root: prints the dir containing a .sln/.csproj (searching from repo root, max depth 4), else empty.
+dotnet_root() {
+  local r; r="$(repo_root)"
+  if ls "$r"/*.sln >/dev/null 2>&1 || ls "$r"/*.csproj >/dev/null 2>&1; then printf '%s' "$r"; return 0; fi
+  local hit; hit="$(find "$r" -maxdepth 4 \( -name '*.sln' -o -name '*.csproj' \) \
+        -not -path '*/bin/*' -not -path '*/obj/*' 2>/dev/null | head -1)"
+  [ -n "$hit" ] && dirname "$hit"
+}
+
+# dotnet_target: prints the .sln if present, else the first .csproj (for build/test/format).
+dotnet_target() {
+  local d; d="$(dotnet_root)"; [ -z "$d" ] && return 0
+  local sln; sln="$(ls "$d"/*.sln 2>/dev/null | head -1)"
+  if [ -n "$sln" ]; then printf '%s' "$sln"; return 0; fi
+  find "$d" -maxdepth 4 -name '*.csproj' -not -path '*/bin/*' -not -path '*/obj/*' 2>/dev/null | head -1
+}

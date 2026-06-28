@@ -7,7 +7,7 @@ React, React Native, Node (Express/Fastify), NestJS, Next.js, PostgreSQL and Mon
 See the repository [`CLAUDE.md`](../../CLAUDE.md) for full usage. Start with `/feature <description>`.
 
 ## Components
-- `agents/` — 7 lifecycle agents + 6 stack experts
+- `agents/` — 7 lifecycle agents + 8 stack experts
 - `commands/` — /feature, /plan, /spec, /tdd, /implement, /e2e, /review, /refactor, /ship
 - `skills/` — spec-driven-development, tdd-workflow, e2e-testing, clean-code, stack-testing-recipes
 - `hooks/` — session reminder, edit guard, post-edit lint, pre-commit gate

@@ -33,5 +33,18 @@ Match the test type and tool to the technology. Always follow the pyramid: many 
 ## MongoDB
 - Integration-test repositories against a containerized Mongo (or in-memory server). Verify queries hit indexes with `explain()`.
 
+## C# / ASP.NET Core Web API (.NET 8/9)
+- **Unit:** xUnit + FluentAssertions; mock seams with NSubstitute/Moq. Test domain/application logic without booting the host. Inject `TimeProvider` for determinism.
+- **Integration/E2E:** `WebApplicationFactory<TProgram>` (Microsoft.AspNetCore.Mvc.Testing) + `HttpClient`; real DB via **Testcontainers for .NET**. Use `[Collection]` to share fixtures; reset DB between tests.
+- Run with `dotnet test`; nullable + `-warnaserror` on. arm64-native on macOS Apple Silicon.
+
+## Avalonia desktop (C# / XAML)
+- **ViewModel unit:** plain xUnit — ViewModels carry no UI dependency, so they're fast.
+- **Headless UI:** `Avalonia.Headless.XUnit` with `[AvaloniaFact]`/`[AvaloniaTheory]` — control logic, layout, and bindings in-memory, no display (ideal for CI).
+- **E2E UI:** **Appium** drives the compiled app via the accessibility tree; macOS requires granting the test runner Accessibility permission. Set `AutomationProperties` so controls are findable.
+
+## .NET web / Blazor front-ends
+- Playwright for .NET (runs natively on Apple Silicon) for full browser flows.
+
 ## Always
 - Deterministic, hermetic, parallel-safe. Inject clock/uuid/random. Coverage thresholds enforced in CI. E2E tagged to run separately.

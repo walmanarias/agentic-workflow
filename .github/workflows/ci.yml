@@ -1,0 +1,56 @@
+name: CI
+
+# Spec-Driven + TDD quality gate, mirrored in CI. Runs on macOS Apple Silicon
+# (macos-14 runners are arm64) so .NET and Node tests match local dev.
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  node:
+    name: Node / TypeScript
+    runs-on: macos-14
+    if: ${{ hashFiles('**/package.json') != '' }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - name: Install
+        run: npm ci || npm install
+      - name: Lint
+        run: npm run lint --if-present
+      - name: Type-check
+        run: npm run typecheck --if-present
+      - name: Unit tests
+        run: npm test --if-present -- --ci
+      - name: E2E tests
+        run: npm run test:e2e --if-present
+
+  dotnet:
+    name: .NET (C# / Avalonia)
+    runs-on: macos-14   # Apple Silicon, arm64-native
+    if: ${{ hashFiles('**/*.sln', '**/*.csproj') != '' }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: |
+            8.0.x
+            9.0.x
+      - name: Restore
+        run: dotnet restore
+      - name: Format check
+        run: dotnet format --verify-no-changes
+      - name: Build
+        run: dotnet build --no-restore -warnaserror
+      - name: Test (unit + headless Avalonia + integration)
+        run: dotnet test --no-build --verbosity normal --collect:"XPlat Code Coverage"
+      # Appium-based Avalonia E2E and Testcontainers integration tests need a
+      # display/daemon or container runtime; enable on a self-hosted arm64 runner.

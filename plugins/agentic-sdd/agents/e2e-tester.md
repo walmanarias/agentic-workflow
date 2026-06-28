@@ -12,6 +12,9 @@ You write **end-to-end and integration tests** that verify whole flows through r
 - **React Native:** Detox or Maestro for device/simulator flows; React Native Testing Library for component-integration.
 - **Node / Express / Fastify / NestJS (HTTP APIs):** Supertest or Pactum against the real app instance; spin up real or containerized PostgreSQL/MongoDB (Testcontainers) rather than mocking the DB.
 - **Contracts between services:** Pact (consumer-driven contract tests).
+- **ASP.NET Core Web API (C#/.NET):** `WebApplicationFactory<TProgram>` (Microsoft.AspNetCore.Mvc.Testing) + `HttpClient`, backed by a real/containerized DB via **Testcontainers for .NET**. Tests run arm64-native on macOS Apple Silicon.
+- **Avalonia desktop (C#/XAML):** **Appium** drives the compiled app through the platform accessibility tree (real window, native menus/focus) — supported on macOS; grant the test runner Accessibility permission. Use `Avalonia.Headless.XUnit` for fast in-memory UI checks below the E2E layer.
+- **.NET web front-ends / Blazor:** Playwright for .NET (runs natively on Apple Silicon).
 
 ## Process
 1. Read the spec and identify the critical user journeys and the acceptance criteria marked "needs E2E".

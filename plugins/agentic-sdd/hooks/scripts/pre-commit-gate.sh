@@ -1,43 +1,40 @@
 #!/usr/bin/env bash
 # PreToolUse(Bash): when the command is a `git commit`, enforce the quality gate.
-# Blocks the commit (exit 2) if lint, type-check, or tests fail.
+# Blocks the commit (exit 2) if lint/format, build/type-check, or tests fail.
+# Handles JavaScript/TypeScript (npm scripts) and C#/.NET (dotnet) repos, incl. polyglot.
 DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"; source "$DIR/lib.sh"
 read_hook_input
 
 cmd="$(json_get '.tool_input.command')"
 printf '%s' "$cmd" | grep -Eq 'git[[:space:]]+commit' || exit 0
-# Let explicit emergency escapes through.
-printf '%s' "$cmd" | grep -Eq '\-\-no-verify' && exit 0
+printf '%s' "$cmd" | grep -Eq '\-\-no-verify' && exit 0   # explicit emergency escape
 
-root="$(project_root)"
+root="$(repo_root)"
 fail=""
 
-run_gate() { # <label> <script-name> [fallback-cmd]
-  local label="$1" script="$2" fallback="${3:-}"
-  if has_script "$script"; then
-    if ! out="$(run_script "$script" 2>&1)"; then
-      fail="${fail}\n### ${label} FAILED\n${out}\n"
-    fi
-  elif [ -n "$fallback" ]; then
-    if ! out="$( cd "$root" && eval "$fallback" 2>&1 )"; then
-      fail="${fail}\n### ${label} FAILED\n${out}\n"
-    fi
-  fi
-}
-
-# Static scan of staged files for focus markers / debugger leftovers.
+# --- Static scan of staged diff: focus markers / debugger leftovers (JS + C#) ---
 staged="$( cd "$root" && git diff --cached --name-only 2>/dev/null )"
 if [ -n "$staged" ]; then
-  bad="$( cd "$root" && git diff --cached -U0 2>/dev/null | grep -E '^\+' | grep -En '\.only\s*\(|(^|[^A-Za-z0-9_])debugger\s*;' || true )"
-  [ -n "$bad" ] && fail="${fail}\n### FOCUSED TESTS / DEBUGGER in staged diff\n${bad}\n"
+  bad="$( cd "$root" && git diff --cached -U0 2>/dev/null | grep -E '^\+' \
+        | grep -En '\.only\s*\(|(^|[^A-Za-z0-9_])debugger\s*;|Debugger\s*\.\s*Break\s*\(' || true )"
+  [ -n "$bad" ] && fail="${fail}\n### Focus markers / debugger in staged diff\n${bad}\n"
 fi
 
-run_gate "Lint"       "lint"      "npx --no-install eslint . || true"
-run_gate "Type-check" "typecheck" "[ -f tsconfig.json ] && npx --no-install tsc --noEmit"
-# Force non-interactive test mode.
-if has_script "test"; then
-  if ! out="$( cd "$root" && CI=true run_script test 2>&1 )"; then
-    fail="${fail}\n### Tests FAILED\n${out}\n"
+# --- JavaScript / TypeScript gates (npm scripts) ---
+proot="$(project_root)"
+if [ -f "$proot/package.json" ]; then
+  if has_script "lint";      then out="$(run_script lint 2>&1)"            || fail="${fail}\n### Lint FAILED\n${out}\n"; fi
+  if has_script "typecheck"; then out="$(run_script typecheck 2>&1)"       || fail="${fail}\n### Type-check FAILED\n${out}\n"; fi
+  if has_script "test";      then out="$( cd "$proot" && CI=true run_script test 2>&1 )" || fail="${fail}\n### Tests FAILED\n${out}\n"; fi
+fi
+
+# --- C# / .NET gates (dotnet) ---
+if has_dotnet; then
+  target="$(dotnet_target)"
+  if [ -n "$target" ]; then
+    out="$(dotnet format "$target" --verify-no-changes 2>&1)" || fail="${fail}\n### dotnet format FAILED (run 'dotnet format')\n${out}\n"
+    out="$(dotnet build "$target" -warnaserror --nologo 2>&1)" || fail="${fail}\n### dotnet build FAILED\n${out}\n"
+    out="$(dotnet test "$target" --nologo --verbosity quiet 2>&1)" || fail="${fail}\n### dotnet test FAILED\n${out}\n"
   fi
 fi
 
