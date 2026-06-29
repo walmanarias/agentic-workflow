@@ -1,5 +1,5 @@
 ---
-allowed-tools: Bash, Read, Write, Edit, Grep, Glob
+allowed-tools: Bash, Read, Grep, Glob
 description: Generate or update PR title and description from commits on current branch
 argument-hint: [optional extra context to emphasize]
 model: opus
@@ -66,8 +66,9 @@ Automatically generate or update the current PR's title and description by analy
 # Get current branch
 CURRENT_BRANCH=$(git branch --show-current)
 
-# Get base branch (main or master)
-BASE_BRANCH=$(git remote show origin | grep 'HEAD branch' | cut -d' ' -f5)
+# Get base branch (default branch) — prefer the local ref (fast, no network)
+BASE_BRANCH=$(git symbolic-ref --quiet --short refs/remotes/origin/HEAD 2>/dev/null | sed 's@^origin/@@')
+BASE_BRANCH=${BASE_BRANCH:-main}
 
 # Get all commits on this branch
 git log ${BASE_BRANCH}..HEAD --pretty=format:"%h|%s|%b" --reverse
@@ -222,19 +223,19 @@ Added for **[X] locales**: [list]
 ```
 ````
 
-````
-
 **🔗 Related Work** - Add if:
+
 - Commits reference other PRs (#XXX)
 - Built on previous work
 
 Format:
+
 ```markdown
 ## 🔗 Related Work
 
 - Builds on [#XXX](link) - [description]
 - Addresses review from [#YYY](link)
-````
+```
 
 **🔌 API / Contract Changes** - Add if commits touch HTTP endpoints, DTOs, GraphQL, or contracts (Express / Fastify / NestJS / ASP.NET Core Web API):
 
@@ -354,7 +355,6 @@ I've generated a PR title and description. To create the PR:
 ```bash
 gh pr create --title "..." --body "..."
 ```
-````
 
 Or copy the content below and create manually on GitHub.
 
@@ -363,13 +363,14 @@ Or copy the content below and create manually on GitHub.
 ````
 
 **If update fails:**
+
 ```markdown
 ❌ Could not update PR automatically
 
 Generated content is below. Please copy and update manually:
 
 [Show generated content]
-````
+```
 
 ## Step 7: Output Summary
 
