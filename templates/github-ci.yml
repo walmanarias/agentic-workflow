@@ -1,0 +1,90 @@
+name: CI
+
+# Build-and-test gate for repos using the agentic-sdd workflow. Mirrors the
+# local quality gate (lint/type/test for JS, format/build/test for .NET).
+# Runs on macOS Apple Silicon (macos-14 is arm64) so results match local dev.
+# Each job auto-detects whether its stack is present and no-ops otherwise,
+# so this single file works for JS-only, .NET-only, and polyglot repos.
+#
+# Installed by:  bash scripts/install.sh /path/to/repo --with-ci
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  node:
+    name: Node / TypeScript
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v4
+      - name: Detect Node project
+        id: detect
+        run: |
+          if git ls-files '*package.json' | grep -vq 'node_modules/'; then
+            echo "found=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "found=false" >> "$GITHUB_OUTPUT"
+            echo "No package.json found — skipping Node job."
+          fi
+      - name: Setup Node
+        if: steps.detect.outputs.found == 'true'
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - name: Install
+        if: steps.detect.outputs.found == 'true'
+        run: npm ci || npm install
+      - name: Lint
+        if: steps.detect.outputs.found == 'true'
+        run: npm run lint --if-present
+      - name: Type-check
+        if: steps.detect.outputs.found == 'true'
+        run: npm run typecheck --if-present
+      - name: Unit tests
+        if: steps.detect.outputs.found == 'true'
+        run: npm test --if-present -- --ci
+      - name: E2E tests
+        if: steps.detect.outputs.found == 'true'
+        run: npm run test:e2e --if-present
+
+  dotnet:
+    name: .NET (C# / Avalonia)
+    runs-on: macos-14   # Apple Silicon, arm64-native
+    steps:
+      - uses: actions/checkout@v4
+      - name: Detect .NET project
+        id: detect
+        run: |
+          if git ls-files '*.sln' '*.csproj' | grep -q .; then
+            echo "found=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "found=false" >> "$GITHUB_OUTPUT"
+            echo "No .sln/.csproj found — skipping .NET job."
+          fi
+      - name: Setup .NET
+        if: steps.detect.outputs.found == 'true'
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: |
+            8.0.x
+            9.0.x
+      - name: Restore
+        if: steps.detect.outputs.found == 'true'
+        run: dotnet restore
+      - name: Format check
+        if: steps.detect.outputs.found == 'true'
+        run: dotnet format --verify-no-changes
+      - name: Build
+        if: steps.detect.outputs.found == 'true'
+        run: dotnet build --no-restore -warnaserror
+      - name: Test (unit + headless Avalonia + integration)
+        if: steps.detect.outputs.found == 'true'
+        run: dotnet test --no-build --verbosity normal --collect:"XPlat Code Coverage"
+      # Appium-based Avalonia E2E and Testcontainers integration tests need a
+      # display/daemon or container runtime; enable on a self-hosted arm64 runner.

@@ -1,100 +1,69 @@
-name: CI
+name: Validate plugin
 
-# Spec-Driven + TDD quality gate, mirrored in CI. Runs on macOS Apple Silicon
-# (macos-14 runners are arm64) so .NET and Node tests match local dev.
-# Each job auto-detects whether its stack is present and no-ops otherwise,
-# so this single workflow works for JS-only, .NET-only, and polyglot repos.
+# This repo is a TEMPLATE / plugin marketplace — it has no application code.
+# This workflow validates the agentic-sdd plugin itself so the template stays
+# installable: manifests parse, agent/command/skill frontmatter is present,
+# hook scripts are valid shell, and the copy installer works.
 on:
   push:
     branches: [main, master]
   pull_request:
 
-concurrency:
-  group: ci-${{ github.ref }}
-  cancel-in-progress: true
-
 jobs:
-  node:
-    name: Node / TypeScript
-    runs-on: macos-14
+  validate:
+    name: Validate agentic-sdd plugin
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
-      - name: Detect Node project
-        id: detect
+      - name: JSON manifests parse
         run: |
-          if git ls-files '*package.json' | grep -vq 'node_modules/'; then
-            echo "found=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "found=false" >> "$GITHUB_OUTPUT"
-            echo "No package.json found — skipping Node job."
-          fi
+          set -e
+          for f in .claude-plugin/marketplace.json \
+                   plugins/agentic-sdd/.claude-plugin/plugin.json \
+                   plugins/agentic-sdd/hooks/hooks.json \
+                   plugins/agentic-sdd/settings.template.json; do
+            python3 -c "import json,sys; json.load(open('$f'))" && echo "ok  $f"
+          done
 
-      - name: Setup Node
-        if: steps.detect.outputs.found == 'true'
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: npm
-
-      - name: Install
-        if: steps.detect.outputs.found == 'true'
-        run: npm ci || npm install
-
-      - name: Lint
-        if: steps.detect.outputs.found == 'true'
-        run: npm run lint --if-present
-
-      - name: Type-check
-        if: steps.detect.outputs.found == 'true'
-        run: npm run typecheck --if-present
-
-      - name: Unit tests
-        if: steps.detect.outputs.found == 'true'
-        run: npm test --if-present -- --ci
-
-      - name: E2E tests
-        if: steps.detect.outputs.found == 'true'
-        run: npm run test:e2e --if-present
-
-  dotnet:
-    name: .NET (C# / Avalonia)
-    runs-on: macos-14   # Apple Silicon, arm64-native
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Detect .NET project
-        id: detect
+      - name: YAML workflows parse
         run: |
-          if git ls-files '*.sln' '*.csproj' | grep -q .; then
-            echo "found=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "found=false" >> "$GITHUB_OUTPUT"
-            echo "No .sln/.csproj found — skipping .NET job."
-          fi
+          python3 - <<'PY'
+          import glob, yaml, sys
+          for f in glob.glob('.github/workflows/*.yml') + glob.glob('templates/*.yml'):
+              yaml.safe_load(open(f)); print('ok ', f)
+          PY
 
-      - name: Setup .NET
-        if: steps.detect.outputs.found == 'true'
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: |
-            8.0.x
-            9.0.x
+      - name: Agent / command / skill frontmatter present
+        run: |
+          set -e
+          for f in plugins/agentic-sdd/agents/*.md \
+                   plugins/agentic-sdd/commands/*.md \
+                   plugins/agentic-sdd/skills/*/SKILL.md; do
+            head -1 "$f" | grep -q '^---' || { echo "MISSING frontmatter: $f"; exit 1; }
+          done
+          echo "frontmatter ok"
 
-      - name: Restore
-        if: steps.detect.outputs.found == 'true'
-        run: dotnet restore
+      - name: Hook scripts and installer are valid shell
+        run: |
+          set -e
+          for f in plugins/agentic-sdd/hooks/scripts/*.sh scripts/install.sh; do
+            bash -n "$f" && echo "ok  $f"
+          done
 
-      - name: Format check
-        if: steps.detect.outputs.found == 'true'
-        run: dotnet format --verify-no-changes
+      - name: shellcheck
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y shellcheck
+          shellcheck -S warning plugins/agentic-sdd/hooks/scripts/*.sh scripts/install.sh || true
 
-      - name: Build
-        if: steps.detect.outputs.found == 'true'
-        run: dotnet build --no-restore -warnaserror
-
-      - name: Test (unit + headless Avalonia + integration)
-        if: steps.detect.outputs.found == 'true'
-        run: dotnet test --no-build --verbosity normal --collect:"XPlat Code Coverage"
-      # Appium-based Avalonia E2E and Testcontainers integration tests need a
-      # display/daemon or container runtime; enable on a self-hosted arm64 runner.
+      - name: Copy installer runs end-to-end
+        run: |
+          set -e
+          TMP="$(mktemp -d)/app"; mkdir -p "$TMP"
+          echo '{"scripts":{}}' > "$TMP/package.json"
+          bash scripts/install.sh "$TMP" --with-ci
+          test -f "$TMP/.claude/commands/feature.md"
+          test -f "$TMP/.claude/agents/dotnet-expert.md"
+          test -f "$TMP/.github/workflows/ci.yml"
+          python3 -c "import json; json.load(open('$TMP/.claude/settings.json'))"
+          echo "installer ok"

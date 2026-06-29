@@ -11,9 +11,9 @@ This repository is a **template** that brings a Spec-Driven Development (SDD) + 
 The **spec is the source of truth**. Tests encode the spec. Code satisfies the tests. Work flows in one direction and every line traces back to a numbered acceptance criterion (`AC-n`).
 
 ```
-/plan  →  /spec  →  /tdd   →  /implement   →  /e2e  →  /review  →  /ship
-design    spec      RED       GREEN+refactor   E2E     review      ship gate
-(opt)    (truth)   (tests)   (clean code)    (flows)
+/plan → /spec → /tdd → /implement → /e2e → /review → /update-pr → /ship
+design  spec    RED     GREEN+refac   E2E    review    PR desc      ship gate
+(opt)  (truth) (tests) (clean code)  (flows)          (describe)
 ```
 
 **Two hard rules, everywhere:**
@@ -48,6 +48,9 @@ Slash commands are the entry points. Each delegates to the right agent and appli
 | `/e2e <flow>` | Reliable end-to-end / integration tests | `e2e-tester` |
 | `/review [scope]` | Clean-code / correctness / security / test review of the diff | `code-reviewer` |
 | `/refactor <target>` | Behavior-preserving cleanup, guarded by tests | `refactorer` |
+| `/update-pr [context]` | Generates/updates the PR title & description from branch commits (stack-aware, preserves media) | (gh CLI) |
+| `/triage-copilot [pr]` | Evaluates GitHub Copilot's PR review comments; applies valid fixes (TDD) or replies with reasoning, then resolves the threads | (gh CLI) |
+| `/triage-reviews [pr]` | Triages human reviewers' PR comments; answers questions, implements clear change requests (TDD), discusses disagreements | (gh CLI) |
 | `/ship [feature]` | Pre-merge gate: verifies the Definition of Done | (verification) |
 
 ---
@@ -140,14 +143,19 @@ agentic-workflow/
 │   └── agentic-sdd/
 │       ├── .claude-plugin/plugin.json
 │       ├── agents/                ← 15 agents (lifecycle + stack experts)
-│       ├── commands/              ← 9 slash commands
+│       ├── commands/              ← 12 slash commands
 │       ├── skills/                ← 5 skills (+ references)
 │       ├── hooks/                 ← hooks.json + scripts/
 │       ├── rules/                 ← 5 rule files
 │       └── settings.template.json ← settings used by the copy installer
+├── templates/
+│   └── github-ci.yml              ← build+test CI for TARGET repos (installed via --with-ci)
+├── .github/workflows/ci.yml       ← validates THIS plugin (not part of the plugin)
 └── scripts/
-    └── install.sh                 ← copy the workflow into another repo's .claude/
+    └── install.sh                 ← copy the workflow into a repo's .claude/ (--with-ci adds CI)
 ```
+
+> **A note on CI.** GitHub Actions is repo-level config, **not** a plugin component — it isn't bundled when you `/plugin install`, and the copy installer only adds it when you pass `--with-ci`. So there are two distinct workflows: `.github/workflows/ci.yml` here *validates the plugin itself*, while `templates/github-ci.yml` is the *build-and-test* pipeline meant for the repos you install the workflow into.
 
 ---
 

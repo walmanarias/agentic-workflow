@@ -22,7 +22,11 @@
       "Bash(git diff*)",
       "Bash(git add*)",
       "Bash(git commit*)",
-      "Bash(git log*)"
+      "Bash(git log*)",
+      "Bash(gh pr *)",
+      "Bash(gh api *)",
+      "Bash(gh repo view*)",
+      "Bash(gh auth status)"
     ],
     "deny": [
       "Read(./.env)",
