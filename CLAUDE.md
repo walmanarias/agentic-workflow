@@ -146,9 +146,14 @@ agentic-workflow/
 │       ├── hooks/                 ← hooks.json + scripts/
 │       ├── rules/                 ← 5 rule files
 │       └── settings.template.json ← settings used by the copy installer
+├── templates/
+│   └── github-ci.yml              ← build+test CI for TARGET repos (installed via --with-ci)
+├── .github/workflows/ci.yml       ← validates THIS plugin (not part of the plugin)
 └── scripts/
-    └── install.sh                 ← copy the workflow into another repo's .claude/
+    └── install.sh                 ← copy the workflow into a repo's .claude/ (--with-ci adds CI)
 ```
+
+> **A note on CI.** GitHub Actions is repo-level config, **not** a plugin component — it isn't bundled when you `/plugin install`, and the copy installer only adds it when you pass `--with-ci`. So there are two distinct workflows: `.github/workflows/ci.yml` here *validates the plugin itself*, while `templates/github-ci.yml` is the *build-and-test* pipeline meant for the repos you install the workflow into.
 
 ---
 
