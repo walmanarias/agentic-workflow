@@ -9,7 +9,7 @@ It ships as a Claude Code **plugin** (`agentic-sdd`) *and* as a copyable `.claud
 ## What's inside
 
 - **15 agents** — 7 lifecycle agents (`architect`, `spec-writer`, `tdd-test-writer`, `implementer`, `e2e-tester`, `code-reviewer`, `refactorer`) + 8 stack experts (React, React Native, Node/Express/Fastify, NestJS, Next.js, C#/ASP.NET Core, Avalonia/XAML, PostgreSQL/MongoDB).
-- **9 commands** — `/feature`, `/plan`, `/spec`, `/tdd`, `/implement`, `/e2e`, `/review`, `/refactor`, `/ship`.
+- **10 commands** — `/feature`, `/plan`, `/spec`, `/tdd`, `/implement`, `/e2e`, `/review`, `/refactor`, `/update-pr`, `/ship`.
 - **5 skills** — `spec-driven-development`, `tdd-workflow`, `e2e-testing`, `clean-code`, `stack-testing-recipes`.
 - **Enforcing, polyglot hooks** — block focused tests/`debugger`/`Debugger.Break()`, format/lint changed files (ESLint or `dotnet format`), and gate `git commit` on the toolchains the repo has (JS: lint + types + tests; .NET: format + build `-warnaserror` + test).
 - **5 rule files** — workflow, testing, clean code, security, git hygiene.
@@ -56,7 +56,7 @@ The hooks degrade gracefully — missing tooling is skipped, never failed. For t
 ## The workflow in one line
 
 ```
-/plan → /spec → /tdd (RED) → /implement (GREEN + refactor) → /e2e → /review → /ship
+/plan → /spec → /tdd (RED) → /implement (GREEN + refactor) → /e2e → /review → /update-pr → /ship
 ```
 
 No production code before a failing test. Never weaken a test to pass. Commits are gated on lint + types + tests.

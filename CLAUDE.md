@@ -11,9 +11,9 @@ This repository is a **template** that brings a Spec-Driven Development (SDD) + 
 The **spec is the source of truth**. Tests encode the spec. Code satisfies the tests. Work flows in one direction and every line traces back to a numbered acceptance criterion (`AC-n`).
 
 ```
-/plan  →  /spec  →  /tdd   →  /implement   →  /e2e  →  /review  →  /ship
-design    spec      RED       GREEN+refactor   E2E     review      ship gate
-(opt)    (truth)   (tests)   (clean code)    (flows)
+/plan → /spec → /tdd → /implement → /e2e → /review → /update-pr → /ship
+design  spec    RED     GREEN+refac   E2E    review    PR desc      ship gate
+(opt)  (truth) (tests) (clean code)  (flows)          (describe)
 ```
 
 **Two hard rules, everywhere:**
@@ -48,6 +48,7 @@ Slash commands are the entry points. Each delegates to the right agent and appli
 | `/e2e <flow>` | Reliable end-to-end / integration tests | `e2e-tester` |
 | `/review [scope]` | Clean-code / correctness / security / test review of the diff | `code-reviewer` |
 | `/refactor <target>` | Behavior-preserving cleanup, guarded by tests | `refactorer` |
+| `/update-pr [context]` | Generates/updates the PR title & description from branch commits (stack-aware, preserves media) | (gh CLI) |
 | `/ship [feature]` | Pre-merge gate: verifies the Definition of Done | (verification) |
 
 ---
@@ -140,7 +141,7 @@ agentic-workflow/
 │   └── agentic-sdd/
 │       ├── .claude-plugin/plugin.json
 │       ├── agents/                ← 15 agents (lifecycle + stack experts)
-│       ├── commands/              ← 9 slash commands
+│       ├── commands/              ← 10 slash commands
 │       ├── skills/                ← 5 skills (+ references)
 │       ├── hooks/                 ← hooks.json + scripts/
 │       ├── rules/                 ← 5 rule files

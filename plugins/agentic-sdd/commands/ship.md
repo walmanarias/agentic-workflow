@@ -13,5 +13,6 @@ Run the pre-ship checklist for: **$ARGUMENTS**
 4. Run `/review` (code-reviewer) and confirm no Blocking findings remain.
 5. Check migration safety (PostgreSQL/Mongo) and backward compatibility of any API/contract change.
 6. Confirm the spec's Definition of Done is fully satisfied.
+7. Ensure the PR is described — if the branch has an open PR, confirm its title/body are current (run `/update-pr` if stale).
 
 Report a clear PASS/FAIL per item. If any fails, stop and list exactly what's needed — do not declare ready.

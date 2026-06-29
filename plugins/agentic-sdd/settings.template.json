@@ -22,7 +22,8 @@
       "Bash(git diff*)",
       "Bash(git add*)",
       "Bash(git commit*)",
-      "Bash(git log*)"
+      "Bash(git log*)",
+      "Bash(gh *)"
     ],
     "deny": [
       "Read(./.env)",
