@@ -49,6 +49,8 @@ Slash commands are the entry points. Each delegates to the right agent and appli
 | `/review [scope]` | Clean-code / correctness / security / test review of the diff | `code-reviewer` |
 | `/refactor <target>` | Behavior-preserving cleanup, guarded by tests | `refactorer` |
 | `/update-pr [context]` | Generates/updates the PR title & description from branch commits (stack-aware, preserves media) | (gh CLI) |
+| `/triage-copilot [pr]` | Evaluates GitHub Copilot's PR review comments; applies valid fixes (TDD) or replies with reasoning, then resolves the threads | (gh CLI) |
+| `/triage-reviews [pr]` | Triages human reviewers' PR comments; answers questions, implements clear change requests (TDD), discusses disagreements | (gh CLI) |
 | `/ship [feature]` | Pre-merge gate: verifies the Definition of Done | (verification) |
 
 ---
@@ -141,7 +143,7 @@ agentic-workflow/
 │   └── agentic-sdd/
 │       ├── .claude-plugin/plugin.json
 │       ├── agents/                ← 15 agents (lifecycle + stack experts)
-│       ├── commands/              ← 10 slash commands
+│       ├── commands/              ← 12 slash commands
 │       ├── skills/                ← 5 skills (+ references)
 │       ├── hooks/                 ← hooks.json + scripts/
 │       ├── rules/                 ← 5 rule files
