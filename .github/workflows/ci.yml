@@ -30,9 +30,15 @@ jobs:
         run: |
           python3 - <<'PY'
           import glob, yaml, sys
-          for f in glob.glob('.github/workflows/*.yml') + glob.glob('templates/*.yml'):
+          for f in (glob.glob('.github/workflows/*.yml') + glob.glob('templates/*.yml')
+                    + glob.glob('plugins/agentic-sdd/skills/*/references/examples/*.yml')):
               yaml.safe_load(open(f)); print('ok ', f)
           PY
+
+      - name: actionlint example pipelines
+        run: |
+          docker run --rm -v "$PWD:/repo" --workdir /repo rhysd/actionlint:1.7.7 -color \
+            plugins/agentic-sdd/skills/cicd-pipelines/references/examples/*.yml
 
       - name: Agent / command / skill frontmatter present
         run: |
@@ -64,6 +70,8 @@ jobs:
           bash scripts/install.sh "$TMP" --with-ci
           test -f "$TMP/.claude/commands/feature.md"
           test -f "$TMP/.claude/agents/dotnet-expert.md"
+          test -f "$TMP/.claude/agents/cicd-engineer.md"
+          test -f "$TMP/.claude/skills/cicd-pipelines/SKILL.md"
           test -f "$TMP/.github/workflows/ci.yml"
           python3 -c "import json; json.load(open('$TMP/.claude/settings.json'))"
           echo "installer ok"
