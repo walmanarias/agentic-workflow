@@ -8,9 +8,9 @@ It ships as a Claude Code **plugin** (`agentic-sdd`) *and* as a copyable `.claud
 
 ## What's inside
 
-- **15 agents** — 7 lifecycle agents (`architect`, `spec-writer`, `tdd-test-writer`, `implementer`, `e2e-tester`, `code-reviewer`, `refactorer`) + 8 stack experts (React, React Native, Node/Express/Fastify, NestJS, Next.js, C#/ASP.NET Core, Avalonia/XAML, PostgreSQL/MongoDB).
-- **12 commands** — `/feature`, `/plan`, `/spec`, `/tdd`, `/implement`, `/e2e`, `/review`, `/refactor`, `/update-pr`, `/triage-copilot`, `/triage-reviews`, `/ship`.
-- **5 skills** — `spec-driven-development`, `tdd-workflow`, `e2e-testing`, `clean-code`, `stack-testing-recipes`.
+- **16 agents** — 8 lifecycle agents (`architect`, `spec-writer`, `tdd-test-writer`, `implementer`, `e2e-tester`, `code-reviewer`, `refactorer`, `cicd-engineer`) + 8 stack experts (React, React Native, Node/Express/Fastify, NestJS, Next.js, C#/ASP.NET Core, Avalonia/XAML, PostgreSQL/MongoDB).
+- **13 commands** — `/feature`, `/plan`, `/spec`, `/tdd`, `/implement`, `/e2e`, `/review`, `/refactor`, `/cicd`, `/update-pr`, `/triage-copilot`, `/triage-reviews`, `/ship`.
+- **6 skills** — `spec-driven-development`, `tdd-workflow`, `e2e-testing`, `clean-code`, `stack-testing-recipes`, `cicd-pipelines`.
 - **Enforcing, polyglot hooks** — block focused tests/`debugger`/`Debugger.Break()`, format/lint changed files (ESLint or `dotnet format`), and gate `git commit` on the toolchains the repo has (JS: lint + types + tests; .NET: format + build `-warnaserror` + test).
 - **5 rule files** — workflow, testing, clean code, security, git hygiene.
 - **CI templates** — a build-and-test GitHub Actions workflow (Node + .NET on macOS Apple Silicon) you can drop into target repos with `--with-ci`. This repo's own CI just validates the plugin.
@@ -100,6 +100,7 @@ Re-running **fully replaces** `agents/`, `commands/`, `skills/`, and `rules/` (s
 
 - **This template repo's CI** (`.github/workflows/ci.yml`) only **validates the plugin** — manifests parse, frontmatter is present, hook scripts and the installer are valid shell, and the copy installer runs end-to-end. It is *not* part of the plugin and isn't installed anywhere.
 - **The build-and-test CI for your projects** lives in `templates/github-ci.yml` and reaches a target repo only when you run the installer with `--with-ci` (or copy it yourself). Plugin installs (marketplace) never carry CI — GitHub Actions is repo-level config, not a plugin component.
+- **A tailored full pipeline** is what the `/cicd` command (the `cicd-engineer` agent) generates per project — build + test + deploy with a staging → manual-approval → production flow. It can read and extend the static `ci.yml` rather than replace it.
 
 ## Requirements in the target repo (for the full quality gate)
 
