@@ -48,6 +48,7 @@ Slash commands are the entry points. Each delegates to the right agent and appli
 | `/e2e <flow>` | Reliable end-to-end / integration tests | `e2e-tester` |
 | `/review [scope]` | Clean-code / correctness / security / test review of the diff | `code-reviewer` |
 | `/refactor <target>` | Behavior-preserving cleanup, guarded by tests | `refactorer` |
+| `/cicd <target>` | Generates/updates a full GitHub Actions CI/CD pipeline (build→test→deploy, stack-aware) | `cicd-engineer` |
 | `/update-pr [context]` | Generates/updates the PR title & description from branch commits (stack-aware, preserves media) | (gh CLI) |
 | `/triage-copilot [pr]` | Evaluates GitHub Copilot's PR review comments; applies valid fixes (TDD) or replies with reasoning, then resolves the threads | (gh CLI) |
 | `/triage-reviews [pr]` | Triages human reviewers' PR comments; answers questions, implements clear change requests (TDD), discusses disagreements | (gh CLI) |
@@ -70,6 +71,7 @@ Agents are specialists Claude calls automatically (or that commands invoke). Two
 | `e2e-tester` | Picks the right E2E tool per stack; hermetic, parallel-safe flows | E2E test files |
 | `code-reviewer` | Reviews the diff; findings grouped Blocking / Should-fix / Nit | review output |
 | `refactorer` | Behavior-preserving structural improvements under green tests | source files |
+| `cicd-engineer` | Generates GitHub Actions CI/CD pipelines (build→test→deploy); default staging→approval→prod | `.github/workflows/` |
 
 ### Stack expert agents (deep knowledge per technology)
 
@@ -101,6 +103,7 @@ Skills are reusable playbooks the agents (and you) apply. They live in `plugins/
 | `e2e-testing` | Adding E2E/integration tests — tool selection + reliability rules |
 | `clean-code` | Writing/reviewing/refactoring — naming, SOLID, smells, checklist |
 | `stack-testing-recipes` | Choosing the right test tool for a specific framework |
+| `cicd-pipelines` | Generating a CI/CD pipeline — promotion model, per-target deploy recipes, security baseline |
 
 ---
 
@@ -142,9 +145,9 @@ agentic-workflow/
 ├── plugins/
 │   └── agentic-sdd/
 │       ├── .claude-plugin/plugin.json
-│       ├── agents/                ← 15 agents (lifecycle + stack experts)
-│       ├── commands/              ← 12 slash commands
-│       ├── skills/                ← 5 skills (+ references)
+│       ├── agents/                ← 16 agents (lifecycle + stack experts)
+│       ├── commands/              ← 13 slash commands
+│       ├── skills/                ← 6 skills (+ references)
 │       ├── hooks/                 ← hooks.json + scripts/
 │       ├── rules/                 ← 5 rule files
 │       └── settings.template.json ← settings used by the copy installer

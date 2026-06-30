@@ -7,3 +7,6 @@ coverage/
 .env
 .env.*
 .DS_Store
+
+# Locally downloaded actionlint binary (CI uses the pinned Docker image instead)
+/actionlint
