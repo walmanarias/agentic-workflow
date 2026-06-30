@@ -1,0 +1,53 @@
+# Canonical agentic-sdd CI/CD pipeline: staging -> manual approval -> production.
+# Replace the echo placeholders with the project's gate (references/build-and-test.md)
+# and target deploy steps (references/deploy-*.md). Validated by actionlint.
+name: CI/CD
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+concurrency:
+  group: cicd-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  ci:
+    name: Build & test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Gate (lint, typecheck, test, build)
+        run: echo "Replace with the stack gate — see references/build-and-test.md"
+
+  deploy-staging:
+    name: Deploy (staging)
+    needs: ci
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    environment: staging
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Deploy to staging
+        run: echo "Replace with the target deploy — see references/deploy-*.md"
+
+  deploy-production:
+    name: Deploy (production)
+    needs: deploy-staging
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    environment: production
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Deploy to production
+        run: echo "Replace with the target deploy — see references/deploy-*.md"
