@@ -245,7 +245,7 @@ The skeleton every generated pipeline starts from.
 
 Create `plugins/agentic-sdd/skills/cicd-pipelines/references/build-and-test.md`:
 
-```markdown
+````markdown
 # Build & Test Gate
 
 The CI job mirrors the local commit hooks so CI and local enforce the same bar. Auto-detect the stack and run only what applies.
@@ -277,7 +277,7 @@ The CI job mirrors the local commit hooks so CI and local enforce the same bar. 
 - Block all deploy jobs on a red gate (`needs: ci`).
 - Tag slow E2E suites (Playwright/Detox/Appium/Testcontainers) to run in a separate job; gate prod on them when they cover the deploy surface.
 - Upload coverage/artifacts where useful; keep the gate fast (cache deps, fail fast).
-```
+````
 
 - [ ] **Step 3: Verify references resolve (test)**
 
@@ -318,7 +318,7 @@ git commit -m "feat(cicd): add foundations + build-and-test references"
 
 Create `plugins/agentic-sdd/skills/cicd-pipelines/references/deploy-cloudflare.md`:
 
-```markdown
+````markdown
 # Deploy: Cloudflare (Workers / Pages)
 
 Deploy with **Wrangler**. Token-based (Cloudflare has no GitHub OIDC).
@@ -338,13 +338,13 @@ Deploy with **Wrangler**. Token-based (Cloudflare has no GitHub OIDC).
 - **Staging vs prod:** separate Wrangler environments (`wrangler deploy --env staging|production`) or separate Pages projects; map each to a GitHub Environment.
 - **Bindings/migrations:** apply D1 migrations (`wrangler d1 migrations apply`) before the Worker deploy; hand schema design to `database-expert`.
 - **Rollback:** `wrangler rollback` (Workers) or redeploy the prior Pages deployment.
-```
+````
 
 - [ ] **Step 2: Write `deploy-containers-and-vms.md`**
 
 Create `plugins/agentic-sdd/skills/cicd-pipelines/references/deploy-containers-and-vms.md`:
 
-```markdown
+````markdown
 # Deploy: Containers & VMs
 
 Build the image once, push to a registry, then deploy. Use **OIDC** for AWS/Azure/GCP.
@@ -373,13 +373,13 @@ Build the image once, push to a registry, then deploy. Use **OIDC** for AWS/Azur
 - Secrets per environment (registry creds via OIDC; `RAILWAY_TOKEN`/`FLY_API_TOKEN`/SSH key as Environment secrets).
 - Run DB migrations as a pre-deploy step against the target environment; coordinate with `database-expert`.
 - **Rollback:** redeploy the previous image tag / `flyctl releases rollback` / ECS task-set rollback.
-```
+````
 
 - [ ] **Step 3: Write `deploy-frontend-hosts.md`**
 
 Create `plugins/agentic-sdd/skills/cicd-pipelines/references/deploy-frontend-hosts.md`:
 
-```markdown
+````markdown
 # Deploy: Frontend Hosts (Vercel / Netlify)
 
 For Next.js / React / static SPAs. Both give PR preview deployments.
@@ -405,13 +405,13 @@ For Next.js / React / static SPAs. Both give PR preview deployments.
 ```
 - **Secrets:** Vercel — `VERCEL_TOKEN`, `VERCEL_ORG_ID`, `VERCEL_PROJECT_ID`; Netlify — `NETLIFY_AUTH_TOKEN`, `NETLIFY_SITE_ID`.
 - **Rollback:** promote a previous deployment in the host dashboard or re-run the prior deploy.
-```
+````
 
 - [ ] **Step 4: Write `deploy-mobile-and-packages.md`**
 
 Create `plugins/agentic-sdd/skills/cicd-pipelines/references/deploy-mobile-and-packages.md`:
 
-```markdown
+````markdown
 # Deploy: Mobile & Packages
 
 ## React Native (EAS / Fastlane)
@@ -447,7 +447,7 @@ Create `plugins/agentic-sdd/skills/cicd-pipelines/references/deploy-mobile-and-p
   env: { NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }} }
 ```
 - **Rollback:** deprecate/unlist the bad version and publish a fixed one (registries are immutable).
-```
+````
 
 - [ ] **Step 5: Verify all four references exist and are linked (test)**
 
