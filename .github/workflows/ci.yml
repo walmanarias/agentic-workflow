@@ -37,8 +37,13 @@ jobs:
 
       - name: actionlint example pipelines
         run: |
-          docker run --rm -v "$PWD:/repo" --workdir /repo rhysd/actionlint:1.7.7 -color \
-            plugins/agentic-sdd/skills/cicd-pipelines/references/examples/*.yml
+          shopt -s nullglob
+          files=(plugins/agentic-sdd/skills/*/references/examples/*.yml)
+          if [ ${#files[@]} -eq 0 ]; then
+            echo "No example workflows to lint."
+            exit 0
+          fi
+          docker run --rm -v "$PWD:/repo" --workdir /repo rhysd/actionlint:1.7.7 -color "${files[@]}"
 
       - name: Agent / command / skill frontmatter present
         run: |
