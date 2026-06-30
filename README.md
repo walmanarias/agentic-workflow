@@ -27,32 +27,74 @@ It runs the whole loop — spec → failing tests → implementation → E2E →
 
 ## Install into another repo
 
-### Option A — as a plugin (recommended, updatable)
+Two ways to install. **Option A (plugin)** is recommended — it updates cleanly from this repo and copies nothing into your target's git history. **Option B (copy)** is fully self-contained — use it when you can't depend on a marketplace or want the workflow checked into the repo. After either, open the target repo with Claude and run `/feature …` to start.
 
-Push this repo to GitHub, then in the target project:
+### Option A — install as a plugin (recommended, updatable)
+
+**One-time setup:** push this template to a GitHub repo you control. It already has `.claude-plugin/marketplace.json` at the root, which is what makes the repo a plugin marketplace.
+
+Then, in the **target** project:
 
 ```
 /plugin marketplace add walmanarias/agentic-workflow
 /plugin install agentic-sdd@agentic-workflow
 ```
 
-(Replace `walmanarias/agentic-workflow` with your repo path. You can also add it from a local path during development.)
+- Replace `walmanarias/agentic-workflow` with your repo path. A full Git URL or a local path also work — handy during local development before you push: `/plugin marketplace add ./path/to/agentic-workflow`.
+- The plugin installs at **user scope** by default (available in all your projects). Add `--scope project` to scope it to this repo only, or `--scope local` for a personal, uncommitted install: `/plugin install agentic-sdd@agentic-workflow --scope project`.
+- Run `/plugin` anytime for the interactive menu (Discover / Installed / Marketplaces / Errors).
+
+**Make it automatic for a team.** Commit these keys to the target repo's `.claude/settings.json`, and anyone who opens the repo with Claude gets the marketplace and plugin without manual steps:
+
+```json
+{
+  "extraKnownMarketplaces": {
+    "agentic-workflow": {
+      "source": { "source": "github", "repo": "walmanarias/agentic-workflow" }
+    }
+  },
+  "enabledPlugins": {
+    "agentic-sdd@agentic-workflow": true
+  }
+}
+```
+
+**Updating an existing install** — pull the latest after this template changes:
+
+```
+/plugin marketplace update agentic-workflow     # refresh the catalog from your repo
+/plugin install agentic-sdd@agentic-workflow    # reinstall to pull the newest version
+```
+
+Or enable auto-update from `/plugin` → **Marketplaces**. To remove: `/plugin uninstall agentic-sdd@agentic-workflow` (and `/plugin marketplace remove agentic-workflow` to drop the source — note that also uninstalls its plugins).
 
 ### Option B — copy the `.claude/` folder (self-contained)
 
-```
+From your local checkout of this template:
+
+```bash
 bash scripts/install.sh /path/to/your/repo
 ```
 
-This copies `agents/`, `commands/`, `skills/`, `hooks/`, and `rules/` into `<repo>/.claude/`, wires up `settings.json` (merged with any existing one when `jq` is available), and adds a starter `CLAUDE.md` if the repo doesn't have one. Re-run any time to update; pass `--force` to overwrite settings.
+This copies `agents/`, `commands/`, `skills/`, `hooks/`, and `rules/` into `<repo>/.claude/`, writes `.claude/settings.json` (merged with any existing one when `jq` is available — template values win on conflicts), and adds a starter `CLAUDE.md` if the repo doesn't already have one. The `.claude/` folder is meant to be **committed** to the target repo.
 
-Add `--with-ci` to also drop the build-and-test GitHub Actions workflow into the target repo's `.github/workflows/ci.yml`:
+Flags:
 
+| Flag | Effect |
+| --- | --- |
+| `--force` | Overwrite `.claude/settings.json` outright instead of merging it |
+| `--with-ci` | Also drop the Node/.NET build-and-test workflow into `.github/workflows/ci.yml` |
+
+If `.github/workflows/ci.yml` already exists, `--with-ci` writes `agentic-sdd-ci.yml` alongside it instead (unless you also pass `--force`). Likewise, without `jq` an existing `settings.json` is preserved and the template is written next to it as `settings.agentic-sdd.json` for you to merge by hand.
+
+**Updating an existing install** — there's no marketplace link, so you re-run the installer against your local checkout:
+
+```bash
+cd /path/to/agentic-workflow && git pull      # 1. update the template itself
+bash scripts/install.sh /path/to/your/repo    # 2. re-apply it (add --with-ci to refresh CI)
 ```
-bash scripts/install.sh /path/to/your/repo --with-ci
-```
 
-(If a `ci.yml` already exists, it's preserved and the workflow is written as `agentic-sdd-ci.yml` instead — use `--force` to overwrite.)
+Re-running **fully replaces** `agents/`, `commands/`, `skills/`, and `rules/` (so renamed or removed files are cleaned up, not left stale) and re-applies the hooks. Your `settings.json` is re-merged — pass `--force` to overwrite it. ⚠️ The `jq` merge replaces overlapping **arrays** wholesale, so re-check `permissions` if you customized them. Then commit the refreshed `.claude/`.
 
 ## CI: two separate things
 
