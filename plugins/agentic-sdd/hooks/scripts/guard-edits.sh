@@ -32,6 +32,18 @@ if is_cs_file "$file"; then
   fi
 fi
 
+if is_py_file "$file"; then
+  if printf '%s' "$content" | grep -Eq 'pdb\.set_trace\s*\(|(^|[^A-Za-z0-9_.])breakpoint\s*\('; then
+    violations="${violations}- Debugger breakpoint ('breakpoint()' / 'pdb.set_trace()') detected — remove before saving.\n"
+  fi
+  if printf '%s' "$content" | grep -Eq '#\s*noqa([^:]|$)'; then
+    violations="${violations}- Blanket '# noqa' without a code — silence a specific rule (e.g. 'noqa: E501') and explain why.\n"
+  fi
+  if printf '%s' "$content" | grep -Eq '#\s*type:\s*ignore($|[^[])'; then
+    violations="${violations}- Blanket '# type: ignore' without a code — narrow it (e.g. 'type: ignore[assignment]') and explain why.\n"
+  fi
+fi
+
 if [ -n "$violations" ]; then
   printf 'Blocked by agentic-sdd quality guard:\n%b' "$violations" >&2
   exit 2

@@ -93,3 +93,53 @@ dotnet_target() {
   if [ -n "$sln" ]; then printf '%s' "$sln"; return 0; fi
   find "$d" -maxdepth 4 -name '*.csproj' -not -path '*/bin/*' -not -path '*/obj/*' 2>/dev/null | head -1
 }
+
+# --- Python helpers ---
+is_py_file() { case "$1" in *.py) return 0;; *) return 1;; esac; }
+is_py_test_file() { case "$1" in */tests/*|*/test_*.py|test_*.py|*_test.py|*/conftest.py|conftest.py) return 0;; *) return 1;; esac; }
+
+# python_cmd: prefer python3, fall back to python. Empty if neither exists.
+python_cmd() {
+  command -v python3 >/dev/null 2>&1 && { printf 'python3'; return 0; }
+  command -v python  >/dev/null 2>&1 && { printf 'python';  return 0; }
+}
+has_python() { [ -n "$(python_cmd)" ]; }
+
+# py_tool <name>: prints how to invoke a Python tool — the direct binary if on PATH,
+# else `python -m <name>` if importable, else empty. Lets callers degrade gracefully.
+py_tool() {
+  local name="$1"
+  command -v "$name" >/dev/null 2>&1 && { printf '%s' "$name"; return 0; }
+  local py; py="$(python_cmd)"; [ -z "$py" ] && return 0
+  "$py" -m "$name" --version >/dev/null 2>&1 && printf '%s -m %s' "$py" "$name"
+}
+
+# python_root: prints the dir containing a Python project marker (checked at the repo
+# root, then a shallow search), else empty.
+python_root() {
+  local r; r="$(repo_root)"
+  local f
+  for f in pyproject.toml setup.py setup.cfg requirements.txt; do
+    [ -f "$r/$f" ] && { printf '%s' "$r"; return 0; }
+  done
+  local hit; hit="$(find "$r" -maxdepth 3 \( -name pyproject.toml -o -name setup.py -o -name setup.cfg -o -name requirements.txt \) \
+        -not -path '*/.venv/*' -not -path '*/venv/*' -not -path '*/node_modules/*' 2>/dev/null | head -1)"
+  [ -n "$hit" ] && dirname "$hit"
+}
+
+# py_uses <root> <tool>: 0 if the project appears to configure/use the tool, so the
+# gate should run it. Keeps the commit gate from firing tools the repo hasn't adopted.
+py_uses() {
+  local d="$1" tool="$2" pp="$1/pyproject.toml"
+  case "$tool" in
+    ruff)   { [ -f "$d/ruff.toml" ] || [ -f "$d/.ruff.toml" ]; } && return 0
+            grep -q '^\[tool\.ruff' "$pp" 2>/dev/null ;;
+    black)  grep -q '^\[tool\.black\]' "$pp" 2>/dev/null ;;
+    mypy)   { [ -f "$d/mypy.ini" ] || [ -f "$d/.mypy.ini" ]; } && return 0
+            grep -q '^\[tool\.mypy\]' "$pp" 2>/dev/null && return 0
+            grep -q '^\[mypy\]' "$d/setup.cfg" 2>/dev/null ;;
+    pytest) { [ -f "$d/pytest.ini" ] || [ -f "$d/tox.ini" ] || [ -f "$d/conftest.py" ] || [ -d "$d/tests" ]; } && return 0
+            grep -q '^\[tool\.pytest' "$pp" 2>/dev/null ;;
+    *) return 1 ;;
+  esac
+}

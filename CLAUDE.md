@@ -2,7 +2,7 @@
 
 This repository is a **template** that brings a Spec-Driven Development (SDD) + Test-Driven Development (TDD) agentic workflow to any of your projects. It ships as a Claude Code **plugin** (`agentic-sdd`) and as a copyable `.claude/` folder. This file is the single source of truth for how the agents, skills, commands, hooks, and rules fit together.
 
-> Stack this workflow targets: **React, React Native, Node.js (Express / Fastify), NestJS, Next.js, C# / ASP.NET Core Web APIs, Avalonia (XAML) desktop, PostgreSQL, MongoDB**, tested with **Jest/Vitest** and **xUnit** (unit) and **Playwright / Detox / Supertest / Testcontainers / WebApplicationFactory / Avalonia.Headless / Appium** (E2E/integration). Cross-platform, including **macOS (Tahoe) on Apple Silicon** — .NET work targets modern cross-platform **.NET 8/9** (arm64), not the Windows-only .NET Framework.
+> Stack this workflow targets: **React, React Native, Node.js (Express / Fastify), NestJS, Next.js, C# / ASP.NET Core Web APIs, Avalonia (XAML) desktop, Python (Django / DRF, FastAPI, Flask), PostgreSQL, MongoDB**, tested with **Jest/Vitest**, **xUnit**, and **pytest** (unit) and **Playwright / Detox / Supertest / Testcontainers / WebApplicationFactory / Avalonia.Headless / Appium / httpx** (E2E/integration). Cross-platform, including **macOS (Tahoe) on Apple Silicon** — .NET work targets modern cross-platform **.NET 8/9** (arm64), not the Windows-only .NET Framework.
 
 ---
 
@@ -82,6 +82,9 @@ Agents are specialists Claude calls automatically (or that commands invoke). Two
 | `node-backend-expert` | Express / Fastify APIs — routing, validation, auth, Supertest |
 | `nestjs-expert` | NestJS — modules, DI, guards/interceptors/pipes, DTOs |
 | `nextjs-expert` | Next.js App Router — Server/Client Components, server actions, caching |
+| `django-expert` | Django / DRF — apps, ORM, migrations, serializers/viewsets, permissions, pytest-django |
+| `fastapi-expert` | FastAPI — routers, `Depends` DI, Pydantic v2, async SQLAlchemy, httpx tests |
+| `flask-expert` | Flask — app factory, blueprints, extensions, Marshmallow schemas, test client |
 | `dotnet-expert` | C# / ASP.NET Core Web APIs — clean architecture, EF Core, DI, xUnit (modern .NET on arm64) |
 | `avalonia-expert` | Avalonia / XAML cross-platform desktop — MVVM, compiled bindings, headless + Appium tests |
 | `database-expert` | PostgreSQL & MongoDB — schema, indexes, migrations, transactions, query perf |
@@ -115,11 +118,11 @@ Hooks make the rules non-optional. They run on **your machine** and degrade grac
 | Hook event | Script | Effect |
 |---|---|---|
 | `SessionStart` | `session-start.sh` | Injects a reminder of the workflow + rules |
-| `PreToolUse` (Edit/Write) | `guard-edits.sh` | **Blocks** focused tests (`.only`), `debugger;`/`Debugger.Break()`, and blanket `eslint-disable` / `#pragma warning disable` |
-| `PostToolUse` (Edit/Write) | `post-edit-quality.sh` | Runs ESLint `--fix` on changed JS/TS, or `dotnet format` on changed C#/XAML; surfaces remaining errors |
-| `PreToolUse` (Bash `git commit`) | `pre-commit-gate.sh` | **Blocks the commit** unless gates pass: JS = lint + typecheck + tests; .NET = `dotnet format --verify-no-changes` + `build -warnaserror` + `test`; and no focus markers staged |
+| `PreToolUse` (Edit/Write) | `guard-edits.sh` | **Blocks** focused tests (`.only`), `debugger;`/`Debugger.Break()`/`breakpoint()`/`pdb.set_trace()`, and blanket `eslint-disable` / `#pragma warning disable` / `# noqa` / `# type: ignore` |
+| `PostToolUse` (Edit/Write) | `post-edit-quality.sh` | Runs ESLint `--fix` on changed JS/TS, `dotnet format` on changed C#/XAML, or `ruff` (fix + format) / `black` on changed Python; surfaces remaining errors |
+| `PreToolUse` (Bash `git commit`) | `pre-commit-gate.sh` | **Blocks the commit** unless gates pass: JS = lint + typecheck + tests; .NET = `dotnet format --verify-no-changes` + `build -warnaserror` + `test`; Python = `ruff` + `mypy` + `pytest`; and no focus markers/debuggers staged |
 
-The gate is **polyglot** — it runs whichever toolchains the repo actually has (npm scripts and/or a `.sln`/`.csproj`), and silently skips the rest. Emergency escape: `git commit --no-verify` bypasses it (use sparingly). The hooks never run network installs — they only use tooling already present.
+The gate is **polyglot** — it runs whichever toolchains the repo actually has (npm scripts, a `.sln`/`.csproj`, and/or a `pyproject.toml`/`requirements.txt`), and silently skips the rest. Emergency escape: `git commit --no-verify` bypasses it (use sparingly). The hooks never run network installs — they only use tooling already present.
 
 ---
 
@@ -146,7 +149,7 @@ agentic-workflow/
 ├── plugins/
 │   └── agentic-sdd/
 │       ├── .claude-plugin/plugin.json
-│       ├── agents/                ← 16 agents (lifecycle + stack experts)
+│       ├── agents/                ← 19 agents (lifecycle + stack experts)
 │       ├── commands/              ← 13 slash commands
 │       ├── skills/                ← 7 skills (+ references)
 │       ├── hooks/                 ← hooks.json + scripts/
@@ -187,6 +190,7 @@ After either method, open the target repo with Claude and run `/feature ...` to 
 
 - **JS/TS repos:** ESLint + a `typecheck` (or `tsc --noEmit`) and a `test` script in `package.json` enable the full gate. Tests co-located as `*.test.ts` / `*.spec.ts` or under `__tests__/`.
 - **.NET repos:** a `.sln` or `.csproj` enables the .NET gate (`dotnet format`, `dotnet build -warnaserror`, `dotnet test`). Nullable reference types on; xUnit + FluentAssertions; tests in a `*.Tests` project. Target `net8.0`/`net9.0` (arm64 on Apple Silicon).
-- Missing toolchains are skipped, not failed — polyglot repos run both gates.
+- **Python repos:** a `pyproject.toml`/`setup.py`/`requirements.txt` enables the Python gate. Each tool runs only when the project adopts it — `ruff` (`[tool.ruff]` or `ruff.toml`) for lint + format, `mypy` (`[tool.mypy]` or `mypy.ini`) for types, `pytest` (a `tests/` dir, `conftest.py`, or `[tool.pytest.ini_options]`). Tests as `test_*.py` / `*_test.py` or under `tests/`.
+- Missing toolchains are skipped, not failed — polyglot repos run every applicable gate.
 - Specs in `specs/`, designs in `docs/design/`, decisions in `docs/adr/`.
 - Each acceptance criterion is referenced by id (`AC-3`) in the test name for traceability.
