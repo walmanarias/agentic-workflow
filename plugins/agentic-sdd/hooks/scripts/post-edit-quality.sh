@@ -37,9 +37,11 @@ fi
 # --- Python: ruff (lint --fix + format), else black, on the changed file ---
 if is_py_file "$file"; then
   [ -f "$file" ] || exit 0
-  root="$(python_root)"; [ -z "$root" ] && root="$(repo_root)"
+  root="$(python_root)"; [ -z "$root" ] && exit 0   # not a recognized Python project — leave it alone
+  # Only format with a tool the project has adopted, matching the commit gate — so a
+  # merely-installed (but unused) ruff/black never silently reformats the file.
   ruff="$(py_tool ruff)"
-  if [ -n "$ruff" ]; then
+  if [ -n "$ruff" ] && py_uses "$root" ruff; then
     ( cd "$root" && $ruff check --fix "$file" >/dev/null 2>&1 )
     ( cd "$root" && $ruff format "$file" >/dev/null 2>&1 )
     out="$( cd "$root" && $ruff check "$file" 2>&1 )"; status=$?
@@ -50,7 +52,7 @@ if is_py_file "$file"; then
     exit 0
   fi
   black="$(py_tool black)"
-  if [ -n "$black" ]; then
+  if [ -n "$black" ] && py_uses "$root" black; then
     out="$( cd "$root" && $black "$file" 2>&1 )"; status=$?
     if [ $status -ne 0 ]; then
       printf 'black reported issues for %s:\n%s\n\nResolve them before continuing.\n' "$file" "$out" >&2

@@ -97,12 +97,15 @@ jobs:
       - uses: actions/checkout@v4
       - name: Detect Python project
         id: detect
+        # Root-level detection on purpose: install/lint/test below run from the repo
+        # root, so a single-project repo stays coherent. For a monorepo, set a working
+        # directory (or a matrix) and point these steps at each Python package.
         run: |
-          if git ls-files '*pyproject.toml' '*setup.py' '*setup.cfg' '*requirements.txt' | grep -q .; then
+          if [ -f pyproject.toml ] || [ -f setup.py ] || [ -f setup.cfg ] || [ -f requirements.txt ]; then
             echo "found=true" >> "$GITHUB_OUTPUT"
           else
             echo "found=false" >> "$GITHUB_OUTPUT"
-            echo "No pyproject.toml/setup.py/requirements.txt found — skipping Python job."
+            echo "No root-level pyproject.toml/setup.py/requirements.txt found — skipping Python job."
           fi
       - name: Setup Python
         if: steps.detect.outputs.found == 'true'
@@ -112,11 +115,14 @@ jobs:
           cache: pip
       - name: Install (project + dev tools it declares)
         if: steps.detect.outputs.found == 'true'
+        # Use `python -m pip` so installs target the setup-python interpreter. A real
+        # requirements failure fails the job; only the editable install soft-fails,
+        # because a non-package app (e.g. Django) legitimately isn't `pip install -e .`-able.
         run: |
           python -m pip install --upgrade pip
-          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-          if [ -f requirements-dev.txt ]; then pip install -r requirements-dev.txt; fi
-          if [ -f pyproject.toml ]; then pip install -e ".[dev]" 2>/dev/null || pip install -e . 2>/dev/null || true; fi
+          if [ -f requirements.txt ]; then python -m pip install -r requirements.txt; fi
+          if [ -f requirements-dev.txt ]; then python -m pip install -r requirements-dev.txt; fi
+          if [ -f pyproject.toml ]; then python -m pip install -e ".[dev]" 2>/dev/null || python -m pip install -e . 2>/dev/null || true; fi
       # Each tool runs only if the repo adopted it, mirroring the local commit gate.
       - name: Lint (ruff)
         if: steps.detect.outputs.found == 'true'

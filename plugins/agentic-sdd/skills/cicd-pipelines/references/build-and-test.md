@@ -29,7 +29,7 @@ The CI job mirrors the local commit hooks so CI and local enforce the same bar. 
 ```yaml
 - uses: actions/setup-python@v5
   with: { python-version: '3.12', cache: pip }
-- run: pip install -r requirements.txt   # or: pip install -e ".[dev]"
+- run: python -m pip install -r requirements.txt   # or: python -m pip install -e ".[dev]"
 - run: ruff check .
 - run: ruff format --check .
 - run: mypy .                            # if the project configures mypy

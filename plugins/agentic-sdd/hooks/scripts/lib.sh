@@ -122,7 +122,7 @@ python_root() {
   for f in pyproject.toml setup.py setup.cfg requirements.txt; do
     [ -f "$r/$f" ] && { printf '%s' "$r"; return 0; }
   done
-  local hit; hit="$(find "$r" -maxdepth 3 \( -name pyproject.toml -o -name setup.py -o -name setup.cfg \) \
+  local hit; hit="$(find "$r" -maxdepth 3 \( -name pyproject.toml -o -name setup.py -o -name setup.cfg -o -name requirements.txt \) \
         -not -path '*/.venv/*' -not -path '*/venv/*' -not -path '*/node_modules/*' 2>/dev/null | head -1)"
   [ -n "$hit" ] && dirname "$hit"
 }
