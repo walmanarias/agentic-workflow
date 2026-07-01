@@ -2,7 +2,7 @@
 description: Pre-merge gate — verify the whole SDD/TDD Definition of Done before shipping.
 argument-hint: [feature]
 allowed-tools: Read, Grep, Glob, Bash
-model: opus
+model: sonnet
 ---
 
 Run the pre-ship checklist for: **$ARGUMENTS**

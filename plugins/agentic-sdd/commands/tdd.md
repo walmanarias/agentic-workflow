@@ -2,7 +2,7 @@
 description: Write failing tests (RED) for a spec or behavior — TDD step.
 argument-hint: <spec file or behavior>
 allowed-tools: Read, Write, Edit, Grep, Glob, Bash
-model: opus
+model: sonnet
 ---
 
 Invoke the `tdd-test-writer` agent for: **$ARGUMENTS**

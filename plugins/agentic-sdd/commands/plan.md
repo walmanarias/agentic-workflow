@@ -1,7 +1,7 @@
 ---
 description: Produce an architecture/design brief and ADRs before specifying or coding.
 argument-hint: <feature or system to design>
-model: opus
+model: sonnet
 ---
 
 Invoke the `architect` agent to design: **$ARGUMENTS**

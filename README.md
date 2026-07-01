@@ -10,7 +10,7 @@ It ships as a Claude Code **plugin** (`agentic-sdd`) *and* as a copyable `.claud
 
 - **16 agents** — 8 lifecycle agents (`architect`, `spec-writer`, `tdd-test-writer`, `implementer`, `e2e-tester`, `code-reviewer`, `refactorer`, `cicd-engineer`) + 8 stack experts (React, React Native, Node/Express/Fastify, NestJS, Next.js, C#/ASP.NET Core, Avalonia/XAML, PostgreSQL/MongoDB).
 - **13 commands** — `/feature`, `/plan`, `/spec`, `/tdd`, `/implement`, `/e2e`, `/review`, `/refactor`, `/cicd`, `/update-pr`, `/triage-copilot`, `/triage-reviews`, `/ship`.
-- **6 skills** — `spec-driven-development`, `tdd-workflow`, `e2e-testing`, `clean-code`, `stack-testing-recipes`, `cicd-pipelines`.
+- **7 skills** — `spec-driven-development`, `tdd-workflow`, `e2e-testing`, `clean-code`, `stack-testing-recipes`, `cicd-pipelines`, `pr-description`.
 - **Enforcing, polyglot hooks** — block focused tests/`debugger`/`Debugger.Break()`, format/lint changed files (ESLint or `dotnet format`), and gate `git commit` on the toolchains the repo has (JS: lint + types + tests; .NET: format + build `-warnaserror` + test).
 - **5 rule files** — workflow, testing, clean code, security, git hygiene.
 - **CI templates** — a build-and-test GitHub Actions workflow (Node + .NET on macOS Apple Silicon) you can drop into target repos with `--with-ci`. This repo's own CI just validates the plugin.

@@ -2,7 +2,7 @@
 description: Evaluate GitHub Copilot's PR review comments, decide which are valid, then apply fixes (TDD) or reply with reasoning, and resolve the threads.
 argument-hint: [PR number or URL] [optional guidance, e.g. "be conservative"]
 allowed-tools: Bash, Read, Write, Edit, Grep, Glob
-model: opus
+model: sonnet
 ---
 
 Triage the **GitHub Copilot** code-review comments on a pull request: judge each suggestion on its merits, then either implement it (following our TDD + clean-code rules) or decline it with a courteous, reasoned reply — and resolve the thread. Optional context: **$ARGUMENTS**
