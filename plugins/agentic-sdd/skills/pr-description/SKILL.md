@@ -9,9 +9,9 @@ Turn a branch's commits into a scannable PR title + description. Add a section *
 
 ## Title
 
-`<emoji> <type>: <short, specific description>` — ≤ 80 chars, action verb (Implement / Add / Fix / Refactor), name the main component.
+`<emoji> <action> <short, specific description>` — ≤ 80 chars; the action is a verb (Implement / Add / Fix / Refactor) and the emoji reflects the change type; name the main component. No conventional-commit `type:` prefix — see the examples.
 
-Emoji by primary change: ✨ feat · 🐛 fix · 🔄 refactor · 🎨 style/ui · ♿ a11y · ⚡ perf · 🧪 test · 📝 docs · 🔧 chore.
+Emoji by change type: ✨ feature · 🐛 fix · 🔄 refactor · 🎨 style/ui · ♿ a11y · ⚡ perf · 🧪 test · 📝 docs · 🔧 chore.
 
 ## Body structure
 

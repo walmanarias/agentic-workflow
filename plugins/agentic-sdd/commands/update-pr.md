@@ -43,7 +43,7 @@ If a PR exists, **preserve verbatim**: every `<img>` / video / Loom link, any `#
 
 Apply the **`pr-description`** skill:
 
-- **Title:** `<emoji> <type>: <short, specific description>` (≤ 80 chars, action verb, main component named).
+- **Title:** `<emoji> <action> <short, specific description>` (≤ 80 chars; action verb like Implement/Add/Fix/Refactor; emoji by change type; no `type:` prefix; main component named).
 - **Always include:** `## 📋 Summary` (2–3 sentences, what + why), `## 📸 Demo` (preserved media or `_Screenshots/videos to be added_`), `## 🎨 What's Changed` (bullets grouped by component).
 - **Conditional sections** (Business Rules, Test Coverage, Accessibility, i18n, API/Contract, Database/Migrations, Spec & AC, Related Work): add one **only** when the commits contain that kind of change. Exact templates live in the skill's `references/section-catalog.md`.
 
