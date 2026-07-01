@@ -1,7 +1,7 @@
 ---
 description: Run the full Spec-Driven Development + TDD loop for a feature, end to end.
 argument-hint: <feature description>
-model: opus
+model: sonnet
 ---
 
 Drive the complete SDD + TDD lifecycle for: **$ARGUMENTS**

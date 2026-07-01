@@ -2,7 +2,7 @@
 description: Review the current diff for clean code, correctness, security, and tests.
 argument-hint: [optional scope or PR]
 allowed-tools: Read, Grep, Glob, Bash
-model: opus
+model: sonnet
 ---
 
 Invoke the `code-reviewer` agent to review: **$ARGUMENTS** (default: the uncommitted/working diff).

@@ -2,7 +2,7 @@
 description: Make failing tests pass with minimal clean code (GREEN -> REFACTOR).
 argument-hint: <feature or test scope>
 allowed-tools: Read, Write, Edit, Grep, Glob, Bash
-model: opus
+model: sonnet
 ---
 
 Invoke the `implementer` agent (plus the relevant stack expert: react / react-native / node-backend / nestjs / nextjs / dotnet / avalonia / database) for: **$ARGUMENTS**

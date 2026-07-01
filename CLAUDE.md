@@ -49,7 +49,7 @@ Slash commands are the entry points. Each delegates to the right agent and appli
 | `/review [scope]` | Clean-code / correctness / security / test review of the diff | `code-reviewer` |
 | `/refactor <target>` | Behavior-preserving cleanup, guarded by tests | `refactorer` |
 | `/cicd <target>` | Generates/updates a full GitHub Actions CI/CD pipeline (build→test→deploy, stack-aware) | `cicd-engineer` |
-| `/update-pr [context]` | Generates/updates the PR title & description from branch commits (stack-aware, preserves media) | (gh CLI) |
+| `/update-pr [context]` | Generates/updates the PR title & description from branch commits (stack-aware, preserves media) | (gh CLI) + `pr-description` skill |
 | `/triage-copilot [pr]` | Evaluates GitHub Copilot's PR review comments; applies valid fixes (TDD) or replies with reasoning, then resolves the threads | (gh CLI) |
 | `/triage-reviews [pr]` | Triages human reviewers' PR comments; answers questions, implements clear change requests (TDD), discusses disagreements | (gh CLI) |
 | `/ship [feature]` | Pre-merge gate: verifies the Definition of Done | (verification) |
@@ -104,6 +104,7 @@ Skills are reusable playbooks the agents (and you) apply. They live in `plugins/
 | `clean-code` | Writing/reviewing/refactoring — naming, SOLID, smells, checklist |
 | `stack-testing-recipes` | Choosing the right test tool for a specific framework |
 | `cicd-pipelines` | Generating a CI/CD pipeline — promotion model, per-target deploy recipes, security baseline |
+| `pr-description` | Writing/updating a PR title & description from commits — section catalog + style guide (loaded by `/update-pr`) |
 
 ---
 
@@ -147,7 +148,7 @@ agentic-workflow/
 │       ├── .claude-plugin/plugin.json
 │       ├── agents/                ← 16 agents (lifecycle + stack experts)
 │       ├── commands/              ← 13 slash commands
-│       ├── skills/                ← 6 skills (+ references)
+│       ├── skills/                ← 7 skills (+ references)
 │       ├── hooks/                 ← hooks.json + scripts/
 │       ├── rules/                 ← 5 rule files
 │       └── settings.template.json ← settings used by the copy installer

@@ -1,7 +1,7 @@
 ---
 description: Write a testable Spec-Driven Development spec for a feature (step 1).
 argument-hint: <feature description>
-model: opus
+model: sonnet
 ---
 
 Invoke the `spec-writer` agent to produce `specs/<feature>.spec.md` for: **$ARGUMENTS**
