@@ -1,6 +1,6 @@
 ---
 name: stack-testing-recipes
-description: Use to pick the right testing tools and write the right kind of tests for a specific technology in the stack (React, React Native, Express, Fastify, NestJS, Next.js, PostgreSQL, MongoDB). Trigger on "how do I test <tech>", "which test tool", or when setting up testing for a given framework.
+description: Use to pick the right testing tools and write the right kind of tests for a specific technology in the stack (React, React Native, Express, Fastify, NestJS, Next.js, Django, FastAPI, Flask, PostgreSQL, MongoDB). Trigger on "how do I test <tech>", "which test tool", or when setting up testing for a given framework.
 ---
 
 # Stack Testing Recipes
@@ -26,6 +26,21 @@ Match the test type and tool to the technology. Always follow the pyramid: many 
 ## Next.js (App Router)
 - **Unit:** Jest/Vitest + RTL for client components; test server actions/route handlers/data fns as plain functions.
 - **E2E:** Playwright for SSR, navigation, forms, and server actions.
+
+## Python (general)
+- **pytest** everywhere: `fixtures` for setup, `@pytest.mark.parametrize` for cases, `pytest.raises` for errors. Unit-test services/domain logic with faked collaborators — no DB, no network. Inject clock/uuid; freeze time with a fixture, not real `datetime.now`.
+
+## Django / DRF
+- **Unit:** pytest-django + `factory_boy`; test services/selectors and model methods. Mark DB-touching tests `@pytest.mark.django_db`.
+- **API/integration:** DRF `APIClient`/`APIRequestFactory` against real URLs; assert status + payload + side effects. Run migrations against a containerized Postgres (Testcontainers) when prod is Postgres — don't test on SQLite substitutes.
+
+## FastAPI
+- **Unit:** test services with faked repositories; override `Depends` via `app.dependency_overrides` to inject fakes.
+- **Integration:** pytest + `pytest-asyncio` + `httpx.AsyncClient` (ASGI transport) against the app factory; containerized DB for repository tests.
+
+## Flask
+- **Unit:** test services without a request context; faked repositories.
+- **Integration:** pytest + the Flask test client built from `create_app(TestConfig)`; app/client/session fixtures; containerized DB, rolling back per test.
 
 ## PostgreSQL
 - Integration-test repositories + migrations (up and down) against a containerized Postgres. Verify plans with `EXPLAIN ANALYZE`.

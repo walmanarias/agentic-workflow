@@ -1,10 +1,11 @@
 name: CI
 
 # Build-and-test gate for repos using the agentic-sdd workflow. Mirrors the
-# local quality gate (lint/type/test for JS, format/build/test for .NET).
+# local quality gate (lint/type/test for JS, format/build/test for .NET,
+# ruff/mypy/pytest for Python).
 # Runs on macOS Apple Silicon (macos-14 is arm64) so results match local dev.
 # Each job auto-detects whether its stack is present and no-ops otherwise,
-# so this single file works for JS-only, .NET-only, and polyglot repos.
+# so this single file works for JS-only, .NET-only, Python-only, and polyglot repos.
 #
 # Installed by:  bash scripts/install.sh /path/to/repo --with-ci
 on:
@@ -88,3 +89,47 @@ jobs:
         run: dotnet test --no-build --verbosity normal --collect:"XPlat Code Coverage"
       # Appium-based Avalonia E2E and Testcontainers integration tests need a
       # display/daemon or container runtime; enable on a self-hosted arm64 runner.
+
+  python:
+    name: Python (Django / FastAPI / Flask)
+    runs-on: macos-14   # Apple Silicon, arm64-native
+    steps:
+      - uses: actions/checkout@v4
+      - name: Detect Python project
+        id: detect
+        run: |
+          if git ls-files '*pyproject.toml' '*setup.py' '*setup.cfg' '*requirements.txt' | grep -q .; then
+            echo "found=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "found=false" >> "$GITHUB_OUTPUT"
+            echo "No pyproject.toml/setup.py/requirements.txt found — skipping Python job."
+          fi
+      - name: Setup Python
+        if: steps.detect.outputs.found == 'true'
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+      - name: Install (project + dev tools it declares)
+        if: steps.detect.outputs.found == 'true'
+        run: |
+          python -m pip install --upgrade pip
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+          if [ -f requirements-dev.txt ]; then pip install -r requirements-dev.txt; fi
+          if [ -f pyproject.toml ]; then pip install -e ".[dev]" 2>/dev/null || pip install -e . 2>/dev/null || true; fi
+      # Each tool runs only if the repo adopted it, mirroring the local commit gate.
+      - name: Lint (ruff)
+        if: steps.detect.outputs.found == 'true'
+        run: if command -v ruff >/dev/null; then ruff check .; else echo "ruff not installed — skipping"; fi
+      - name: Format check (ruff)
+        if: steps.detect.outputs.found == 'true'
+        run: if command -v ruff >/dev/null; then ruff format --check .; else echo "ruff not installed — skipping"; fi
+      - name: Type-check (mypy)
+        if: steps.detect.outputs.found == 'true'
+        run: if command -v mypy >/dev/null; then mypy .; else echo "mypy not installed — skipping"; fi
+      - name: Tests (pytest)
+        if: steps.detect.outputs.found == 'true'
+        run: if command -v pytest >/dev/null; then pytest; else echo "pytest not installed — skipping"; fi
+      # Django: set DJANGO_SETTINGS_MODULE (+ SECRET_KEY) here and add a
+      # `python manage.py migrate` step. Testcontainers-backed integration
+      # tests need a container runtime; enable on a self-hosted arm64 runner.

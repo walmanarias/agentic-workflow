@@ -24,5 +24,5 @@ Build the image once, push to a registry, then deploy. Use **OIDC** for AWS/Azur
 
 ## Notes
 - Secrets per environment (registry creds via OIDC; `RAILWAY_TOKEN`/`FLY_API_TOKEN`/SSH key as Environment secrets).
-- Run DB migrations as a pre-deploy step against the target environment; coordinate with `database-expert`.
+- Run DB migrations as a pre-deploy step against the target environment; coordinate with `database-expert`. Python: Django `python manage.py migrate`; SQLAlchemy (FastAPI/Flask) `alembic upgrade head`.
 - **Rollback:** redeploy the previous image tag / `flyctl releases rollback` / ECS task-set rollback.

@@ -6,7 +6,7 @@ read_hook_input
 
 file="$(json_get '.tool_input.file_path')"
 [ -z "$file" ] && exit 0
-case "$file" in *node_modules*|*/dist/*|*/build/*|*/.next/*|*/bin/*|*/obj/*) exit 0;; esac
+case "$file" in *node_modules*|*/dist/*|*/build/*|*/.next/*|*/bin/*|*/obj/*|*/.venv/*|*/venv/*|*/__pycache__/*) exit 0;; esac
 
 # --- JavaScript / TypeScript: ESLint --fix on the changed file ---
 if is_js_file "$file"; then
@@ -30,6 +30,32 @@ if is_cs_file "$file"; then
   if [ $status -ne 0 ]; then
     printf 'dotnet format reported issues for %s:\n%s\n\nResolve them before continuing.\n' "$file" "$out" >&2
     exit 2
+  fi
+  exit 0
+fi
+
+# --- Python: ruff (lint --fix + format), else black, on the changed file ---
+if is_py_file "$file"; then
+  [ -f "$file" ] || exit 0
+  root="$(python_root)"; [ -z "$root" ] && root="$(repo_root)"
+  ruff="$(py_tool ruff)"
+  if [ -n "$ruff" ]; then
+    ( cd "$root" && $ruff check --fix "$file" >/dev/null 2>&1 )
+    ( cd "$root" && $ruff format "$file" >/dev/null 2>&1 )
+    out="$( cd "$root" && $ruff check "$file" 2>&1 )"; status=$?
+    if [ $status -ne 0 ]; then
+      printf 'Ruff reported problems in %s (auto-fixable issues were fixed):\n%s\n\nFix the remaining issues before continuing.\n' "$file" "$out" >&2
+      exit 2
+    fi
+    exit 0
+  fi
+  black="$(py_tool black)"
+  if [ -n "$black" ]; then
+    out="$( cd "$root" && $black "$file" 2>&1 )"; status=$?
+    if [ $status -ne 0 ]; then
+      printf 'black reported issues for %s:\n%s\n\nResolve them before continuing.\n' "$file" "$out" >&2
+      exit 2
+    fi
   fi
   exit 0
 fi

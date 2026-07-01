@@ -25,6 +25,20 @@ The CI job mirrors the local commit hooks so CI and local enforce the same bar. 
 - run: dotnet test --no-build --verbosity normal
 ```
 
+## Python (pytest — Django / FastAPI / Flask)
+```yaml
+- uses: actions/setup-python@v5
+  with: { python-version: '3.12', cache: pip }
+- run: pip install -r requirements.txt   # or: pip install -e ".[dev]"
+- run: ruff check .
+- run: ruff format --check .
+- run: mypy .                            # if the project configures mypy
+- run: pytest --cov                      # Django: pytest-django (DJANGO_SETTINGS_MODULE set)
+```
+
+- Provision service containers (Postgres/Mongo) via `services:` for integration tests, or let Testcontainers manage them.
+- Django: run `python manage.py migrate --check` (or apply migrations) before the suite; keep `SECRET_KEY`/`DJANGO_SETTINGS_MODULE` in CI env.
+
 ## Rules
 - Block all deploy jobs on a red gate (`needs: ci`).
 - Tag slow E2E suites (Playwright/Detox/Appium/Testcontainers) to run in a separate job; gate prod on them when they cover the deploy surface.

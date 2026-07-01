@@ -19,7 +19,7 @@ Production is gated by a GitHub **Environment** with required reviewers — appr
 
 ## Stage anatomy
 
-1. **CI gate** — mirror the local commit hooks: Node = lint + typecheck + test + build; .NET = `dotnet format --verify-no-changes` + `build -warnaserror` + `test`. Block deploy on red.
+1. **CI gate** — mirror the local commit hooks: Node = lint + typecheck + test + build; .NET = `dotnet format --verify-no-changes` + `build -warnaserror` + `test`; Python = `ruff check` + `ruff format --check` + `mypy` + `pytest`. Block deploy on red.
 2. **Build artifact** — produce the deployable (image, bundle, package) once; reuse across environments.
 3. **Deploy staging** — auto on merge to `main`; run smoke checks.
 4. **Approval** — `environment: production` with required reviewers.
@@ -31,6 +31,7 @@ Production is gated by a GitHub **Environment** with required reviewers — appr
 |---|---|---|
 | Cloudflare Workers / Pages | Wrangler | `references/deploy-cloudflare.md` |
 | Containerized API (AWS ECS/App Runner, Azure Container Apps/App Service, GCP Cloud Run, Railway, Fly.io) | Build image → push → deploy | `references/deploy-containers-and-vms.md` |
+| Python API (Django / FastAPI / Flask) | Build image → push → deploy (+ run migrations) | `references/deploy-containers-and-vms.md` |
 | VM / AWS EC2 | SSM / SSH / CodeDeploy | `references/deploy-containers-and-vms.md` |
 | Next.js / React / SPA | Vercel / Netlify (+ PR previews) | `references/deploy-frontend-hosts.md` |
 | React Native app | EAS / Fastlane → TestFlight / Play | `references/deploy-mobile-and-packages.md` |
