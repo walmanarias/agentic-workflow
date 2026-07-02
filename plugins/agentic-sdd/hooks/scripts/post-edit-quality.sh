@@ -16,7 +16,7 @@ if is_js_file "$file"; then
   ( cd "$root" && npx --no-install eslint --version >/dev/null 2>&1 ) || exit 0
   out="$( cd "$root" && npx --no-install eslint --fix "$file" 2>&1 )"; status=$?
   if [ $status -ne 0 ]; then
-    printf 'ESLint reported problems in %s (auto-fixable issues were fixed):\n%s\n\nFix the remaining issues before continuing.\n' "$file" "$out" >&2
+    printf 'ESLint reportó problemas en %s (se corrigieron los arreglables automáticamente):\n%s\n\nCorrige los problemas restantes antes de continuar.\n' "$file" "$out" >&2
     exit 2
   fi
   exit 0
@@ -28,7 +28,7 @@ if is_cs_file "$file"; then
   target="$(dotnet_target)"; [ -z "$target" ] && exit 0
   out="$( dotnet format "$target" --include "$file" 2>&1 )"; status=$?
   if [ $status -ne 0 ]; then
-    printf 'dotnet format reported issues for %s:\n%s\n\nResolve them before continuing.\n' "$file" "$out" >&2
+    printf 'dotnet format reportó problemas en %s:\n%s\n\nResuélvelos antes de continuar.\n' "$file" "$out" >&2
     exit 2
   fi
   exit 0
@@ -46,7 +46,7 @@ if is_py_file "$file"; then
     ( cd "$root" && $ruff format "$file" >/dev/null 2>&1 )
     out="$( cd "$root" && $ruff check "$file" 2>&1 )"; status=$?
     if [ $status -ne 0 ]; then
-      printf 'Ruff reported problems in %s (auto-fixable issues were fixed):\n%s\n\nFix the remaining issues before continuing.\n' "$file" "$out" >&2
+      printf 'Ruff reportó problemas en %s (se corrigieron los arreglables automáticamente):\n%s\n\nCorrige los problemas restantes antes de continuar.\n' "$file" "$out" >&2
       exit 2
     fi
     exit 0
@@ -55,7 +55,7 @@ if is_py_file "$file"; then
   if [ -n "$black" ] && py_uses "$root" black; then
     out="$( cd "$root" && $black "$file" 2>&1 )"; status=$?
     if [ $status -ne 0 ]; then
-      printf 'black reported issues for %s:\n%s\n\nResolve them before continuing.\n' "$file" "$out" >&2
+      printf 'black reportó problemas en %s:\n%s\n\nResuélvelos antes de continuar.\n' "$file" "$out" >&2
       exit 2
     fi
   fi

@@ -1,6 +1,6 @@
 ---
 name: fastapi-expert
-description: Use for FastAPI backends — routers, dependency injection (Depends), Pydantic v2 models, async endpoints, async SQLAlchemy, OAuth2/JWT auth, and testing with httpx. Triggers on "FastAPI", "Pydantic", "Depends", "async endpoint", "APIRouter", "uvicorn". For Django/DRF use django-expert; for Flask/WSGI use flask-expert.
+description: Use for FastAPI backends — routers, dependency injection (Depends), Pydantic v2 models, async endpoints, async SQLAlchemy, OAuth2/JWT auth, and testing with httpx. Triggers on "FastAPI", "Pydantic", "Depends", "async endpoint", "APIRouter", "uvicorn". For Django/DRF use django-expert; for Flask/WSGI use flask-expert. En español — "punto final asíncrono", "dependencia", "asíncrono", "esquema", "autenticación".
 tools: Read, Write, Edit, Grep, Glob, Bash
 model: sonnet
 ---

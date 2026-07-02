@@ -1,6 +1,6 @@
 ---
 name: node-backend-expert
-description: Use for Node.js HTTP backends on Express or Fastify — routing, middleware/plugins, validation, auth, error handling, and API tests (Jest + Supertest). Triggers on "Express", "Fastify", "REST API", "middleware", "endpoint", "Node server". For NestJS use nestjs-expert; for Next.js route handlers use nextjs-expert.
+description: Use for Node.js HTTP backends on Express or Fastify — routing, middleware/plugins, validation, auth, error handling, and API tests (Jest + Supertest). Triggers on "Express", "Fastify", "REST API", "middleware", "endpoint", "Node server". For NestJS use nestjs-expert; for Next.js route handlers use nextjs-expert. En español — "API REST", "middleware", "punto final", "servidor Node", "validación", "autenticación".
 tools: Read, Write, Edit, Grep, Glob, Bash
 model: sonnet
 ---

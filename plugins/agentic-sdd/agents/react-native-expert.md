@@ -1,6 +1,6 @@
 ---
 name: react-native-expert
-description: Use for React Native / Expo mobile work — screens, navigation, native modules, platform differences, performance, and mobile testing (RN Testing Library, Detox/Maestro). Triggers on "React Native", "Expo", "mobile", "iOS/Android", "navigation", "FlatList". For web React use react-expert.
+description: Use for React Native / Expo mobile work — screens, navigation, native modules, platform differences, performance, and mobile testing (RN Testing Library, Detox/Maestro). Triggers on "React Native", "Expo", "mobile", "iOS/Android", "navigation", "FlatList". For web React use react-expert. En español — "móvil", "navegación", "pantalla", "iOS/Android", "rendimiento móvil".
 tools: Read, Write, Edit, Grep, Glob, Bash
 model: sonnet
 ---

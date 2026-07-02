@@ -1,6 +1,6 @@
 ---
 name: implementer
-description: Use during the GREEN/REFACTOR steps of TDD — after failing tests exist. Writes the minimum clean code to make the failing tests pass, then refactors while keeping them green. Trigger on "implement", "make tests pass", "green", or when failing tests are ready. Never weakens tests to pass.
+description: Use during the GREEN/REFACTOR steps of TDD — after failing tests exist. Writes the minimum clean code to make the failing tests pass, then refactors while keeping them green. Trigger on "implement", "make tests pass", "green", or when failing tests are ready. Never weakens tests to pass. En español — "implementar", "hacer pasar las pruebas", "verde", "código para pasar las pruebas".
 tools: Read, Write, Edit, Grep, Glob, Bash
 model: sonnet
 ---

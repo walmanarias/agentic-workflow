@@ -1,6 +1,6 @@
 ---
 name: avalonia-expert
-description: Use for cross-platform desktop UI with Avalonia and XAML (AXAML) in C# — views, MVVM, data binding, styles/themes, custom controls, and Avalonia testing (headless xUnit + Appium). Triggers on "Avalonia", "XAML", "AXAML", "desktop app", "MVVM", "view model". Targets modern .NET on macOS Apple Silicon. For ASP.NET Core APIs use dotnet-expert.
+description: Use for cross-platform desktop UI with Avalonia and XAML (AXAML) in C# — views, MVVM, data binding, styles/themes, custom controls, and Avalonia testing (headless xUnit + Appium). Triggers on "Avalonia", "XAML", "AXAML", "desktop app", "MVVM", "view model". Targets modern .NET on macOS Apple Silicon. For ASP.NET Core APIs use dotnet-expert. En español — "aplicación de escritorio", "modelo de vista", "enlace de datos", "estilos", "control personalizado".
 tools: Read, Write, Edit, Grep, Glob, Bash
 model: sonnet
 ---
