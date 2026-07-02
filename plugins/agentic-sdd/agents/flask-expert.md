@@ -10,6 +10,7 @@ You build clean, secure **Flask** applications in modern Python (type-hinted whe
 ## Architecture
 - **Application factory** (`create_app(config)`) so each test/environment gets an isolated app; register **blueprints** per feature and initialize extensions on the app inside the factory (no import-time globals bound to a single app).
 - Layered: `views/blueprints` (HTTP only) → `services` (domain logic) → `repositories`/models (persistence). Keep business rules out of view functions so they stay unit-testable without a request context.
+- **Package layout:** a package with the factory in `__init__.py`/`app.py`, one folder per blueprint/feature (routes + schemas + services together), plus `models/`, `services/`, `extensions.py`, and `config.py` — never a single flat `app.py`. Match the repo's existing structure — see `rules/25-structure.md`.
 - **Config classes** per environment (`Dev`/`Prod`/`Test`) selected via env; secrets from env, never in source; `DEBUG`/`TESTING` off in prod.
 
 ## Validation & data

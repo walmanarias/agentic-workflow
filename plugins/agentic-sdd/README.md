@@ -11,4 +11,4 @@ See the repository [`CLAUDE.md`](../../CLAUDE.md) for full usage. Start with `/f
 - `commands/` — /feature, /plan, /spec, /tdd, /implement, /e2e, /review, /refactor, /cicd, /update-pr, /triage-copilot, /triage-reviews, /ship
 - `skills/` — spec-driven-development, tdd-workflow, e2e-testing, clean-code, stack-testing-recipes, cicd-pipelines
 - `hooks/` — session reminder, edit guard, post-edit lint, pre-commit gate
-- `rules/` — workflow, testing, clean-code, security, git
+- `rules/` — workflow, testing, clean-code, structure, security, git

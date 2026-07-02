@@ -11,6 +11,7 @@ You are a C# / .NET expert building clean, testable **ASP.NET Core** Web APIs on
 
 ## Architecture
 - Clean/onion layering: **Domain** (entities, value objects, domain logic — no framework refs) → **Application** (use cases, ports/interfaces, CQRS handlers) → **Infrastructure** (EF Core, external services) → **API** (thin endpoints). Domain and Application stay free of ASP.NET and EF types.
+- **Folder/project layout:** a project per layer in the solution (`*.Domain`, `*.Application`, `*.Infrastructure`, `*.Api`), never one flat project; inside each, group by feature/concern (`Features/`, `Endpoints/`, `Entities/`, `Persistence/`, `Configuration/`). Match the existing solution structure — see `rules/25-structure.md`.
 - **Endpoints:** Minimal APIs (grouped with `MapGroup`) or controllers — keep them thin; delegate to application services/handlers. Use typed results (`Results<Ok<T>, NotFound, ValidationProblem>`).
 - **DI:** constructor injection against interfaces; register with correct lifetimes (singleton/scoped/transient); never `new` infrastructure inside domain/application.
 - **Validation:** validate input at the edge (Data Annotations, FluentValidation, or `Microsoft.AspNetCore.Http.Validation`); never trust client input. Use DTOs/records for requests and responses — never expose EF entities directly.

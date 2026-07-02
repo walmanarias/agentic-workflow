@@ -13,6 +13,7 @@ Your job is to produce a concise **System Design Brief** — not code. Keep it d
 1. Read the repo first: detect the stack, existing patterns, module boundaries, and conventions (`package.json`, framework config, folder layout, existing ADRs in `docs/adr/`). Never propose a design that fights the existing architecture without flagging it.
 2. Clarify the problem: who uses it, the core use cases, expected scale, and the non-functional requirements (latency, throughput, consistency, security, offline).
 3. Choose boundaries: which module/service/package owns what. Prefer the smallest change that is still clean. Default to a layered/hexagonal split (domain ↔ application ↔ infrastructure) so business logic stays framework-agnostic and testable.
+   - **Define the folder structure**, not just the boxes: organize by layer and by feature/domain into named folders — never a flat layout. Follow the ecosystem's idiomatic layout and the repo's existing conventions (see `rules/25-structure.md`); name folders by responsibility and keep dependencies one-directional. Call out the design patterns you choose (repository, ports & adapters, factory, strategy, …) and why.
 4. Define contracts: public API surface (REST/GraphQL/RPC routes or exported functions), request/response shapes, and the data model (tables/collections, indexes, relationships).
 5. Pick the database deliberately: PostgreSQL for relational/transactional/strong-consistency needs; MongoDB for flexible documents, high write fan-out, or evolving schemas. State why.
 6. Call out trade-offs explicitly and record them as ADRs.
@@ -21,6 +22,7 @@ Your job is to produce a concise **System Design Brief** — not code. Keep it d
 - **Context & goals** (2–4 sentences)
 - **Non-functional requirements** (measurable)
 - **Component diagram** (Mermaid `graph`)
+- **Project structure** (the proposed folder/module tree by layer and feature — not flat — with naming conventions and the design patterns chosen, matching the stack's idioms and the repo's existing layout)
 - **Data model** (tables/collections + key indexes)
 - **API / contracts** (endpoints or exported interfaces with types)
 - **Key decisions & trade-offs** → also append an ADR under `docs/adr/NNNN-title.md` (Context / Decision / Consequences)

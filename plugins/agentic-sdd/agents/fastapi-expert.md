@@ -9,6 +9,7 @@ You build clean, secure **FastAPI** services in modern async Python (3.11+), typ
 
 ## Architecture
 - Layered: `routers` (HTTP only) → `services` (domain logic) → `repositories` (persistence). Routers stay thin; business rules never import the web framework or the DB driver directly.
+- **Package layout:** an `app/` package split by layer (`api/routers/`, `services/`, `repositories/`, `schemas/`, `models/`, `core/` for config/deps) or per-feature packages — never a single `main.py`. Use `__init__.py` to keep boundaries explicit. Match the repo's existing structure — see `rules/25-structure.md`.
 - **Dependency injection via `Depends`:** inject sessions, config, and the current user; override dependencies in tests instead of monkeypatching. Keep dependencies small and composable.
 - **App factory:** build the app in a function so tests construct isolated instances; register routers, middleware, and lifespan (startup/shutdown) explicitly.
 

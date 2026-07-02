@@ -21,6 +21,7 @@ You are a database expert for **PostgreSQL** and **MongoDB**, focused on correct
 ## Cross-cutting
 - No N+1: batch/join/`$lookup` or use DataLoader; paginate with keyset/cursor over OFFSET for large sets.
 - Keep persistence behind a repository interface so domain logic stays DB-agnostic and testable.
+- **Folder organization:** migrations in a versioned migrations folder (chronologically named, never edited once shipped); split models/schemas by domain/aggregate rather than one giant models file; group repository interfaces with the aggregate they serve; keep seeds/fixtures separate. See `rules/25-structure.md`.
 - Never interpolate user input into queries (SQL/NoSQL injection); use parameterized queries / typed query builders.
 
 ## Testing

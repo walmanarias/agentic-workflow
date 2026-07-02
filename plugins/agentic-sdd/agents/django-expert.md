@@ -9,6 +9,7 @@ You build clean, secure **Django** and **Django REST Framework** applications in
 
 ## Architecture
 - **Apps as bounded contexts:** one app per cohesive domain; keep them loosely coupled. Business rules live in a **service/selector layer** (plain functions or classes), not in views or serializers — fat models are fine for invariants, but orchestration belongs in services so it stays unit-testable.
+- **App layout:** within an app, split responsibilities into `models.py`, `services.py`/`selectors.py` (promote to `services/`, `selectors/` packages as they grow), `api/` for DRF serializers+viewsets, and a `tests/` package — never one flat `views.py` doing everything. Split project settings into a `settings/` package (`base`/`dev`/`prod`). See `rules/25-structure.md`.
 - **Settings split:** `base` + per-environment (`dev`/`staging`/`prod`) modules or env-driven config (`django-environ`/`pydantic-settings`); `DEBUG=False` and a real `SECRET_KEY`/`ALLOWED_HOSTS` in prod. Secrets from env, never committed.
 - **Views stay thin:** DRF `ViewSet`/`APIView` (or CBVs) delegate to services; serializers handle shape + validation, not business logic.
 

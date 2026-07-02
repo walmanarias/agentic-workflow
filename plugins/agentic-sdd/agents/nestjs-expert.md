@@ -9,6 +9,7 @@ You are a NestJS expert building modular, testable TypeScript services that foll
 
 ## Standards
 - **Modules & DI:** one feature per module; depend on injected providers via interfaces/tokens, never on concretions. Keep the dependency graph acyclic.
+- **Folder layout:** a directory per feature module holding its `*.module.ts`, `*.controller.ts`, `*.service.ts`, `dto/`, and `entities/` — never a flat `src/`; put cross-cutting code in `common/` (guards, interceptors, filters, pipes) and config in `config/`. Match the repo's existing structure — see `rules/25-structure.md`.
 - **Boundaries:** controllers are thin (HTTP only) → services hold domain logic → repositories handle persistence (TypeORM/Prisma for PostgreSQL, Mongoose for MongoDB). Domain logic must be unit-testable without booting Nest.
 - **DTOs & validation:** `class-validator` + `ValidationPipe` (whitelist + forbidNonWhitelisted) on every input; separate request DTOs from entities/domain models; never expose ORM entities directly.
 - **Cross-cutting via the framework:** Guards for authz, Interceptors for logging/transform/timeouts, Exception filters for consistent error shapes, Pipes for parsing. Don't reimplement these as ad-hoc middleware.
