@@ -13,39 +13,39 @@ violations=""
 
 if is_js_file "$file"; then
   if is_test_file "$file" && printf '%s' "$content" | grep -Eq '\.only\s*\('; then
-    violations="${violations}- Focused test (.only) detected — it would silently skip the rest of the suite.\n"
+    violations="${violations}- Prueba enfocada (.only) detectada — saltaría en silencio el resto de la suite.\n"
   fi
   if printf '%s' "$content" | grep -Eq '(^|[^A-Za-z0-9_])debugger\s*;'; then
-    violations="${violations}- 'debugger;' statement detected — remove before saving.\n"
+    violations="${violations}- Sentencia 'debugger;' detectada — elimínala antes de guardar.\n"
   fi
   if printf '%s' "$content" | grep -Eq 'eslint-disable($|[^-])' && ! printf '%s' "$content" | grep -Eq 'eslint-disable.*--'; then
-    violations="${violations}- Blanket 'eslint-disable' without a reason — disable a specific rule and explain why.\n"
+    violations="${violations}- 'eslint-disable' general sin motivo — desactiva una regla específica y explica por qué.\n"
   fi
 fi
 
 if is_cs_file "$file"; then
   if printf '%s' "$content" | grep -Eq 'Debugger\s*\.\s*Break\s*\('; then
-    violations="${violations}- 'Debugger.Break()' detected — remove before saving.\n"
+    violations="${violations}- 'Debugger.Break()' detectado — elimínalo antes de guardar.\n"
   fi
   if printf '%s' "$content" | grep -Eq '#pragma\s+warning\s+disable' && ! printf '%s' "$content" | grep -Eq 'disable\s+[A-Z]{2,}[0-9]'; then
-    violations="${violations}- Blanket '#pragma warning disable' (no specific code) — disable a specific analyzer id and explain why.\n"
+    violations="${violations}- '#pragma warning disable' general (sin código específico) — desactiva un id de analizador específico y explica por qué.\n"
   fi
 fi
 
 if is_py_file "$file"; then
   if printf '%s' "$content" | grep -Eq 'pdb\.set_trace\s*\(|(^|[^A-Za-z0-9_.])breakpoint\s*\('; then
-    violations="${violations}- Debugger breakpoint ('breakpoint()' / 'pdb.set_trace()') detected — remove before saving.\n"
+    violations="${violations}- Punto de interrupción ('breakpoint()' / 'pdb.set_trace()') detectado — elimínalo antes de guardar.\n"
   fi
   if printf '%s' "$content" | grep -Eq '#\s*noqa([^:]|$)'; then
-    violations="${violations}- Blanket '# noqa' without a code — silence a specific rule (e.g. 'noqa: E501') and explain why.\n"
+    violations="${violations}- '# noqa' general sin código — silencia una regla específica (p. ej. 'noqa: E501') y explica por qué.\n"
   fi
   if printf '%s' "$content" | grep -Eq '#\s*type:\s*ignore($|[^[])'; then
-    violations="${violations}- Blanket '# type: ignore' without a code — narrow it (e.g. 'type: ignore[assignment]') and explain why.\n"
+    violations="${violations}- '# type: ignore' general sin código — acótalo (p. ej. 'type: ignore[assignment]') y explica por qué.\n"
   fi
 fi
 
 if [ -n "$violations" ]; then
-  printf 'Blocked by agentic-sdd quality guard:\n%b' "$violations" >&2
+  printf 'Bloqueado por el guardián de calidad de agentic-sdd:\n%b' "$violations" >&2
   exit 2
 fi
 exit 0

@@ -4,6 +4,8 @@ This repository is a **template** that brings a Spec-Driven Development (SDD) + 
 
 > Stack this workflow targets: **React, React Native, Node.js (Express / Fastify), NestJS, Next.js, C# / ASP.NET Core Web APIs, Avalonia (XAML) desktop, Python (Django / DRF, FastAPI, Flask), PostgreSQL, MongoDB**, tested with **Jest/Vitest**, **xUnit**, and **pytest** (unit) and **Playwright / Detox / Supertest / Testcontainers / WebApplicationFactory / Avalonia.Headless / Appium / httpx** (E2E/integration). Cross-platform, including **macOS (Tahoe) on Apple Silicon** — .NET work targets modern cross-platform **.NET 8/9** (arm64), not the Windows-only .NET Framework.
 
+> **Idioma / Language:** Este proyecto trabaja en **español**. Todos los agentes y comandos responden en español — specs, criterios de aceptación (`AC-n`), nombres de pruebas, comentarios de código, la descripción de los mensajes de commit y las descripciones de PR van en español. Se mantienen en inglés por convención: los prefijos de Conventional Commits (`feat`, `fix`, …), los identificadores `AC-n` y el código / nombres técnicos (APIs, tipos, comandos).
+
 ---
 
 ## The core idea
@@ -133,6 +135,7 @@ Short, enforceable policies in `plugins/agentic-sdd/rules/` (mirrored to `.claud
 - `00-workflow.md` — SDD + TDD is mandatory; spec is the contract.
 - `10-testing.md` — TDD discipline, behavior-not-internals, the pyramid, coverage.
 - `20-clean-code.md` — naming, SOLID, hexagonal boundaries, no smells.
+- `25-structure.md` — organize by layer/feature (not flat), follow ecosystem conventions, apply design patterns.
 - `30-security.md` — input validation, parameterized queries, authz, secrets.
 - `40-git.md` — gated commits, Conventional Commits, focused commits.
 
@@ -153,7 +156,7 @@ agentic-workflow/
 │       ├── commands/              ← 13 slash commands
 │       ├── skills/                ← 7 skills (+ references)
 │       ├── hooks/                 ← hooks.json + scripts/
-│       ├── rules/                 ← 5 rule files
+│       ├── rules/                 ← 6 rule files
 │       └── settings.template.json ← settings used by the copy installer
 ├── templates/
 │   └── github-ci.yml              ← build+test CI for TARGET repos (installed via --with-ci)

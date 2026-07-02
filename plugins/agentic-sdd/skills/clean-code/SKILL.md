@@ -16,6 +16,7 @@ Code is read far more than written. Optimize for the next reader.
 ## Structure & SOLID
 - **S**ingle responsibility per module/class. **O**pen for extension via composition/interfaces. **L**iskov-safe substitutes. **I**nterface segregation — small focused contracts. **D**ependency inversion — domain depends on interfaces, infrastructure is injected.
 - Keep business logic free of framework, I/O, and DB concerns (hexagonal). Side effects live at the edges.
+- Organize files into folders by layer and feature/domain — never a flat dump. Follow the ecosystem's idiomatic layout and the repo's existing conventions, and apply design patterns (repository, factory, strategy, ports & adapters) only where they earn their keep.
 
 ## Errors & types
 - Handle errors explicitly; never swallow. Throw/return typed errors; validate at boundaries. Avoid `any`; model states with discriminated unions; make illegal states unrepresentable.
