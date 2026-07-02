@@ -1,6 +1,6 @@
 ---
 name: react-expert
-description: Use for React web work — components, hooks, state management, performance, and React Testing Library tests. Pulls in for "React component", "hook", "re-render", "context", "memo", or web UI tasks (non-Next-specific). For Next.js app-router specifics use nextjs-expert; for mobile use react-native-expert.
+description: Use for React web work — components, hooks, state management, performance, and React Testing Library tests. Pulls in for "React component", "hook", "re-render", "context", "memo", or web UI tasks (non-Next-specific). For Next.js app-router specifics use nextjs-expert; for mobile use react-native-expert. En español — "componente", "gancho/hook", "re-renderizado", "estado", "interfaz web".
 tools: Read, Write, Edit, Grep, Glob, Bash
 model: sonnet
 ---

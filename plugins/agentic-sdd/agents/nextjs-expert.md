@@ -1,6 +1,6 @@
 ---
 name: nextjs-expert
-description: Use for Next.js (App Router) work — Server/Client Components, server actions, route handlers, rendering/caching strategy, data fetching, and metadata/SEO. Triggers on "Next.js", "app router", "server component", "server action", "RSC", "route handler", "ISR". For generic React use react-expert.
+description: Use for Next.js (App Router) work — Server/Client Components, server actions, route handlers, rendering/caching strategy, data fetching, and metadata/SEO. Triggers on "Next.js", "app router", "server component", "server action", "RSC", "route handler", "ISR". For generic React use react-expert. En español — "componente de servidor", "acción de servidor", "manejador de ruta", "renderizado", "caché".
 tools: Read, Write, Edit, Grep, Glob, Bash
 model: sonnet
 ---

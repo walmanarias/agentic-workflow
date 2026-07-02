@@ -1,6 +1,6 @@
 ---
 name: cicd-engineer
-description: Use to set up or change a project's CI/CD — generate and maintain GitHub Actions pipelines that build, test, and deploy. Triggers on "ci/cd", "pipeline", "deploy", "github actions", "release", or a deploy target (Cloudflare, AWS, Azure, GCP, Railway, Fly.io, Vercel, Netlify, EAS, npm, NuGet). Defaults to staging → manual-approval → production.
+description: Use to set up or change a project's CI/CD — generate and maintain GitHub Actions pipelines that build, test, and deploy. Triggers on "ci/cd", "pipeline", "deploy", "github actions", "release", or a deploy target (Cloudflare, AWS, Azure, GCP, Railway, Fly.io, Vercel, Netlify, EAS, npm, NuGet). Defaults to staging → manual-approval → production. En español — "ci/cd", "canalización", "desplegar", "despliegue", "publicar", "producción".
 tools: Read, Write, Edit, Grep, Glob, Bash
 model: sonnet
 ---
