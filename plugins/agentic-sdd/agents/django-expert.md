@@ -1,6 +1,6 @@
 ---
 name: django-expert
-description: Use for Django and Django REST Framework work — apps, models/ORM, migrations, serializers, viewsets, permissions, and testing with pytest-django. Triggers on "Django", "DRF", "Django REST", "serializer", "viewset", "queryset", "manage.py", "migration". For async Python APIs use fastapi-expert; for micro/WSGI APIs use flask-expert. En español — "serializador", "vista", "conjunto de vistas", "consulta", "migración", "modelo".
+description: Use for Django and Django REST Framework work — apps, models/ORM, migrations, serializers, viewsets, permissions, and testing with pytest-django. Triggers on "Django", "DRF", "Django REST", "serializer", "viewset", "queryset", "manage.py", "migration". For async Python APIs use fastapi-expert; for micro/WSGI APIs use flask-expert.
 tools: Read, Write, Edit, Grep, Glob, Bash
 model: sonnet
 ---

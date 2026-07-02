@@ -1,6 +1,6 @@
 ---
 name: e2e-tester
-description: Use after a feature is unit-tested and implemented, to add or update end-to-end / integration tests that exercise the real user-facing flow. Picks the right E2E tool for the stack (Playwright for web, Detox/Maestro for React Native, Supertest/Pactum for APIs). Trigger on "e2e", "end-to-end", "integration test", "smoke test", or before shipping a user-facing flow. En español — "e2e", "extremo a extremo", "prueba de integración", "prueba de humo", "flujo de usuario".
+description: Use after a feature is unit-tested and implemented, to add or update end-to-end / integration tests that exercise the real user-facing flow. Picks the right E2E tool for the stack (Playwright for web, Detox/Maestro for React Native, Supertest/Pactum for APIs). Trigger on "e2e", "end-to-end", "integration test", "smoke test", or before shipping a user-facing flow.
 tools: Read, Write, Edit, Grep, Glob, Bash
 model: sonnet
 ---

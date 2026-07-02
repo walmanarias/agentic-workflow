@@ -1,6 +1,6 @@
 ---
 name: nestjs-expert
-description: Use for NestJS backends — modules, providers, dependency injection, guards, interceptors, pipes, DTOs, and testing with the Nest testing module. Triggers on "NestJS", "Nest module", "provider", "guard", "interceptor", "DTO". For plain Express/Fastify use node-backend-expert. En español — "proveedor", "guardia", "interceptor", "tubería/pipe", "módulo".
+description: Use for NestJS backends — modules, providers, dependency injection, guards, interceptors, pipes, DTOs, and testing with the Nest testing module. Triggers on "NestJS", "Nest module", "provider", "guard", "interceptor", "DTO". For plain Express/Fastify use node-backend-expert.
 tools: Read, Write, Edit, Grep, Glob, Bash
 model: sonnet
 ---

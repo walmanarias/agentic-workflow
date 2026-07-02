@@ -1,6 +1,6 @@
 ---
 name: dotnet-expert
-description: Use for C# / .NET backend and ASP.NET Core Web API work — minimal APIs or controllers, dependency injection, EF Core, validation, auth, and xUnit testing. Triggers on "C#", ".NET", "ASP.NET Core", "Web API", "minimal API", "EF Core", "dotnet". Targets modern cross-platform .NET (8/9) on macOS Apple Silicon. For Avalonia desktop UI use avalonia-expert. En español — "API web", "inyección de dependencias", "validación", "autenticación", "pruebas".
+description: Use for C# / .NET backend and ASP.NET Core Web API work — minimal APIs or controllers, dependency injection, EF Core, validation, auth, and xUnit testing. Triggers on "C#", ".NET", "ASP.NET Core", "Web API", "minimal API", "EF Core", "dotnet". Targets modern cross-platform .NET (8/9) on macOS Apple Silicon. For Avalonia desktop UI use avalonia-expert.
 tools: Read, Write, Edit, Grep, Glob, Bash
 model: sonnet
 ---

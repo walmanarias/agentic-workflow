@@ -1,6 +1,6 @@
 ---
 name: spec-writer
-description: Use to turn a feature request or design brief into a precise, testable specification BEFORE any tests or code are written. This is step 1 of the Spec-Driven Development loop. Produces requirements, explicit acceptance criteria (Given/When/Then), edge cases, and out-of-scope notes. Trigger on "spec", "requirements", "write a spec for", or the start of any new feature. En español — "especificación", "requisitos", "escribe una especificación", "criterios de aceptación".
+description: Use to turn a feature request or design brief into a precise, testable specification BEFORE any tests or code are written. This is step 1 of the Spec-Driven Development loop. Produces requirements, explicit acceptance criteria (Given/When/Then), edge cases, and out-of-scope notes. Trigger on "spec", "requirements", "write a spec for", or the start of any new feature.
 tools: Read, Write, Edit, Grep, Glob, WebSearch
 model: sonnet
 ---

@@ -4,8 +4,6 @@ This repository is a **template** that brings a Spec-Driven Development (SDD) + 
 
 > Stack this workflow targets: **React, React Native, Node.js (Express / Fastify), NestJS, Next.js, C# / ASP.NET Core Web APIs, Avalonia (XAML) desktop, Python (Django / DRF, FastAPI, Flask), PostgreSQL, MongoDB**, tested with **Jest/Vitest**, **xUnit**, and **pytest** (unit) and **Playwright / Detox / Supertest / Testcontainers / WebApplicationFactory / Avalonia.Headless / Appium / httpx** (E2E/integration). Cross-platform, including **macOS (Tahoe) on Apple Silicon** — .NET work targets modern cross-platform **.NET 8/9** (arm64), not the Windows-only .NET Framework.
 
-> **Idioma / Language:** Este proyecto trabaja en **español**. Todos los agentes y comandos responden en español — specs, criterios de aceptación (`AC-n`), nombres de pruebas, comentarios de código, la descripción de los mensajes de commit y las descripciones de PR van en español. Se mantienen en inglés por convención: los prefijos de Conventional Commits (`feat`, `fix`, …), los identificadores `AC-n` y el código / nombres técnicos (APIs, tipos, comandos).
-
 ---
 
 ## The core idea

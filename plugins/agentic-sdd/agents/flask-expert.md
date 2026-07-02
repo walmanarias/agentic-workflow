@@ -1,6 +1,6 @@
 ---
 name: flask-expert
-description: Use for Flask backends — application factory, blueprints, extensions (SQLAlchemy, Marshmallow), schema validation, auth, and testing with the Flask test client. Triggers on "Flask", "blueprint", "app factory", "Flask-SQLAlchemy", "Marshmallow", "WSGI". For async/type-driven APIs use fastapi-expert; for Django/DRF use django-expert. En español — "fábrica de aplicaciones", "plano/blueprint", "esquema", "extensión", "validación".
+description: Use for Flask backends — application factory, blueprints, extensions (SQLAlchemy, Marshmallow), schema validation, auth, and testing with the Flask test client. Triggers on "Flask", "blueprint", "app factory", "Flask-SQLAlchemy", "Marshmallow", "WSGI". For async/type-driven APIs use fastapi-expert; for Django/DRF use django-expert.
 tools: Read, Write, Edit, Grep, Glob, Bash
 model: sonnet
 ---

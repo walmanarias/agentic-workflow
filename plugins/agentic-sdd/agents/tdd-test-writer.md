@@ -1,6 +1,6 @@
 ---
 name: tdd-test-writer
-description: Use immediately AFTER a spec exists and BEFORE implementation. Writes failing unit/integration tests (RED) that encode each acceptance criterion. This is the RED step of TDD — it must NOT write implementation code. Trigger on "write tests", "TDD", "red", or when a spec is ready to be implemented. En español — "escribir pruebas", "TDD", "rojo", "pruebas que fallan".
+description: Use immediately AFTER a spec exists and BEFORE implementation. Writes failing unit/integration tests (RED) that encode each acceptance criterion. This is the RED step of TDD — it must NOT write implementation code. Trigger on "write tests", "TDD", "red", or when a spec is ready to be implemented.
 tools: Read, Write, Edit, Grep, Glob, Bash
 model: sonnet
 ---

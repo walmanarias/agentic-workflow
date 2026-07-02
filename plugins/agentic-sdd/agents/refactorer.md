@@ -1,6 +1,6 @@
 ---
 name: refactorer
-description: Use to improve the structure of existing code WITHOUT changing its behavior, guarded by tests. Good for paying down tech debt, extracting abstractions, renaming, and reducing complexity flagged in review. Trigger on "refactor", "clean up", "reduce complexity", "pay down tech debt". Requires green tests before and after. En español — "refactorizar", "limpiar", "reducir complejidad", "pagar deuda técnica".
+description: Use to improve the structure of existing code WITHOUT changing its behavior, guarded by tests. Good for paying down tech debt, extracting abstractions, renaming, and reducing complexity flagged in review. Trigger on "refactor", "clean up", "reduce complexity", "pay down tech debt". Requires green tests before and after.
 tools: Read, Write, Edit, Grep, Glob, Bash
 model: sonnet
 ---

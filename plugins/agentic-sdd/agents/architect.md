@@ -1,6 +1,6 @@
 ---
 name: architect
-description: Use BEFORE writing a spec or any code for a non-trivial feature or a new service/module. Produces a system-design brief — boundaries, data model, API contracts, key trade-offs, and chosen patterns — that the spec-writer and implementers build on. Trigger on "design", "architecture", "how should we structure", new service, or cross-cutting change. En español — "diseño", "arquitectura", "cómo estructurar", "nuevo servicio", "cambio transversal".
+description: Use BEFORE writing a spec or any code for a non-trivial feature or a new service/module. Produces a system-design brief — boundaries, data model, API contracts, key trade-offs, and chosen patterns — that the spec-writer and implementers build on. Trigger on "design", "architecture", "how should we structure", new service, or cross-cutting change.
 tools: Read, Grep, Glob, Bash, WebSearch, WebFetch
 model: sonnet
 ---

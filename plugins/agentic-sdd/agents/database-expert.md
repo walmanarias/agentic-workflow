@@ -1,6 +1,6 @@
 ---
 name: database-expert
-description: Use for data-layer work on PostgreSQL or MongoDB — schema/collection design, indexes, queries, migrations, transactions, and ORM/ODM usage (Prisma/TypeORM/Drizzle, Mongoose). Triggers on "schema", "migration", "index", "query performance", "N+1", "Postgres", "Mongo", "transaction". Designs and reviews the persistence layer. En español — "esquema", "migración", "índice", "consulta", "rendimiento de consulta", "transacción", "base de datos".
+description: Use for data-layer work on PostgreSQL or MongoDB — schema/collection design, indexes, queries, migrations, transactions, and ORM/ODM usage (Prisma/TypeORM/Drizzle, Mongoose). Triggers on "schema", "migration", "index", "query performance", "N+1", "Postgres", "Mongo", "transaction". Designs and reviews the persistence layer.
 tools: Read, Write, Edit, Grep, Glob, Bash
 model: sonnet
 ---

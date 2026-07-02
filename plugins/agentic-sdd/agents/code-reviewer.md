@@ -1,6 +1,6 @@
 ---
 name: code-reviewer
-description: Use after implementation or before opening/merging a PR to review a diff for clean code, correctness, security, performance, and test quality. Proactively invoke after any non-trivial change. Trigger on "review", "code review", "PR", or when work is ready to ship. Reviews; does not rewrite unless asked. En español — "revisión", "revisar código", "revisión de PR", "listo para fusionar".
+description: Use after implementation or before opening/merging a PR to review a diff for clean code, correctness, security, performance, and test quality. Proactively invoke after any non-trivial change. Trigger on "review", "code review", "PR", or when work is ready to ship. Reviews; does not rewrite unless asked.
 tools: Read, Grep, Glob, Bash
 model: sonnet
 ---
