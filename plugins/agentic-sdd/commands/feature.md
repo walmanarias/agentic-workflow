@@ -15,7 +15,8 @@ Use the `spec-driven-development` skill as the playbook and delegate each phase 
 5. **Refactor:** keep tests green while improving structure.
 6. **E2E:** invoke `e2e-tester` for criteria marked (E2E).
 7. **Review:** invoke `code-reviewer`; address Blocking + Should-fix.
-8. **Describe:** run `/update-pr` to generate/refresh the PR title and description from the branch commits (stack-aware; preserves existing media).
-9. **Verify:** confirm every AC maps to a passing test, coverage/lint/type gates pass, and the spec's Definition of Done is met. Summarize what shipped.
+8. **Curate:** invoke `curator` to feed back on the work + process and update the project's conventions (`docs/conventions.md`) and advisory rules (`.claude/rules/9x-*`). Advisory only — never blocks.
+9. **Describe:** run `/update-pr` to generate/refresh the PR title and description from the branch commits (stack-aware; preserves existing media).
+10. **Verify:** confirm every AC maps to a passing test, coverage/lint/type gates pass, and the spec's Definition of Done is met. Summarize what shipped.
 
 Never write production code before a failing test exists. Never weaken a test to make it pass.

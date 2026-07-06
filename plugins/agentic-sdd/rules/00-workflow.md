@@ -2,7 +2,7 @@
 
 Every behavior change follows the loop, in order:
 
-`/plan` (design, optional) → `/spec` → `/tdd` (RED) → `/implement` (GREEN → refactor) → `/e2e` → `/review` → `/ship`.
+`/plan` (design, optional) → `/spec` → `/tdd` (RED) → `/implement` (GREEN → refactor) → `/e2e` → `/review` → `/curate` → `/ship`.
 
 - No production code is written before a failing test exists for that behavior.
 - Every acceptance criterion in the spec is numbered (`AC-n`) and maps to at least one automated test.
