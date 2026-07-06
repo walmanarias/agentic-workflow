@@ -187,4 +187,3 @@ Mirror the existing files exactly:
 - **AC-5** `/review` (and `code-reviewer`) and `/ship` read `docs/conventions.md` / `9x` rules and
   report conformance *when present*, without failing if they are absent.
 - **AC-6** The plugin's CI (`.github/workflows/ci.yml`) passes with the new files and edits.
-```

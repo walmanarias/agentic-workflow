@@ -12,7 +12,7 @@ It ships as a Claude Code **plugin** (`agentic-sdd`) *and* as a copyable `.claud
 - **14 commands** — `/feature`, `/plan`, `/spec`, `/tdd`, `/implement`, `/e2e`, `/review`, `/curate`, `/refactor`, `/cicd`, `/update-pr`, `/triage-copilot`, `/triage-reviews`, `/ship`.
 - **8 skills** — `spec-driven-development`, `tdd-workflow`, `e2e-testing`, `clean-code`, `stack-testing-recipes`, `cicd-pipelines`, `pr-description`, `curation`.
 - **Enforcing, polyglot hooks** — block focused tests/`debugger`/`Debugger.Break()`/`breakpoint()`, format/lint changed files (ESLint, `dotnet format`, or `ruff`), and gate `git commit` on the toolchains the repo has (JS: lint + types + tests; .NET: format + build `-warnaserror` + test; Python: ruff + mypy + pytest).
-- **5 rule files** — workflow, testing, clean code, security, git hygiene.
+- **6 rule files** — workflow, testing, clean code, structure, security, git hygiene.
 - **CI templates** — a build-and-test GitHub Actions workflow (Node + .NET on macOS Apple Silicon) you can drop into target repos with `--with-ci`. This repo's own CI just validates the plugin.
 
 ## Quick start (this repo)
