@@ -47,7 +47,7 @@ blocks a commit. A human decides when a convention hardens into an enforced gate
 - **Reconcile, don't hoard.** Supersede outdated conventions; don't accumulate contradictions.
 - **Language:** conventions, feedback, and the retrospective follow the conversation's working
   language (English by default; Spanish when the user is working in Spanish); ids
-  (`CONV-n`, `AC-n`) and Conventional-Commit prefixes stay English.
+  (`CONV-<area>-n`, `AC-n`) and Conventional-Commit prefixes stay English.
 
 ## Artifact — `docs/conventions.md`
 Living document, organized by area. Each entry has a stable id, a rationale, an example, and

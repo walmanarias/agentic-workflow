@@ -75,7 +75,7 @@ Convention areas:
 
 | Artifact | Purpose |
 |---|---|
-| `docs/conventions.md` | Living conventions doc, organized by area. Each entry: stable id `CONV-<area>-n`, statement, *why*, good/bad example, provenance (`Since: <feature> (AC-n), <date>`). The curator **reconciles** — refines/supersedes stale entries rather than blindly appending. |
+| `docs/conventions.md` | Living conventions doc, organized by area. Each entry: stable id `CONV-<area>-n`, statement, *why*, good/bad example, provenance (`From: <feature> (AC-n), <date>`). The curator **reconciles** — refines/supersedes stale entries rather than blindly appending. |
 | `.claude/rules/9x-<topic>.md` | Advisory project-local rules, same format as the shipped `00–40` rules, numbered **90+** to sit clearly apart. Header marks them advisory and cites the `CONV` ids they enforce. |
 | `docs/curation/<date>-<feature>.md` | Persisted retrospective/feedback log (kept, for traceability of feedback over time). |
 
@@ -119,7 +119,7 @@ keep the optional **`docs/curation/`** log.
 ### CONV-naming-1: <statement>
 - Why: <rationale>
 - Example: <good vs bad>
-- Since: <feature> (AC-n), <date>
+- From: <feature> (AC-n), <date>
 
 ## Structure
 ## Testing
@@ -161,9 +161,9 @@ Mirror the existing files exactly:
 
 - Agent/command/skill **bodies** follow the current style; **`description` frontmatter** includes
   Spanish trigger synonyms (as in `code-reviewer.md`, `refactorer.md`).
-- **Generated artifacts** (conventions entries, feedback, retrospective) are written in Spanish per
-  `CLAUDE.md`.
-- **Ids** (`CONV-n`, `AC-n`) and **Conventional-Commit prefixes** (`feat`, `fix`, …) stay English.
+- **Generated artifacts** (conventions entries, feedback, retrospective) follow the conversation's
+  working language (English by default; Spanish when the user is working in Spanish) per `CLAUDE.md`.
+- **Ids** (`CONV-<area>-n`, `AC-n`) and **Conventional-Commit prefixes** (`feat`, `fix`, …) stay English.
 
 ## Validation
 

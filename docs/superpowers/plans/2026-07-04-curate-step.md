@@ -12,13 +12,13 @@
 
 - Every `agents/*.md`, `commands/*.md`, and `skills/*/SKILL.md` file MUST have `---` as its first line (CI: "frontmatter present").
 - New agent/command/skill files land under `plugins/agentic-sdd/` (the plugin source), not `.claude/`.
-- i18n (from `CLAUDE.md`): agent/command/skill **bodies** follow the existing English-with-Spanish-triggers style; `description` frontmatter includes Spanish trigger synonyms (as in `code-reviewer.md`). Generated runtime artifacts (conventions, feedback) are Spanish. Ids (`CONV-n`, `AC-n`) and Conventional-Commit prefixes (`feat`, `fix`, …) stay English.
+- i18n (from `CLAUDE.md`): agent/command/skill **bodies** follow the existing English-with-Spanish-triggers style; `description` frontmatter includes Spanish trigger synonyms (as in `code-reviewer.md`). Generated runtime artifacts (conventions, feedback) follow the conversation's working language (English by default; Spanish when the user is working in Spanish). Ids (`CONV-<area>-n`, `AC-n`) and Conventional-Commit prefixes (`feat`, `fix`, …) stay English.
 - Loop position is fixed: `… → /review → /curate → /update-pr → /ship` (curate immediately after review).
 - Curator is **advisory**: it writes only under `docs/` and `.claude/rules/`; it never edits hooks/gates/`settings.json` and never blocks a commit.
 - Rule numbering for curated project rules is `9x` (`.claude/rules/9x-<topic>.md`), 90+.
 - Convention ids are `CONV-<area>-n`.
 - Work happens on branch `feat/curate-step` (already created; the design doc is already committed there).
-- Commit messages: Conventional-Commit prefix in English, description in Spanish, ending with the `Co-Authored-By: Claude Opus 4.8 (1M context) <noreply@anthropic.com>` trailer.
+- Commit messages: Conventional-Commit prefix in English, description in the conversation's working language (English by default; Spanish when the user is working in Spanish), ending with the `Co-Authored-By: Claude Opus 4.8 (1M context) <noreply@anthropic.com>` trailer.
 
 ---
 
@@ -84,24 +84,25 @@ blocks a commit. A human decides when a convention hardens into an enforced gate
 - **Advisory only.** Never touch hooks, gates, or `settings.json`. Never block a commit.
 - **Docs & rules only.** Write only under `docs/` and `.claude/rules/`. Never change production
   code, tests, or the spec.
-- **Trace everything.** Each convention cites where it came from (`Desde: <feature> (AC-n),
-  <fecha>`). Don't invent conventions the code doesn't actually support.
+- **Trace everything.** Each convention cites where it came from (`From: <feature> (AC-n),
+  <date>`). Don't invent conventions the code doesn't actually support.
 - **Reconcile, don't hoard.** Supersede outdated conventions; don't accumulate contradictions.
-- **Language:** conventions, feedback, and the retrospective are written in Spanish; ids
-  (`CONV-n`, `AC-n`) and Conventional-Commit prefixes stay English.
+- **Language:** conventions, feedback, and the retrospective follow the conversation's working
+  language (English by default; Spanish when the user is working in Spanish); ids
+  (`CONV-<area>-n`, `AC-n`) and Conventional-Commit prefixes stay English.
 
 ## Artifact — `docs/conventions.md`
 Living document, organized by area. Each entry has a stable id, a rationale, an example, and
 provenance.
 
-    # Convenciones del proyecto
-    > Documento vivo, curado por `curator` tras cada feature. Advisory.
+    # Project conventions
+    > Living document, curated by `curator` after each feature. Advisory.
 
     ## Naming
-    ### CONV-naming-1: <enunciado de la convención>
-    - Por qué: <razón>
-    - Ejemplo: <bueno vs malo>
-    - Desde: <feature> (AC-n), <fecha>
+    ### CONV-naming-1: <convention statement>
+    - Why: <reason>
+    - Example: <good vs bad>
+    - From: <feature> (AC-n), <date>
 
     ## Structure
     ## Testing
@@ -205,8 +206,9 @@ tools, and methodologies. Apply the `curation` skill.
 - **Trace everything.** Cite provenance on every convention; don't invent conventions the code
   doesn't support.
 - **Reconcile, don't hoard.** Supersede outdated conventions instead of accumulating contradictions.
-- Write conventions, feedback, and the retrospective in Spanish; keep ids (`CONV-n`, `AC-n`) and
-  Conventional-Commit prefixes in English.
+- Write conventions, feedback, and the retrospective in the conversation's working language
+  (English by default; Spanish when the user is working in Spanish); keep ids (`CONV-<area>-n`,
+  `AC-n`) and Conventional-Commit prefixes in English.
 - **Return to the caller:** the feedback, the list of conventions/rules changed (paths + ids), and
   the author action items — not the full file contents.
 ```
