@@ -4,7 +4,7 @@ This repository is a **template** that brings a Spec-Driven Development (SDD) + 
 
 > Stack this workflow targets: **React, React Native, Node.js (Express / Fastify), NestJS, Next.js, C# / ASP.NET Core Web APIs, Avalonia (XAML) desktop, Python (Django / DRF, FastAPI, Flask), PostgreSQL, MongoDB**, tested with **Jest/Vitest**, **xUnit**, and **pytest** (unit) and **Playwright / Detox / Supertest / Testcontainers / WebApplicationFactory / Avalonia.Headless / Appium / httpx** (E2E/integration). Cross-platform, including **macOS (Tahoe) on Apple Silicon** — .NET work targets modern cross-platform **.NET 8/9** (arm64), not the Windows-only .NET Framework.
 
-> **Idioma / Language:** Este proyecto trabaja en **español**. Todos los agentes y comandos responden en español — specs, criterios de aceptación (`AC-n`), nombres de pruebas, comentarios de código, la descripción de los mensajes de commit y las descripciones de PR van en español. Se mantienen en inglés por convención: los prefijos de Conventional Commits (`feat`, `fix`, …), los identificadores `AC-n` y el código / nombres técnicos (APIs, tipos, comandos).
+> **Language:** **English is the default.** Every agent and command matches the language of the conversation — respond in **Spanish only when the user writes in Spanish or explicitly asks for it**; otherwise respond in English. Generated artifacts (specs, acceptance-criteria prose, test names, code comments, commit-message descriptions, PR descriptions) follow that same working language. Regardless of language, these stay in **English by convention**: the Conventional Commits prefixes (`feat`, `fix`, …), the `AC-n` / `CONV-<area>-n` identifiers, and code / technical names (APIs, types, commands).
 
 ---
 
@@ -13,9 +13,9 @@ This repository is a **template** that brings a Spec-Driven Development (SDD) + 
 The **spec is the source of truth**. Tests encode the spec. Code satisfies the tests. Work flows in one direction and every line traces back to a numbered acceptance criterion (`AC-n`).
 
 ```
-/plan → /spec → /tdd → /implement → /e2e → /review → /update-pr → /ship
-design  spec    RED     GREEN+refac   E2E    review    PR desc      ship gate
-(opt)  (truth) (tests) (clean code)  (flows)          (describe)
+/plan → /spec → /tdd → /implement → /e2e → /review → /curate → /update-pr → /ship
+design  spec    RED     GREEN+refac   E2E    review   curate     PR desc      ship gate
+(opt)  (truth) (tests) (clean code)  (flows)         (conv.)     (describe)
 ```
 
 **Two hard rules, everywhere:**
@@ -49,6 +49,7 @@ Slash commands are the entry points. Each delegates to the right agent and appli
 | `/implement <scope>` | Minimal clean code to pass (GREEN), then refactor | `implementer` + stack expert |
 | `/e2e <flow>` | Reliable end-to-end / integration tests | `e2e-tester` |
 | `/review [scope]` | Clean-code / correctness / security / test review of the diff | `code-reviewer` |
+| `/curate [scope]` | Retrospective — feedback on work + process; curates the project's living conventions & advisory rules | `curator` |
 | `/refactor <target>` | Behavior-preserving cleanup, guarded by tests | `refactorer` |
 | `/cicd <target>` | Generates/updates a full GitHub Actions CI/CD pipeline (build→test→deploy, stack-aware) | `cicd-engineer` |
 | `/update-pr [context]` | Generates/updates the PR title & description from branch commits (stack-aware, preserves media) | (gh CLI) + `pr-description` skill |
@@ -72,6 +73,7 @@ Agents are specialists Claude calls automatically (or that commands invoke). Two
 | `implementer` | GREEN → REFACTOR — minimal clean code; never edits tests to pass | source files |
 | `e2e-tester` | Picks the right E2E tool per stack; hermetic, parallel-safe flows | E2E test files |
 | `code-reviewer` | Reviews the diff; findings grouped Blocking / Should-fix / Nit | review output |
+| `curator` | Retrospective — feedback on work + process; curates project conventions & advisory rules | `docs/conventions.md`, `.claude/rules/9x-*` |
 | `refactorer` | Behavior-preserving structural improvements under green tests | source files |
 | `cicd-engineer` | Generates GitHub Actions CI/CD pipelines (build→test→deploy); default staging→approval→prod | `.github/workflows/` |
 
@@ -110,6 +112,7 @@ Skills are reusable playbooks the agents (and you) apply. They live in `plugins/
 | `stack-testing-recipes` | Choosing the right test tool for a specific framework |
 | `cicd-pipelines` | Generating a CI/CD pipeline — promotion model, per-target deploy recipes, security baseline |
 | `pr-description` | Writing/updating a PR title & description from commits — section catalog + style guide (loaded by `/update-pr`) |
+| `curation` | Curating the project's conventions & advisory rules after a feature — harvest method + artifact templates |
 
 ---
 
@@ -152,9 +155,9 @@ agentic-workflow/
 ├── plugins/
 │   └── agentic-sdd/
 │       ├── .claude-plugin/plugin.json
-│       ├── agents/                ← 19 agents (lifecycle + stack experts)
-│       ├── commands/              ← 13 slash commands
-│       ├── skills/                ← 7 skills (+ references)
+│       ├── agents/                ← 20 agents (lifecycle + stack experts)
+│       ├── commands/              ← 14 slash commands
+│       ├── skills/                ← 8 skills (+ references)
 │       ├── hooks/                 ← hooks.json + scripts/
 │       ├── rules/                 ← 6 rule files
 │       └── settings.template.json ← settings used by the copy installer
