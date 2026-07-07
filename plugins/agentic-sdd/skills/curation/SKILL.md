@@ -42,24 +42,25 @@ blocks a commit. A human decides when a convention hardens into an enforced gate
 - **Advisory only.** Never touch hooks, gates, or `settings.json`. Never block a commit.
 - **Docs & rules only.** Write only under `docs/` and `.claude/rules/`. Never change production
   code, tests, or the spec.
-- **Trace everything.** Each convention cites where it came from (`Desde: <feature> (AC-n),
-  <fecha>`). Don't invent conventions the code doesn't actually support.
+- **Trace everything.** Each convention cites where it came from (`From: <feature> (AC-n),
+  <date>`). Don't invent conventions the code doesn't actually support.
 - **Reconcile, don't hoard.** Supersede outdated conventions; don't accumulate contradictions.
-- **Language:** conventions, feedback, and the retrospective are written in Spanish; ids
+- **Language:** conventions, feedback, and the retrospective follow the conversation's working
+  language (English by default; Spanish when the user is working in Spanish); ids
   (`CONV-n`, `AC-n`) and Conventional-Commit prefixes stay English.
 
 ## Artifact — `docs/conventions.md`
 Living document, organized by area. Each entry has a stable id, a rationale, an example, and
 provenance.
 
-    # Convenciones del proyecto
-    > Documento vivo, curado por `curator` tras cada feature. Advisory.
+    # Project conventions
+    > Living document, curated by `curator` after each feature. Advisory.
 
     ## Naming
-    ### CONV-naming-1: <enunciado de la convención>
-    - Por qué: <razón>
-    - Ejemplo: <bueno vs malo>
-    - Desde: <feature> (AC-n), <fecha>
+    ### CONV-naming-1: <convention statement>
+    - Why: <reason>
+    - Example: <good vs bad>
+    - From: <feature> (AC-n), <date>
 
     ## Structure
     ## Testing
@@ -73,7 +74,7 @@ provenance.
 Same shape as the shipped `00–40` rules. Numbered 90+ so it never collides with the template's
 rules. Header marks it advisory and cites the conventions it enforces.
 
-    # Rule: <título> (advisory — curated)
+    # Rule: <title> (advisory — curated)
     > Enforces: CONV-<area>-n, CONV-<area>-m. Advisory — surfaced by /review and /ship, not a commit gate.
 
-    <política corta y accionable, en viñetas>
+    <short, actionable policy, in bullets>

@@ -6,6 +6,8 @@ It ships as a Claude Code **plugin** (`agentic-sdd`) *and* as a copyable `.claud
 
 > **Read [`CLAUDE.md`](./CLAUDE.md) for the full source of truth** on how the agents, skills, commands, hooks, and rules work together.
 
+> **Language:** **English by default.** Agents and commands match the conversation — they answer in **Spanish only when you write in Spanish or ask for it**, and generated artifacts (specs, tests, commit/PR descriptions) follow that same working language. The `AC-n` / `CONV-n` ids, Conventional Commits prefixes, and code / technical names always stay English. See [`CLAUDE.md`](./CLAUDE.md) for the details.
+
 ## What's inside
 
 - **20 agents** — 9 lifecycle agents (`architect`, `spec-writer`, `tdd-test-writer`, `implementer`, `e2e-tester`, `code-reviewer`, `curator`, `refactorer`, `cicd-engineer`) + 11 stack experts (React, React Native, Node/Express/Fastify, NestJS, Next.js, C#/ASP.NET Core, Avalonia/XAML, Django/DRF, FastAPI, Flask, PostgreSQL/MongoDB).

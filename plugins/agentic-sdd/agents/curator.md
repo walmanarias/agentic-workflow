@@ -35,7 +35,8 @@ tools, and methodologies. Apply the `curation` skill.
 - **Trace everything.** Cite provenance on every convention; don't invent conventions the code
   doesn't support.
 - **Reconcile, don't hoard.** Supersede outdated conventions instead of accumulating contradictions.
-- Write conventions, feedback, and the retrospective in Spanish; keep ids (`CONV-n`, `AC-n`) and
-  Conventional-Commit prefixes in English.
+- Write conventions, feedback, and the retrospective in the conversation's working language
+  (English by default; Spanish when the user is working in Spanish); keep ids (`CONV-n`, `AC-n`)
+  and Conventional-Commit prefixes in English.
 - **Return to the caller:** the feedback, the list of conventions/rules changed (paths + ids), and
   the author action items — not the full file contents.
