@@ -11,7 +11,7 @@ Run the pre-ship checklist for: **$ARGUMENTS**
 2. Run the full test suite, E2E suite, lint, and type-check — all must pass.
 3. Verify coverage meets the threshold on changed files.
 4. Run `/review` (code-reviewer) and confirm no Blocking findings remain.
-5. Confirm the curate step ran and the feature conforms to the established conventions (`docs/conventions.md`); no unresolved curation action items remain. Skip if the project has no curated conventions yet.
+5. Confirm the curate step ran. When curated conventions exist (`docs/conventions.md`), verify the feature conforms to them and no unresolved curation action items remain — skip only the conformance part if the project has no curated conventions yet.
 6. Check migration safety (PostgreSQL/Mongo) and backward compatibility of any API/contract change.
 7. Confirm the spec's Definition of Done is fully satisfied.
 8. Ensure the PR is described — if the branch has an open PR, confirm its title/body are current (run `/update-pr` if stale).

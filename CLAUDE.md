@@ -15,7 +15,7 @@ The **spec is the source of truth**. Tests encode the spec. Code satisfies the t
 ```
 /plan → /spec → /tdd → /implement → /e2e → /review → /curate → /update-pr → /ship
 design  spec    RED     GREEN+refac   E2E    review   curate     PR desc      ship gate
-(opt)  (truth) (tests) (clean code)  (flows)         (conv.)
+(opt)  (truth) (tests) (clean code)  (flows)         (conv.)     (describe)
 ```
 
 **Two hard rules, everywhere:**

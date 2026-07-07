@@ -1,7 +1,7 @@
 # Design: The `curate` step
 
 **Date:** 2026-07-04
-**Status:** Approved (design), pending implementation
+**Status:** Approved (design), implemented
 **Repo:** `agentic-workflow` (the `agentic-sdd` plugin/template)
 
 ## Summary
