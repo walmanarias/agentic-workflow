@@ -3,6 +3,7 @@ dist/
 build/
 .next/
 coverage/
+.qa-visual/
 *.log
 .env
 .env.*
