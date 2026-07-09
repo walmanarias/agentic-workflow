@@ -10,8 +10,8 @@ It ships as a Claude Code **plugin** (`agentic-sdd`) *and* as a copyable `.claud
 
 ## What's inside
 
-- **20 agents** — 9 lifecycle agents (`architect`, `spec-writer`, `tdd-test-writer`, `implementer`, `e2e-tester`, `code-reviewer`, `curator`, `refactorer`, `cicd-engineer`) + 11 stack experts (React, React Native, Node/Express/Fastify, NestJS, Next.js, C#/ASP.NET Core, Avalonia/XAML, Django/DRF, FastAPI, Flask, PostgreSQL/MongoDB).
-- **14 commands** — `/feature`, `/plan`, `/spec`, `/tdd`, `/implement`, `/e2e`, `/review`, `/curate`, `/refactor`, `/cicd`, `/update-pr`, `/triage-copilot`, `/triage-reviews`, `/ship`.
+- **21 agents** — 10 lifecycle agents (`architect`, `spec-writer`, `tdd-test-writer`, `implementer`, `e2e-tester`, `qa-visual`, `code-reviewer`, `curator`, `refactorer`, `cicd-engineer`) + 11 stack experts (React, React Native, Node/Express/Fastify, NestJS, Next.js, C#/ASP.NET Core, Avalonia/XAML, Django/DRF, FastAPI, Flask, PostgreSQL/MongoDB).
+- **15 commands** — `/feature`, `/plan`, `/spec`, `/tdd`, `/implement`, `/e2e`, `/qa`, `/review`, `/curate`, `/refactor`, `/cicd`, `/update-pr`, `/triage-copilot`, `/triage-reviews`, `/ship`.
 - **8 skills** — `spec-driven-development`, `tdd-workflow`, `e2e-testing`, `clean-code`, `stack-testing-recipes`, `cicd-pipelines`, `pr-description`, `curation`.
 - **Enforcing, polyglot hooks** — block focused tests/`debugger`/`Debugger.Break()`/`breakpoint()`, format/lint changed files (ESLint, `dotnet format`, or `ruff`), and gate `git commit` on the toolchains the repo has (JS: lint + types + tests; .NET: format + build `-warnaserror` + test; Python: ruff + mypy + pytest).
 - **6 rule files** — workflow, testing, clean code, structure, security, git hygiene.
@@ -115,7 +115,7 @@ The hooks degrade gracefully — missing tooling is skipped, never failed. For t
 ## The workflow in one line
 
 ```
-/plan → /spec → /tdd (RED) → /implement (GREEN + refactor) → /e2e → /review → /curate → /update-pr → /ship
+/plan → /spec → /tdd (RED) → /implement (GREEN + refactor) → /e2e → /qa → /review → /curate → /update-pr → /ship
 ```
 
 No production code before a failing test. Never weaken a test to pass. Commits are gated on lint + types + tests.
