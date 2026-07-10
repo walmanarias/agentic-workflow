@@ -82,7 +82,7 @@ dotnet_root() {
   local r; r="$(repo_root)"
   if ls "$r"/*.sln >/dev/null 2>&1 || ls "$r"/*.csproj >/dev/null 2>&1; then printf '%s' "$r"; return 0; fi
   local hit; hit="$(find "$r" -maxdepth 4 \( -name '*.sln' -o -name '*.csproj' \) \
-        -not -path '*/bin/*' -not -path '*/obj/*' 2>/dev/null | head -1)"
+        -not -path '*/bin/*' -not -path '*/obj/*' -not -path '*/node_modules/*' 2>/dev/null | head -1)"
   [ -n "$hit" ] && dirname "$hit"
 }
 
@@ -91,7 +91,7 @@ dotnet_target() {
   local d; d="$(dotnet_root)"; [ -z "$d" ] && return 0
   local sln; sln="$(ls "$d"/*.sln 2>/dev/null | head -1)"
   if [ -n "$sln" ]; then printf '%s' "$sln"; return 0; fi
-  find "$d" -maxdepth 4 -name '*.csproj' -not -path '*/bin/*' -not -path '*/obj/*' 2>/dev/null | head -1
+  find "$d" -maxdepth 4 -name '*.csproj' -not -path '*/bin/*' -not -path '*/obj/*' -not -path '*/node_modules/*' 2>/dev/null | head -1
 }
 
 # --- Python helpers ---

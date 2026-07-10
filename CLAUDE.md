@@ -13,9 +13,9 @@ This repository is a **template** that brings a Spec-Driven Development (SDD) + 
 The **spec is the source of truth**. Tests encode the spec. Code satisfies the tests. Work flows in one direction and every line traces back to a numbered acceptance criterion (`AC-n`).
 
 ```
-/plan → /spec → /tdd → /implement → /e2e → /review → /curate → /update-pr → /ship
-design  spec    RED     GREEN+refac   E2E    review   curate     PR desc      ship gate
-(opt)  (truth) (tests) (clean code)  (flows)         (conv.)     (describe)
+/plan → /spec → /tdd → /implement → /e2e → /qa → /review → /curate → /update-pr → /ship
+design  spec    RED     GREEN+refac   E2E    QA    review   curate     PR desc      ship gate
+(opt)  (truth) (tests) (clean code)  (flows) (visual)       (conv.)     (describe)
 ```
 
 **Two hard rules, everywhere:**
@@ -48,6 +48,7 @@ Slash commands are the entry points. Each delegates to the right agent and appli
 | `/tdd <spec>` | Writes failing tests (RED) mapped to each `AC-n` | `tdd-test-writer` |
 | `/implement <scope>` | Minimal clean code to pass (GREEN), then refactor | `implementer` + stack expert |
 | `/e2e <flow>` | Reliable end-to-end / integration tests | `e2e-tester` |
+| `/qa [flow]` | Visual QA — captures screenshots and catches visual bugs functional tests miss | `qa-visual` |
 | `/review [scope]` | Clean-code / correctness / security / test review of the diff | `code-reviewer` |
 | `/curate [scope]` | Retrospective — feedback on work + process; curates the project's living conventions & advisory rules | `curator` |
 | `/refactor <target>` | Behavior-preserving cleanup, guarded by tests | `refactorer` |
@@ -72,6 +73,7 @@ Agents are specialists Claude calls automatically (or that commands invoke). Two
 | `tdd-test-writer` | RED — failing tests that encode each `AC-n`; never writes production code | test files |
 | `implementer` | GREEN → REFACTOR — minimal clean code; never edits tests to pass | source files |
 | `e2e-tester` | Picks the right E2E tool per stack; hermetic, parallel-safe flows | E2E test files |
+| `qa-visual` | Drives the app, screenshots user-facing flows, and inspects them for visual bugs | QA report (findings + screenshot paths) |
 | `code-reviewer` | Reviews the diff; findings grouped Blocking / Should-fix / Nit | review output |
 | `curator` | Retrospective — feedback on work + process; curates project conventions & advisory rules | `docs/conventions.md`, `.claude/rules/9x-*` |
 | `refactorer` | Behavior-preserving structural improvements under green tests | source files |
@@ -108,6 +110,7 @@ Skills are reusable playbooks the agents (and you) apply. They live in `plugins/
 | `spec-driven-development` | Starting any non-trivial feature — the full loop + spec template |
 | `tdd-workflow` | Any behavior change — Red/Green/Refactor with Jest/Vitest patterns |
 | `e2e-testing` | Adding E2E/integration tests — tool selection + reliability rules |
+| `visual-qa` | Visually QA a UI — capture-by-stack + inspection checklist + report format |
 | `clean-code` | Writing/reviewing/refactoring — naming, SOLID, smells, checklist |
 | `stack-testing-recipes` | Choosing the right test tool for a specific framework |
 | `cicd-pipelines` | Generating a CI/CD pipeline — promotion model, per-target deploy recipes, security baseline |
@@ -155,9 +158,9 @@ agentic-workflow/
 ├── plugins/
 │   └── agentic-sdd/
 │       ├── .claude-plugin/plugin.json
-│       ├── agents/                ← 20 agents (lifecycle + stack experts)
-│       ├── commands/              ← 14 slash commands
-│       ├── skills/                ← 8 skills (+ references)
+│       ├── agents/                ← 21 agents (lifecycle + stack experts)
+│       ├── commands/              ← 15 slash commands
+│       ├── skills/                ← 9 skills (+ references)
 │       ├── hooks/                 ← hooks.json + scripts/
 │       ├── rules/                 ← 6 rule files
 │       └── settings.template.json ← settings used by the copy installer

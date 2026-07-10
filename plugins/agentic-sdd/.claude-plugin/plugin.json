@@ -2,8 +2,8 @@
   "$schema": "https://json.schemastore.org/claude-code-plugin.json",
   "name": "agentic-sdd",
   "displayName": "Agentic SDD (Spec-Driven + TDD)",
-  "version": "1.0.0",
-  "description": "Spec-Driven Development lifecycle with TDD and E2E testing. Ships lifecycle agents (spec, tdd, implement, e2e, review, refactor, architect) and stack experts (React, React Native, Node/Express/Fastify, NestJS, Next.js, C#/ASP.NET Core, Avalonia/XAML desktop, PostgreSQL, MongoDB), reusable skills, slash commands, and enforcing quality-gate hooks for clean, maintainable, scalable code. Cross-platform incl. macOS Apple Silicon.",
+  "version": "1.1.0",
+  "description": "Spec-Driven Development lifecycle with TDD and E2E testing. Ships lifecycle agents (spec, tdd, implement, e2e, qa, review, refactor, architect) and stack experts (React, React Native, Node/Express/Fastify, NestJS, Next.js, C#/ASP.NET Core, Avalonia/XAML desktop, PostgreSQL, MongoDB), reusable skills, slash commands, and enforcing quality-gate hooks for clean, maintainable, scalable code. Cross-platform incl. macOS Apple Silicon.",
   "author": {
     "name": "Walman",
     "email": "walmanarias@outlook.com"
