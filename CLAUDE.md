@@ -158,8 +158,8 @@ agentic-workflow/
 ├── plugins/
 │   └── agentic-sdd/
 │       ├── .claude-plugin/plugin.json
-│       ├── agents/                ← 20 agents (lifecycle + stack experts)
-│       ├── commands/              ← 14 slash commands
+│       ├── agents/                ← 21 agents (lifecycle + stack experts)
+│       ├── commands/              ← 15 slash commands
 │       ├── skills/                ← 9 skills (+ references)
 │       ├── hooks/                 ← hooks.json + scripts/
 │       ├── rules/                 ← 6 rule files
