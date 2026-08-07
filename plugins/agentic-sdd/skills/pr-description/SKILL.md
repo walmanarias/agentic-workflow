@@ -5,7 +5,7 @@ description: Use when writing or updating a pull request title and description f
 
 # PR Description
 
-Turn a branch's commits into a scannable PR title + description. Add a section **only** when the commits actually contain that kind of change, so one playbook fits any stack (React, React Native, Node/Express/Fastify, NestJS, Next.js, C#/ASP.NET Core, Avalonia, PostgreSQL/MongoDB) — UI-only sections (Accessibility, i18n) appear only for front-end work.
+Turn a branch's commits into a scannable PR title + description. Add a section **only** when the commits actually contain that kind of change, so one playbook fits any stack (React, React Native, Node/Express/Fastify, NestJS, Next.js, C#/ASP.NET Core, Avalonia, .NET MAUI, PostgreSQL/MongoDB) — UI-only sections (Accessibility, i18n) appear only for front-end work.
 
 ## Title
 
