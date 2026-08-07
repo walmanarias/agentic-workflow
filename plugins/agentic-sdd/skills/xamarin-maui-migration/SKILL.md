@@ -20,7 +20,7 @@ Look for the signals that place a project pre-migration:
 - Either way, **land a characterization-test safety net before touching code** — the same "characterize, then change" discipline as any refactor: write tests that lock in the current, pre-migration behavior for anything you can exercise (ViewModel logic, service behavior, critical user flows), then keep them green through the migration.
 
 ## 3. Run the mechanical pass
-Use Microsoft's `dotnet-upgrade-assistant` (`dotnet tool install -g upgrade-assistant`) as the first pass — it rewrites the project file to the MAUI single-project format and handles the bulk of namespace renames. It will **not** handle: custom renderers, Effects, `DependencyService` registrations, or third-party package swaps — those need the manual pass below.
+Use Microsoft's .NET Upgrade Assistant (`dotnet tool install -g upgrade-assistant`; run `upgrade-assistant upgrade`) as the first pass — it rewrites the project file to the MAUI single-project format and handles the bulk of namespace renames. It will **not** handle: custom renderers, Effects, `DependencyService` registrations, or third-party package swaps — those need the manual pass below.
 
 ## 4. Work the manual pass
 Go through `references/breaking-changes-map.md` systematically:

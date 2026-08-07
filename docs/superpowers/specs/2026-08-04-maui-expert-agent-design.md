@@ -73,7 +73,7 @@ A reference table/notes covering: namespace & package mapping (`Xamarin.Forms.*`
 
 - Add ".NET MAUI (mobile)" to the persona's stack-awareness line.
 - Add a short mobile-specific consideration bullet under the boundaries/patterns step: offline-first data (local SQLite + sync strategy), platform-abstraction boundary via DI for platform services, app lifecycle/backgrounding.
-- Note that a migration-shaped design brief should include a current-state → target-state section, referencing `maui-expert`'s breaking-change map rather than re-deriving it.
+- Note that a migration-shaped design brief should include a current-state → target-state section, referencing the `xamarin-maui-migration` skill's breaking-change map rather than re-deriving it.
 
 ## Workflow & docs integration (parity with how `avalonia-expert` was threaded through)
 

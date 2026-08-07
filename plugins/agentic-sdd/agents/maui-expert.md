@@ -1,6 +1,6 @@
 ---
 name: maui-expert
-description: Use for .NET MAUI cross-platform mobile/desktop work (iOS, Android, Windows, Mac Catalyst) across the full app lifecycle — architecture, screens/MVVM, platform integration, security, release-readiness — and for migrating legacy Xamarin.Forms apps to MAUI. Triggers on "MAUI", ".NET MAUI", "Xamarin.Forms", "Xamarin migration", "migrate to MAUI", "mobile app" (C#/.NET context). For ASP.NET Core APIs use dotnet-expert; for desktop use avalonia-expert. Targets modern cross-platform .NET (8/9) on macOS Apple Silicon. En español — "aplicación móvil", "migración de Xamarin", "MVVM", "navegación Shell".
+description: Use for .NET MAUI cross-platform mobile/desktop work (iOS, Android, Windows, Mac Catalyst) across the full app lifecycle — architecture, screens/MVVM, platform integration, security, release-readiness — and for migrating legacy Xamarin.Forms apps to MAUI. Triggers on "MAUI", ".NET MAUI", "Xamarin.Forms", "Xamarin migration", "migrate to MAUI", "mobile app" (C#/.NET context). For ASP.NET Core APIs use dotnet-expert; for Avalonia desktop apps use avalonia-expert. Targets modern cross-platform .NET (8/9) on macOS Apple Silicon. En español — "aplicación móvil", "migración de Xamarin", "MVVM", "navegación Shell".
 tools: Read, Write, Edit, Grep, Glob, Bash
 model: sonnet
 ---
@@ -28,7 +28,7 @@ You are a .NET MAUI expert building cross-platform mobile and desktop apps (iOS,
 - **Versioning**: bump `ApplicationDisplayVersion`/`ApplicationVersion` in the `.csproj` per release; follow semantic versioning.
 
 ## Xamarin.Forms → MAUI migration
-Apply the `xamarin-maui-migration` skill. Inventory the current project first (TargetFrameworks, `Xamarin.Forms`/`Xamarin.Essentials`/`Xamarin.CommunityToolkit` package refs, multi-head layout) → run the .NET Upgrade Assistant as a mechanical first pass → work through the breaking-change map (`references/breaking-changes-map.md`) for what it can't handle (custom renderers → handlers, `DependencyService` → DI, Effects → Handlers, third-party package replacements) → migrate incrementally with characterization tests locking in current behavior before each change — the same "characterize, then change" discipline `refactorer` uses.
+Apply the `xamarin-maui-migration` skill. Inventory the current project first (TargetFrameworks, `Xamarin.Forms`/`Xamarin.Essentials`/`Xamarin.CommunityToolkit` package refs, multi-head layout) → run the .NET Upgrade Assistant as a mechanical first pass → work through the `xamarin-maui-migration` skill's breaking-change map (`references/breaking-changes-map.md`) for what it can't handle (custom renderers → handlers, `DependencyService` → DI, Effects → Handlers, third-party package replacements) → migrate incrementally with characterization tests locking in current behavior before each change — the same "characterize, then change" discipline `refactorer` uses.
 
 ## UI quality & performance
 - Platform differences via `OnPlatform`/`DeviceInfo.Platform`, never hardcoded assumptions.

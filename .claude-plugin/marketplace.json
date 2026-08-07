@@ -11,7 +11,7 @@
     {
       "name": "agentic-sdd",
       "source": "./plugins/agentic-sdd",
-      "description": "Spec-Driven Development with TDD and E2E. Expert agents for React, React Native, Node/Express/Fastify, NestJS, Next.js, C#/ASP.NET Core, Avalonia/XAML desktop, .NET MAUI mobile, PostgreSQL and MongoDB, plus clean-code review and enforcing hooks. Cross-platform incl. macOS Apple Silicon."
+      "description": "Spec-Driven Development with TDD and E2E. Expert agents for React, React Native, Node/Express/Fastify, NestJS, Next.js, C#/ASP.NET Core, Avalonia/XAML desktop, .NET MAUI mobile/desktop, PostgreSQL and MongoDB, plus clean-code review and enforcing hooks. Cross-platform incl. macOS Apple Silicon."
     }
   ]
 }

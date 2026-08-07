@@ -1,6 +1,6 @@
 # Xamarin.Forms → MAUI breaking-change map
 
-## Namespaces & packages
+## Namespaces, types & packages
 | Xamarin.Forms | .NET MAUI |
 |---|---|
 | `Xamarin.Forms` | `Microsoft.Maui.Controls` |
