@@ -21,7 +21,7 @@
 ## UI extensibility
 | Xamarin.Forms | .NET MAUI |
 |---|---|
-| Custom Renderers (`ExportRenderer`, `ViewRenderer<TView, TNativeView>`) | **Handlers** (`ExportHandler`/`ICustomHandler`, or `Handler.SetVirtualView`) — a thinner, non-renderer mapping layer between the cross-platform control and its native counterpart |
+| Custom Renderers (`ExportRenderer`, `ViewRenderer<TView, TNativeView>`) | **Handlers** — derive from `ViewHandler<TVirtualView, TPlatformView>` (or subclass a built-in handler) and register via `builder.ConfigureMauiHandlers(h => h.AddHandler(typeof(MyControl), typeof(MyControlHandler)))` in `MauiProgram.cs`; for behavior-only tweaks prefer a mapper (`…Handler.Mapper.AppendToMapping`) over a full handler. |
 | Effects (`ExportEffect`, `RoutingEffect`) | Handlers (attach behavior directly in a handler mapper, e.g. `Microsoft.Maui.Handlers.EntryHandler.Mapper.AppendToMapping(...)`) |
 | `DependencyService.Get<T>()` | Constructor injection — register the implementation in `MauiProgram.cs` (`builder.Services.AddSingleton<IMyService, MyService>()`) |
 | `Device.RuntimePlatform` / `Device.OnPlatform` | `DeviceInfo.Platform` / `OnPlatform<T>` markup or `OnPlatform` in XAML |
