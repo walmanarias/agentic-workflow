@@ -1,6 +1,6 @@
 ---
 name: xamarin-maui-migration
-description: Use when migrating a Xamarin.Forms app to .NET MAUI — assessing the current project, sequencing the migration, and mapping Xamarin.Forms/Xamarin.Essentials APIs to their MAUI equivalents. Trigger on "migrate to MAUI", "Xamarin.Forms migration", "port Xamarin app", or when a `.csproj` still references `Xamarin.Forms`/`Xamarin.Essentials`. Loaded by `maui-expert`.
+description: Use when migrating a Xamarin.Forms app to .NET MAUI — assessing the current project, sequencing the migration, and mapping Xamarin.Forms/Xamarin.Essentials APIs to their MAUI equivalents. Trigger on "migrate to MAUI", "Xamarin.Forms migration", "port Xamarin app", or when a `.csproj` still references `Xamarin.Forms`/`Xamarin.Essentials`. Loaded by the `maui-expert` skill.
 ---
 
 # Xamarin.Forms → MAUI Migration
@@ -32,7 +32,7 @@ Go through `references/breaking-changes-map.md` systematically:
 6. Shell — mostly compatible; verify route registration and navigation parameter passing still work as expected.
 
 ## 5. Verify parity
-Run the full test pyramid (unit, integration, E2E — see `maui-expert`'s testing section) against the migrated app. A migration is done when the characterization tests from step 2 are green again, not when the code merely compiles.
+Run the full test pyramid (unit, integration, E2E — see the `maui-expert` skill's testing section) against the migrated app. A migration is done when the characterization tests from step 2 are green again, not when the code merely compiles.
 
 ## Rules
 - Never delete or weaken a characterization test to make the migration "pass" — if pre-migration behavior was actually a bug, fix it as a separate, explicit, reviewed change.

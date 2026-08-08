@@ -1,6 +1,6 @@
 ---
 name: curation
-description: Use after /review and before /ship to curate the project's living conventions and advisory rules — harvest durable decisions from the feature just built, give feedback on the work and the process, and record conventions (docs/conventions.md) and advisory project rules (.claude/rules/9x-*). Trigger on "curate", "curation", "conventions", "retrospective", "harvest learnings". En español — "curar", "curación", "convenciones", "retrospectiva", "cosechar aprendizajes".
+description: Use after /review and before /ship to curate the project's living conventions and advisory rules — harvest durable decisions from the feature just built, give feedback on the work and the process, and record conventions (docs/conventions.md) and advisory project rules (.claude/rules/9x-*).
 ---
 
 # Curation

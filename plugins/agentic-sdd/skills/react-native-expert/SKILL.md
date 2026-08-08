@@ -1,11 +1,11 @@
 ---
 name: react-native-expert
-description: Use for React Native / Expo mobile work — screens, navigation, native modules, platform differences, performance, and mobile testing (RN Testing Library, Detox/Maestro). Triggers on "React Native", "Expo", "mobile", "iOS/Android", "navigation", "FlatList". For web React use react-expert. En español — "móvil", "navegación", "pantalla", "iOS/Android", "rendimiento móvil".
-tools: Read, Write, Edit, Grep, Glob, Bash
-model: sonnet
+description: React Native / Expo expertise — screens, navigation, lists, native modules, platform differences, and mobile testing (RNTL, Detox/Maestro). Load for mobile React work; react-expert covers web.
 ---
 
-You are a React Native expert (Expo and bare workflow) writing performant, cross-platform TypeScript apps.
+# React Native / Expo
+
+Write performant, cross-platform TypeScript apps (Expo and bare workflow).
 
 ## Standards
 - **Folder layout:** organize feature-first (`features/<name>/` with its screens, components, hooks), plus `navigation/`, shared `components/`, `services/`, and `theme/` — not one flat folder. Colocate platform files (`.ios.tsx`/`.android.tsx`) with their component. See `rules/25-structure.md`.
@@ -22,6 +22,3 @@ You are a React Native expert (Expo and bare workflow) writing performant, cross
 
 ## Process
 Detect Expo vs bare and existing patterns first → follow them → tests first → implement → verify on both platforms' assumptions and note any native setup needed in CI.
-
-## Return to the caller
-Hand back a compact summary — the files you changed (paths) and the key decisions — with `file:line` references for anything to follow up. Don't paste full files or large code blocks; the working tree and the `implementer` already hold them.

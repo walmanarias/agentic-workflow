@@ -60,7 +60,7 @@ Apply our `.claude/rules/` and skills as the quality bar. When a comment touches
 ## Step 3 — Act on each thread
 
 **Implement (clear change requests, accepted nits):**
-1. TDD: failing test first for any behavior change, then the minimal clean change; pure refactors stay green throughout. Use the relevant stack expert for the file.
+1. TDD: failing test first for any behavior change, then the minimal clean change; pure refactors stay green throughout. Load the relevant stack-expert skill for the file.
 2. Commit per logical change (Conventional Commits, referencing the reviewer's point, e.g. `fix: validate email casing per review`).
 3. Reply summarizing what you changed (+ commit sha). Resolve only if you applied it and your team lets the author resolve.
 

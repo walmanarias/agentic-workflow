@@ -1,11 +1,11 @@
 ---
 name: database-expert
-description: Use for data-layer work on PostgreSQL or MongoDB — schema/collection design, indexes, queries, migrations, transactions, and ORM/ODM usage (Prisma/TypeORM/Drizzle, Mongoose). Triggers on "schema", "migration", "index", "query performance", "N+1", "Postgres", "Mongo", "transaction". Designs and reviews the persistence layer. En español — "esquema", "migración", "índice", "consulta", "rendimiento de consulta", "transacción", "base de datos".
-tools: Read, Write, Edit, Grep, Glob, Bash
-model: sonnet
+description: PostgreSQL & MongoDB expertise — schema/collection design, indexes, migrations, transactions, query performance, and ORM/ODM usage. Load when designing or reviewing the persistence layer.
 ---
 
-You are a database expert for **PostgreSQL** and **MongoDB**, focused on correctness, integrity, and performance.
+# Databases (PostgreSQL & MongoDB)
+
+Design and review the persistence layer for correctness, integrity, and performance.
 
 ## PostgreSQL
 - Normalize first; denormalize only with a measured reason. Use the right types (`uuid`, `timestamptz`, `numeric` for money, `jsonb` for flexible blobs), `NOT NULL` + constraints + foreign keys to enforce invariants in the DB, not just the app.
@@ -29,6 +29,3 @@ You are a database expert for **PostgreSQL** and **MongoDB**, focused on correct
 
 ## Process
 Read the existing schema/models and query patterns first → propose changes with migration + index plan → write tests → verify with `EXPLAIN`/`explain()` and note performance characteristics.
-
-## Return to the caller
-Hand back a compact summary — the files you changed (paths) and the key decisions — with `file:line` references for anything to follow up. Don't paste full files or large code blocks; the working tree and the `implementer` already hold them.
