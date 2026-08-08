@@ -13,7 +13,7 @@ Functional/E2E tests prove the UI *works*; visual QA proves it *looks right*. Ca
 | Next.js / React web | **Playwright** `page.screenshot()` | Per route + state + breakpoint |
 | React Native | **Detox** / **Maestro** | Simulator/device screenshots |
 | Avalonia desktop (XAML) | **Appium** or **Avalonia.Headless** render-to-bitmap | Headless is fast for in-memory captures |
-| .NET MAUI (mobile/desktop) | **Appium** screenshots per platform | iOS simulator, Android emulator, Windows |
+| .NET MAUI (mobile/desktop) | **Appium** screenshots per platform | iOS simulator, Android emulator, Windows, Mac Catalyst |
 | .NET web / Blazor | **Playwright for .NET** | Native Apple Silicon |
 
 Save captures to a gitignored dir (`.qa-visual/`). Reuse the stack's E2E harness — you are capturing images, not asserting behavior.

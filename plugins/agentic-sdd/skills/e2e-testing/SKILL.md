@@ -17,7 +17,7 @@ Verify whole flows through real interfaces. Complement unit tests; don't duplica
 | Any DB integration | **Testcontainers** | Ephemeral PostgreSQL/MongoDB, no mocking the DB |
 | ASP.NET Core Web API (.NET) | **WebApplicationFactory + xUnit** | In-memory host + HttpClient; DB via Testcontainers for .NET; arm64-native on macOS |
 | Avalonia desktop (XAML) | **Appium** (+ Avalonia.Headless for unit) | Drives the real window via the accessibility tree; macOS needs Accessibility permission |
-| .NET MAUI mobile/desktop | **Appium** (+ xUnit for unit/integration) | Drives the compiled app per platform (iOS/Android/Windows) via the accessibility tree; owned by `maui-expert` |
+| .NET MAUI mobile/desktop | **Appium** (+ xUnit for unit/integration) | Drives the compiled app per platform (iOS/Android/Windows/Mac Catalyst) via the accessibility tree; owned by `maui-expert` |
 | .NET web / Blazor UI | **Playwright for .NET** | Native Apple Silicon support |
 
 ## Principles

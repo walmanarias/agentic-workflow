@@ -12,7 +12,7 @@ Pick the same tool `e2e-tester` uses for the stack; you are capturing images, no
 - **Next.js / React (web):** Playwright — navigate each route/state and `page.screenshot()`.
 - **React Native:** Detox / Maestro device or simulator screenshots.
 - **Avalonia desktop (XAML):** Appium screenshots, or `Avalonia.Headless` render-to-bitmap for fast in-memory captures.
-- **.NET MAUI (mobile/desktop):** Appium screenshots per platform (iOS simulator, Android emulator, Windows).
+- **.NET MAUI (mobile/desktop):** Appium screenshots per platform (iOS simulator, Android emulator, Windows, Mac Catalyst).
 - **.NET web / Blazor:** Playwright for .NET.
 
 Save captures to a gitignored dir (`.qa-visual/`). Capture the states people forget: **loading, empty, error, long-text, and narrow + wide breakpoints** — not just the happy path.

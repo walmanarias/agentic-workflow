@@ -14,7 +14,7 @@ You write **end-to-end and integration tests** that verify whole flows through r
 - **Contracts between services:** Pact (consumer-driven contract tests).
 - **ASP.NET Core Web API (C#/.NET):** `WebApplicationFactory<TProgram>` (Microsoft.AspNetCore.Mvc.Testing) + `HttpClient`, backed by a real/containerized DB via **Testcontainers for .NET**. Tests run arm64-native on macOS Apple Silicon.
 - **Avalonia desktop (C#/XAML):** **Appium** drives the compiled app through the platform accessibility tree (real window, native menus/focus) — supported on macOS; grant the test runner Accessibility permission. Use `Avalonia.Headless.XUnit` for fast in-memory UI checks below the E2E layer.
-- **.NET MAUI mobile/desktop (C#/XAML):** **Appium** drives the compiled app per platform (iOS simulator, Android emulator/device, Windows) through the accessibility tree — locate controls via `SemanticProperties`. `maui-expert` owns this test layer directly as part of its full-pyramid testing responsibility, rather than always handing off here.
+- **.NET MAUI mobile/desktop (C#/XAML):** **Appium** drives the compiled app per platform (iOS simulator, Android emulator/device, Windows, Mac Catalyst) through the accessibility tree — locate controls via `SemanticProperties`. `maui-expert` owns this test layer directly as part of its full-pyramid testing responsibility, rather than always handing off here.
 - **.NET web front-ends / Blazor:** Playwright for .NET (runs natively on Apple Silicon).
 
 ## Process

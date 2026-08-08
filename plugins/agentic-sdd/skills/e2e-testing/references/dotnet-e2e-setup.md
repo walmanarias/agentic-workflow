@@ -12,9 +12,9 @@
 - Set `AutomationProperties.AutomationId` on controls; locate by automation id. Keep E2E lean — push logic to headless `[AvaloniaFact]` tests.
 
 ## MAUI (Appium + device/simulator)
-- Use Appium with the platform-specific driver: `XCUITest` (iOS simulator/device), `UiAutomator2` (Android emulator/device), `Windows Application Driver` (Windows). Start the Appium server, point it at the built app package per platform.
+- Use Appium with the platform-specific driver: `XCUITest` (iOS simulator/device), `UiAutomator2` (Android emulator/device), `Windows Application Driver` (Windows), `Mac2Driver` (Mac Catalyst — it runs as a native macOS app, not iOS, so it needs Apple's macOS UI-testing driver rather than XCUITest). Start the Appium server, point it at the built app package per platform.
 - Set `SemanticProperties.Description`/`AutomationId` on controls; locate by those, not by visual position.
-- iOS/Android runs need a simulator/emulator (or a device farm) — CI needs a macOS runner for iOS, and Android SDK/emulator setup for Android.
+- iOS/Android runs need a simulator/emulator (or a device farm) — CI needs a macOS runner for iOS and Mac Catalyst, and Android SDK/emulator setup for Android.
 - Keep E2E lean — push ViewModel/service logic to xUnit unit tests; reserve Appium for the highest-value user journeys.
 
 ## .NET web / Blazor
