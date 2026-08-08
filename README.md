@@ -10,12 +10,36 @@ It ships as a Claude Code **plugin** (`agentic-sdd`) *and* as a copyable `.claud
 
 ## What's inside
 
-- **22 agents** — 10 lifecycle agents (`architect`, `spec-writer`, `tdd-test-writer`, `implementer`, `e2e-tester`, `qa-visual`, `code-reviewer`, `curator`, `refactorer`, `cicd-engineer`) + 12 stack experts (React, React Native, Node/Express/Fastify, NestJS, Next.js, C#/ASP.NET Core, Avalonia/XAML, .NET MAUI, Django/DRF, FastAPI, Flask, PostgreSQL/MongoDB).
+- **10 lifecycle agents** — `architect`, `spec-writer`, `tdd-test-writer`, `implementer`, `e2e-tester`, `qa-visual`, `code-reviewer`, `curator`, `refactorer`, `cicd-engineer`.
 - **15 commands** — `/feature`, `/plan`, `/spec`, `/tdd`, `/implement`, `/e2e`, `/qa`, `/review`, `/curate`, `/refactor`, `/cicd`, `/update-pr`, `/triage-copilot`, `/triage-reviews`, `/ship`.
-- **10 skills** — `spec-driven-development`, `tdd-workflow`, `e2e-testing`, `visual-qa`, `clean-code`, `stack-testing-recipes`, `cicd-pipelines`, `pr-description`, `xamarin-maui-migration`, `curation`.
+- **22 skills** — 10 workflow playbooks (`spec-driven-development`, `tdd-workflow`, `e2e-testing`, `visual-qa`, `clean-code`, `stack-testing-recipes`, `cicd-pipelines`, `pr-description`, `xamarin-maui-migration`, `curation`) + 12 **stack-expert skills** (React, React Native, Node/Express/Fastify, NestJS, Next.js, Django/DRF, FastAPI, Flask, C#/ASP.NET Core, Avalonia/XAML, .NET MAUI, PostgreSQL/MongoDB). Stack expertise ships as skills rather than agents so `implementer`, `tdd-test-writer`, and `e2e-tester` load it into their own context instead of spawning a second agent — same knowledge, far fewer tokens. "Use the nestjs-expert" still works; it loads the skill.
 - **Enforcing, polyglot hooks** — block focused tests/`debugger`/`Debugger.Break()`/`breakpoint()`, format/lint changed files (ESLint, `dotnet format`, or `ruff`), and gate `git commit` on the toolchains the repo has (JS: lint + types + tests; .NET: format + build `-warnaserror` + test; Python: ruff + mypy + pytest).
 - **6 rule files** — workflow, testing, clean code, structure, security, git hygiene.
 - **CI templates** — a build-and-test GitHub Actions workflow (Node + .NET on macOS Apple Silicon) you can drop into target repos with `--with-ci`. This repo's own CI just validates the plugin.
+
+## Repository layout
+
+```
+agentic-workflow/
+├── CLAUDE.md                      ← the operational contract the agents follow
+├── README.md                      ← install + quick start (this file)
+├── .claude-plugin/
+│   └── marketplace.json           ← marketplace manifest (for /plugin install)
+├── plugins/
+│   └── agentic-sdd/
+│       ├── .claude-plugin/plugin.json
+│       ├── agents/                ← 10 lifecycle agents
+│       ├── commands/              ← 15 slash commands
+│       ├── skills/                ← 22 skills (10 playbooks + 12 stack experts)
+│       ├── hooks/                 ← hooks.json + scripts/
+│       ├── rules/                 ← 6 rule files
+│       └── settings.template.json ← settings used by the copy installer
+├── templates/
+│   └── github-ci.yml              ← build+test CI for TARGET repos (via --with-ci)
+├── .github/workflows/ci.yml       ← validates THIS plugin (not part of the plugin)
+└── scripts/
+    └── install.sh                 ← copy the workflow into a repo's .claude/
+```
 
 ## Quick start (this repo)
 

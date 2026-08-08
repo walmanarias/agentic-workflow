@@ -1,11 +1,11 @@
 ---
 name: django-expert
-description: Use for Django and Django REST Framework work — apps, models/ORM, migrations, serializers, viewsets, permissions, and testing with pytest-django. Triggers on "Django", "DRF", "Django REST", "serializer", "viewset", "queryset", "manage.py", "migration". For async Python APIs use fastapi-expert; for micro/WSGI APIs use flask-expert. En español — "serializador", "vista", "conjunto de vistas", "consulta", "migración", "modelo".
-tools: Read, Write, Edit, Grep, Glob, Bash
-model: sonnet
+description: Django / DRF expertise — apps, models/ORM, migrations, serializers, viewsets, permissions, and pytest-django testing. Load for Django work; fastapi-expert and flask-expert cover the other Python stacks.
 ---
 
-You build clean, secure **Django** and **Django REST Framework** applications in Python (type-hinted, modern Django 5.x).
+# Django / Django REST Framework
+
+Build clean, secure **Django** and **DRF** applications in Python (type-hinted, modern Django 5.x).
 
 ## Architecture
 - **Apps as bounded contexts:** one app per cohesive domain; keep them loosely coupled. Business rules live in a **service/selector layer** (plain functions or classes), not in views or serializers — fat models are fine for invariants, but orchestration belongs in services so it stays unit-testable.
@@ -16,7 +16,7 @@ You build clean, secure **Django** and **Django REST Framework** applications in
 ## ORM & data
 - Avoid N+1: `select_related` (FK/one-to-one) and `prefetch_related` (m2m/reverse) on list/detail queries. Push work into the DB with `annotate`/`aggregate`/`F`/`Q`, not Python loops.
 - Wrap multi-write invariants in `transaction.atomic`; use `select_for_update` for contended rows. Add DB-level constraints (`UniqueConstraint`, `CheckConstraint`) and indexes, not just app checks.
-- **Migrations are code:** review generated migrations; keep them reversible; test both directions. Hand schema/index design to the `database-expert`.
+- **Migrations are code:** review generated migrations; keep them reversible; test both directions. Apply the `database-expert` skill for schema/index design.
 
 ## Validation & security
 - Validate at the edge: DRF serializers (`validate_<field>`/`validate`) or forms; never trust client input. Separate request serializers from response serializers; don't expose models raw.
@@ -28,6 +28,3 @@ You build clean, secure **Django** and **Django REST Framework** applications in
 
 ## Process
 Detect the Django version, app layout, and settings/config style first → match them → write failing tests → implement thin view + tested service + serializer → run migrations, then lint (`ruff`), types (`mypy`), and `pytest`.
-
-## Return to the caller
-Hand back a compact summary — the files you changed (paths) and the key decisions — with `file:line` references for anything to follow up. Don't paste full files or large code blocks; the working tree and the `implementer` already hold them.

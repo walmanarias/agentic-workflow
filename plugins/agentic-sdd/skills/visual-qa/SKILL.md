@@ -21,6 +21,12 @@ Save captures to a gitignored dir (`.qa-visual/`). Reuse the stack's E2E harness
 ## Capture these states (not just the happy path)
 Loading · empty · error · long-text/overflow · narrow **and** wide breakpoints · light **and** dark theme.
 
+## Screenshot budget
+Screenshots are the most expensive tokens in the whole loop — spend them deliberately:
+- Capture at device-pixel-ratio 1 (e.g. Playwright `deviceScaleFactor: 1`) and a standard viewport (1280×800 desktop, 390×844 mobile). Viewport shots by default; full-page only when a finding needs it.
+- **At most 8 screenshots per flow** — prioritize the riskiest states above over exhaustive coverage, and note in the report what you skipped rather than silently capturing extras.
+- On the fix → re-inspect loop, re-capture and re-read **only the screens whose findings were fixed**, never the full sweep.
+
 ## Inspection checklist (read each screenshot for)
 - Broken or overlapping layout; content off-screen.
 - Overflow / clipping; text truncated or wrapping badly.

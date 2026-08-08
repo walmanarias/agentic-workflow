@@ -15,5 +15,5 @@ Deploy with **Wrangler**. Token-based (Cloudflare has no GitHub OIDC).
 
 - **Secrets (per environment):** `CLOUDFLARE_API_TOKEN` (scoped to Workers/Pages edit), `CLOUDFLARE_ACCOUNT_ID`.
 - **Staging vs prod:** separate Wrangler environments (`wrangler deploy --env staging|production`) or separate Pages projects; map each to a GitHub Environment.
-- **Bindings/migrations:** apply D1 migrations (`wrangler d1 migrations apply`) before the Worker deploy; hand schema design to `database-expert`.
+- **Bindings/migrations:** apply D1 migrations (`wrangler d1 migrations apply`) before the Worker deploy; apply the `database-expert` skill for schema design.
 - **Rollback:** `wrangler rollback` (Workers) or redeploy the prior Pages deployment.

@@ -1,7 +1,7 @@
 ---
 description: Evaluate GitHub Copilot's PR review comments, decide which are valid, then apply fixes (TDD) or reply with reasoning, and resolve the threads.
 argument-hint: [PR number or URL] [optional guidance, e.g. "be conservative"]
-allowed-tools: Bash, Read, Write, Edit, Grep, Glob
+allowed-tools: Bash, Read, Write, Edit, Grep, Glob, Skill
 model: sonnet
 ---
 
@@ -63,7 +63,7 @@ Be fair and specific. Judge the idea, not the source — Copilot is often right 
 ## Step 3 — Act on each thread
 
 **Accept → implement (TDD):**
-1. If it changes behavior, add or adjust a failing test first (or note the existing test that covers it), then make the minimal clean change so tests pass. If it's a pure refactor, keep tests green throughout. Use the relevant stack expert for the file's technology.
+1. If it changes behavior, add or adjust a failing test first (or note the existing test that covers it), then make the minimal clean change so tests pass. If it's a pure refactor, keep tests green throughout. Load the relevant stack-expert skill for the file's technology.
 2. Stage the change. Keep one focused commit per logical fix (Conventional Commits, e.g. `fix: guard null user in AuthService (copilot review)`).
 3. Reply on the thread summarizing what you changed and why, then resolve it.
 

@@ -1,11 +1,11 @@
 ---
 name: react-expert
-description: Use for React web work — components, hooks, state management, performance, and React Testing Library tests. Pulls in for "React component", "hook", "re-render", "context", "memo", or web UI tasks (non-Next-specific). For Next.js app-router specifics use nextjs-expert; for mobile use react-native-expert. En español — "componente", "gancho/hook", "re-renderizado", "estado", "interfaz web".
-tools: Read, Write, Edit, Grep, Glob, Bash
-model: sonnet
+description: React web expertise — components, hooks, state, performance, and React Testing Library tests. Load when implementing or testing React web UI. For Next.js App Router specifics use nextjs-expert; for mobile use react-native-expert.
 ---
 
-You are a React expert who writes accessible, performant, well-tested function components in TypeScript.
+# React (web)
+
+Write accessible, performant, well-tested function components in TypeScript.
 
 ## Standards
 - Function components + hooks only. Keep components small and presentational where possible; lift data-fetching and side effects into hooks/services.
@@ -21,6 +21,3 @@ You are a React expert who writes accessible, performant, well-tested function c
 
 ## Process
 Read existing components and conventions first → follow the repo's patterns → write/extend tests with `tdd-test-writer` discipline → implement → verify lint/types/tests. Flag accessibility and performance risks explicitly.
-
-## Return to the caller
-Hand back a compact summary — the files you changed (paths) and the key decisions — with `file:line` references for anything to follow up. Don't paste full files or large code blocks; the working tree and the `implementer` already hold them.

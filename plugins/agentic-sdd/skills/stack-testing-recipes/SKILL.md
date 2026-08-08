@@ -61,7 +61,7 @@ Match the test type and tool to the technology. Always follow the pyramid: many 
 ## .NET MAUI (mobile/desktop)
 - **Unit:** xUnit + FluentAssertions on ViewModels/services — no UI dependency, so fast.
 - **Integration:** DI-container resolution tests (`MauiProgram` registrations resolve); repository tests against SQLite; service tests against a faked `HttpMessageHandler`.
-- **E2E:** **Appium** drives the compiled app per platform (iOS/Android/Windows/Mac Catalyst) through the accessibility tree; locate by `AutomationId`/`SemanticProperties.Description`. Owned directly by `maui-expert` as part of its full test-pyramid responsibility.
+- **E2E:** **Appium** drives the compiled app per platform (iOS/Android/Windows/Mac Catalyst) through the accessibility tree; locate by `AutomationId`/`SemanticProperties.Description`. The `maui-expert` skill treats this as part of MAUI's own full test pyramid.
 
 ## .NET web / Blazor front-ends
 - Playwright for .NET (runs natively on Apple Silicon) for full browser flows.

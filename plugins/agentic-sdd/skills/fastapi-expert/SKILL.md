@@ -1,11 +1,11 @@
 ---
 name: fastapi-expert
-description: Use for FastAPI backends — routers, dependency injection (Depends), Pydantic v2 models, async endpoints, async SQLAlchemy, OAuth2/JWT auth, and testing with httpx. Triggers on "FastAPI", "Pydantic", "Depends", "async endpoint", "APIRouter", "uvicorn". For Django/DRF use django-expert; for Flask/WSGI use flask-expert. En español — "punto final asíncrono", "dependencia", "asíncrono", "esquema", "autenticación".
-tools: Read, Write, Edit, Grep, Glob, Bash
-model: sonnet
+description: FastAPI expertise — routers, Depends DI, Pydantic v2, async SQLAlchemy, OAuth2/JWT, and httpx testing. Load for FastAPI services; django-expert and flask-expert cover the other Python stacks.
 ---
 
-You build clean, secure **FastAPI** services in modern async Python (3.11+), typed end to end.
+# FastAPI
+
+Build clean, secure **FastAPI** services in modern async Python (3.11+), typed end to end.
 
 ## Architecture
 - Layered: `routers` (HTTP only) → `services` (domain logic) → `repositories` (persistence). Routers stay thin; business rules never import the web framework or the DB driver directly.
@@ -19,7 +19,7 @@ You build clean, secure **FastAPI** services in modern async Python (3.11+), typ
 
 ## Async & data
 - Endpoints and DB access are `async` all the way down — async SQLAlchemy 2.0 (or an async driver); never make blocking calls inside `async def` (offload CPU/blocking work to `run_in_executor`/a worker).
-- One session per request via a dependency; wrap multi-write invariants in a transaction. No N+1 — eager-load relations. Hand schema/index design to the `database-expert`.
+- One session per request via a dependency; wrap multi-write invariants in a transaction. No N+1 — eager-load relations. Apply the `database-expert` skill for schema/index design.
 
 ## Security
 - OAuth2/JWT through security dependencies (`OAuth2PasswordBearer` / `Security`); enforce authz in dependencies, not scattered in handlers. Validate every input via Pydantic; return consistent error shapes (exception handlers → RFC-7807-style problem details). CORS and rate limiting configured explicitly.
@@ -29,6 +29,3 @@ You build clean, secure **FastAPI** services in modern async Python (3.11+), typ
 
 ## Process
 Detect the app layout, Python/FastAPI version, and async-DB setup first → match them → write failing tests → implement thin router + tested service with proper `Depends` + Pydantic schemas → run lint (`ruff`), types (`mypy`), and `pytest`.
-
-## Return to the caller
-Hand back a compact summary — the files you changed (paths) and the key decisions — with `file:line` references for anything to follow up. Don't paste full files or large code blocks; the working tree and the `implementer` already hold them.

@@ -74,8 +74,9 @@ jobs:
           echo '{"scripts":{}}' > "$TMP/package.json"
           bash scripts/install.sh "$TMP" --with-ci
           test -f "$TMP/.claude/commands/feature.md"
-          test -f "$TMP/.claude/agents/dotnet-expert.md"
+          test -f "$TMP/.claude/agents/implementer.md"
           test -f "$TMP/.claude/agents/cicd-engineer.md"
+          test -f "$TMP/.claude/skills/dotnet-expert/SKILL.md"
           test -f "$TMP/.claude/skills/cicd-pipelines/SKILL.md"
           test -f "$TMP/.github/workflows/ci.yml"
           python3 -c "import json; json.load(open('$TMP/.claude/settings.json'))"

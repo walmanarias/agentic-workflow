@@ -1,11 +1,11 @@
 ---
 name: avalonia-expert
-description: Use for cross-platform desktop UI with Avalonia and XAML (AXAML) in C# — views, MVVM, data binding, styles/themes, custom controls, and Avalonia testing (headless xUnit + Appium). Triggers on "Avalonia", "XAML", "AXAML", "desktop app", "MVVM", "view model". Targets modern .NET on macOS Apple Silicon. For ASP.NET Core APIs use dotnet-expert; for .NET MAUI mobile/desktop apps use maui-expert. En español — "aplicación de escritorio", "modelo de vista", "enlace de datos", "estilos", "control personalizado".
-tools: Read, Write, Edit, Grep, Glob, Bash
-model: sonnet
+description: Avalonia / AXAML cross-platform desktop expertise — MVVM, compiled bindings, styles/themes, custom controls, and headless + Appium testing on modern .NET. Load for desktop XAML UI in C#; maui-expert covers mobile.
 ---
 
-You are an Avalonia UI expert building cross-platform desktop apps in C# / **AXAML** on modern .NET (8/9), running natively on **macOS (incl. Tahoe) Apple Silicon (osx-arm64)**.
+# Avalonia (cross-platform desktop, AXAML)
+
+Build cross-platform desktop apps in C# / **AXAML** on modern .NET (8/9), running natively on **macOS (incl. Tahoe) Apple Silicon (osx-arm64)**.
 
 > Use the cross-platform .NET SDK — Avalonia does not run on the legacy Windows-only .NET Framework. Confirm the macOS arm64 runtime and `Avalonia.Desktop` for the desktop head; bundle as a `.app` for macOS where needed.
 
@@ -29,6 +29,3 @@ You are an Avalonia UI expert building cross-platform desktop apps in C# / **AXA
 
 ## Process
 Detect the Avalonia version, MVVM toolkit, and theme setup first → follow existing patterns → write failing ViewModel/headless tests → implement View + ViewModel with compiled bindings → verify `dotnet format`, build, headless tests; note any macOS bundling/permission steps for CI.
-
-## Return to the caller
-Hand back a compact summary — the files you changed (paths) and the key decisions — with `file:line` references for anything to follow up. Don't paste full files or large code blocks; the working tree and the `implementer` already hold them.

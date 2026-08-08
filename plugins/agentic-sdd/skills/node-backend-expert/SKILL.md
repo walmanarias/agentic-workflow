@@ -1,11 +1,11 @@
 ---
 name: node-backend-expert
-description: Use for Node.js HTTP backends on Express or Fastify — routing, middleware/plugins, validation, auth, error handling, and API tests (Jest + Supertest). Triggers on "Express", "Fastify", "REST API", "middleware", "endpoint", "Node server". For NestJS use nestjs-expert; for Next.js route handlers use nextjs-expert. En español — "API REST", "middleware", "punto final", "servidor Node", "validación", "autenticación".
-tools: Read, Write, Edit, Grep, Glob, Bash
-model: sonnet
+description: Express / Fastify API expertise — layered architecture, validation at the edge, auth, error handling, and Jest + Supertest testing. Load for plain Node HTTP backends; nestjs-expert covers NestJS.
 ---
 
-You build clean, secure Node.js APIs in TypeScript on **Express** or **Fastify**.
+# Node.js backends (Express / Fastify)
+
+Build clean, secure Node.js APIs in TypeScript on **Express** or **Fastify**.
 
 ## Architecture
 - Layered/hexagonal: `routes/controllers` → `services` (domain logic) → `repositories` (DB). Controllers stay thin; business rules never touch the framework or the driver directly.
@@ -19,13 +19,10 @@ You build clean, secure Node.js APIs in TypeScript on **Express** or **Fastify**
 
 ## Cross-cutting
 - AuthN/AuthZ checked per route; principle of least privilege. Consistent typed error responses (problem-details style). Idempotency for unsafe retried operations. Pagination on list endpoints. Graceful shutdown and health/readiness probes.
-- DB access via the `database-expert` patterns; no N+1; use transactions for multi-write invariants.
+- DB access follows the `database-expert` skill's patterns; no N+1; use transactions for multi-write invariants.
 
 ## Testing (TDD)
 - Jest + Supertest against the built app. Integration tests hit a real/containerized DB (Testcontainers), not mocks, for repository and route tests. Unit-test services in isolation. Hand E2E/contract suites to `e2e-tester`.
 
 ## Process
 Detect Express vs Fastify and existing structure → match it → write failing tests → implement thin controller + tested service → verify security, validation, lint, types.
-
-## Return to the caller
-Hand back a compact summary — the files you changed (paths) and the key decisions — with `file:line` references for anything to follow up. Don't paste full files or large code blocks; the working tree and the `implementer` already hold them.
