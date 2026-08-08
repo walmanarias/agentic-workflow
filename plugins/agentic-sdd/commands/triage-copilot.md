@@ -1,7 +1,7 @@
 ---
 description: Evaluate GitHub Copilot's PR review comments, decide which are valid, then apply fixes (TDD) or reply with reasoning, and resolve the threads.
 argument-hint: [PR number or URL] [optional guidance, e.g. "be conservative"]
-allowed-tools: Bash, Read, Write, Edit, Grep, Glob
+allowed-tools: Bash, Read, Write, Edit, Grep, Glob, Skill
 model: sonnet
 ---
 
