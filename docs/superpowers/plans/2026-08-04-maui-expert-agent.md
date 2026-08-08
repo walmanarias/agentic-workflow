@@ -1,6 +1,6 @@
 # `maui-expert` Agent Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking. (These are Claude Code session-level workflow skills from the author's personal "Superpowers" plugin — not part of this repo's own `agentic-sdd` plugin. Skip this note and just work through the numbered tasks below if you don't have that plugin installed.)
 
 **Goal:** Add a full-lifecycle `.NET MAUI` stack-expert agent (`maui-expert`) plus its `xamarin-maui-migration` skill to the `agentic-sdd` plugin, and thread both through every existing touchpoint that already carries `avalonia-expert` (agent cross-references, testing skills, plugin manifests, doc counts).
 

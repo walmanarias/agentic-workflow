@@ -1,7 +1,7 @@
 # Design — `maui-expert` agent (.NET MAUI + Xamarin.Forms migration)
 
 **Date:** 2026-08-04
-**Status:** Approved (design); pending implementation plan
+**Status:** Implemented — see `docs/superpowers/plans/2026-08-04-maui-expert-agent.md` and PR #8
 
 ## Goal
 
