@@ -22,7 +22,7 @@ Add a stack-expert agent to `agentic-sdd` for **.NET MAUI** cross-platform mobil
 ## Non-goals (YAGNI / scope guard)
 
 - No new slash command.
-- No fix for `plugins/agentic-sdd/README.md`'s existing staleness (it already undercounts agents/skills independent of this change — pre-existing drift, out of scope here).
+- `plugins/agentic-sdd/README.md`'s pre-existing staleness was originally scoped out here as unrelated drift, but was fixed during PR #8's review once flagged as directly relevant (its component counts/lists now match reality).
 - No fix for `architect.md`'s persona line only naming the JS/TS stack even though .NET/Avalonia/Django/etc. already exist — out of scope; this change only *adds* MAUI awareness, it doesn't rewrite the agent's framing for every other already-missing stack.
 - No Xamarin.Android/Xamarin.iOS (classic, non-Forms) migration guidance — scoped to **Xamarin.Forms → MAUI** specifically, since that's what was asked for.
 - No build/signing/store-submission pipeline authoring inside `maui-expert` — that's `cicd-engineer`'s job (extended in a follow-up if/when someone asks for MAUI CI/CD specifically; not part of this change, see `cicd-pipelines` skill's existing target table).
@@ -102,4 +102,4 @@ Markdown-only deliverable (agent/skill/command config), same as the CI/CD-agent 
 
 ## Open questions / follow-ups
 
-None blocking. `plugins/agentic-sdd/README.md`'s pre-existing staleness and `architect.md`'s narrow persona framing are noted as explicit non-goals above, not silently left inconsistent.
+None blocking. `plugins/agentic-sdd/README.md`'s pre-existing staleness was fixed during PR #8's review (see the non-goals note above); `architect.md`'s narrow persona framing remains an explicit non-goal, not silently left inconsistent.

@@ -6,9 +6,9 @@
 | `Xamarin.Forms` | `Microsoft.Maui.Controls` |
 | `Xamarin.Forms.Xaml` | `Microsoft.Maui.Controls.Xaml` |
 | `Xamarin.Forms.Application` | `Microsoft.Maui.Controls.Application` |
-| `Xamarin.Essentials` | Built in — `Microsoft.Maui.ApplicationModel`, `Microsoft.Maui.Devices`, `Microsoft.Maui.Storage`, `Microsoft.Maui.Networking` (no separate package; part of the MAUI SDK) |
+| `Xamarin.Essentials` | Built-in — `Microsoft.Maui.ApplicationModel`, `Microsoft.Maui.Devices`, `Microsoft.Maui.Storage`, `Microsoft.Maui.Networking` (no separate package; part of the MAUI SDK) |
 | `Xamarin.CommunityToolkit` | `CommunityToolkit.Maui` (NuGet) |
-| `Xamarin.Forms.Shell` | `Microsoft.Maui.Controls` (Shell is built in, no separate namespace) |
+| `Xamarin.Forms.Shell` | `Microsoft.Maui.Controls` (Shell is built-in, no separate namespace) |
 | `Xamarin.Forms.PlatformConfiguration` | `Microsoft.Maui.Controls.PlatformConfiguration` |
 
 ## Project structure

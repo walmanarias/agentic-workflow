@@ -24,7 +24,7 @@ Use Microsoft's .NET Upgrade Assistant (`dotnet tool install -g upgrade-assistan
 
 ## 4. Work the manual pass
 Go through `references/breaking-changes-map.md` systematically:
-1. Namespaces & packages (`Xamarin.Forms.*` → `Microsoft.Maui.Controls.*`, `Xamarin.Essentials` → built-in Maui Essentials APIs, `Xamarin.CommunityToolkit` → `CommunityToolkit.Maui`).
+1. Namespaces & packages (`Xamarin.Forms.*` → `Microsoft.Maui.Controls.*`, `Xamarin.Essentials` → built-in MAUI Essentials APIs, `Xamarin.CommunityToolkit` → `CommunityToolkit.Maui`).
 2. Renderers → Handlers for every custom control.
 3. `DependencyService` → constructor DI via `MauiProgram`.
 4. Effects → Handlers.
