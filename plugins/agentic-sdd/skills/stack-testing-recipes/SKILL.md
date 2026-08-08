@@ -58,6 +58,11 @@ Match the test type and tool to the technology. Always follow the pyramid: many 
 - **Headless UI:** `Avalonia.Headless.XUnit` with `[AvaloniaFact]`/`[AvaloniaTheory]` — control logic, layout, and bindings in-memory, no display (ideal for CI).
 - **E2E UI:** **Appium** drives the compiled app via the accessibility tree; macOS requires granting the test runner Accessibility permission. Set `AutomationProperties` so controls are findable.
 
+## .NET MAUI (mobile/desktop)
+- **Unit:** xUnit + FluentAssertions on ViewModels/services — no UI dependency, so fast.
+- **Integration:** DI-container resolution tests (`MauiProgram` registrations resolve); repository tests against SQLite; service tests against a faked `HttpMessageHandler`.
+- **E2E:** **Appium** drives the compiled app per platform (iOS/Android/Windows/Mac Catalyst) through the accessibility tree; locate by `AutomationId`/`SemanticProperties.Description`. Owned directly by `maui-expert` as part of its full test-pyramid responsibility.
+
 ## .NET web / Blazor front-ends
 - Playwright for .NET (runs natively on Apple Silicon) for full browser flows.
 

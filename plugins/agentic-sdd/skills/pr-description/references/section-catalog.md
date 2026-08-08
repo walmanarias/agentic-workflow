@@ -24,7 +24,7 @@ Add if test files or testing keywords appear. Detect across the whole stack:
 - **JS/TS unit:** `*.test.ts(x)` / `*.spec.ts(x)` (Jest/Vitest, React Testing Library, RN Testing Library)
 - **JS/TS integration / E2E:** Playwright (`e2e/**/*.spec.ts`), Detox/Maestro (`*.e2e.ts`), Supertest (API)
 - **.NET unit:** `*Tests.cs` in a `*.Tests` project (xUnit + FluentAssertions)
-- **.NET integration / E2E:** `WebApplicationFactory`, Testcontainers for .NET, Avalonia headless (`[AvaloniaFact]`), Appium
+- **.NET integration / E2E:** `WebApplicationFactory`, Testcontainers for .NET, Avalonia headless (`[AvaloniaFact]`), Appium (Avalonia and MAUI)
 
 ```markdown
 ## 🧪 Test Coverage

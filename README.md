@@ -1,6 +1,6 @@
 # Agentic Workflow — Spec-Driven Development + TDD
 
-A reusable Claude Code workflow that enforces **Spec-Driven Development (SDD)** and **Test-Driven Development (TDD)** across a full-stack TypeScript/JavaScript, **C#/.NET**, and **Python** stack: **React, React Native, Node.js (Express/Fastify), NestJS, Next.js, C# / ASP.NET Core Web APIs, Avalonia (XAML) desktop, Python (Django/DRF, FastAPI, Flask), PostgreSQL, MongoDB**.
+A reusable Claude Code workflow that enforces **Spec-Driven Development (SDD)** and **Test-Driven Development (TDD)** across a full-stack TypeScript/JavaScript, **C#/.NET**, and **Python** stack: **React, React Native, Node.js (Express/Fastify), NestJS, Next.js, C# / ASP.NET Core Web APIs, Avalonia (XAML) desktop, .NET MAUI (cross-platform mobile/desktop), Python (Django/DRF, FastAPI, Flask), PostgreSQL, MongoDB**.
 
 It ships as a Claude Code **plugin** (`agentic-sdd`) *and* as a copyable `.claude/` folder, so you can install it in any repo and start shipping clean, tested, maintainable code. Cross-platform, including **macOS (Tahoe) on Apple Silicon** — .NET work targets modern cross-platform **.NET 8/9** (arm64-native), not the Windows-only .NET Framework.
 
@@ -10,9 +10,9 @@ It ships as a Claude Code **plugin** (`agentic-sdd`) *and* as a copyable `.claud
 
 ## What's inside
 
-- **21 agents** — 10 lifecycle agents (`architect`, `spec-writer`, `tdd-test-writer`, `implementer`, `e2e-tester`, `qa-visual`, `code-reviewer`, `curator`, `refactorer`, `cicd-engineer`) + 11 stack experts (React, React Native, Node/Express/Fastify, NestJS, Next.js, C#/ASP.NET Core, Avalonia/XAML, Django/DRF, FastAPI, Flask, PostgreSQL/MongoDB).
+- **22 agents** — 10 lifecycle agents (`architect`, `spec-writer`, `tdd-test-writer`, `implementer`, `e2e-tester`, `qa-visual`, `code-reviewer`, `curator`, `refactorer`, `cicd-engineer`) + 12 stack experts (React, React Native, Node/Express/Fastify, NestJS, Next.js, C#/ASP.NET Core, Avalonia/XAML, .NET MAUI, Django/DRF, FastAPI, Flask, PostgreSQL/MongoDB).
 - **15 commands** — `/feature`, `/plan`, `/spec`, `/tdd`, `/implement`, `/e2e`, `/qa`, `/review`, `/curate`, `/refactor`, `/cicd`, `/update-pr`, `/triage-copilot`, `/triage-reviews`, `/ship`.
-- **9 skills** — `spec-driven-development`, `tdd-workflow`, `e2e-testing`, `visual-qa`, `clean-code`, `stack-testing-recipes`, `cicd-pipelines`, `pr-description`, `curation`.
+- **10 skills** — `spec-driven-development`, `tdd-workflow`, `e2e-testing`, `visual-qa`, `clean-code`, `stack-testing-recipes`, `cicd-pipelines`, `pr-description`, `xamarin-maui-migration`, `curation`.
 - **Enforcing, polyglot hooks** — block focused tests/`debugger`/`Debugger.Break()`/`breakpoint()`, format/lint changed files (ESLint, `dotnet format`, or `ruff`), and gate `git commit` on the toolchains the repo has (JS: lint + types + tests; .NET: format + build `-warnaserror` + test; Python: ruff + mypy + pytest).
 - **6 rule files** — workflow, testing, clean code, structure, security, git hygiene.
 - **CI templates** — a build-and-test GitHub Actions workflow (Node + .NET on macOS Apple Silicon) you can drop into target repos with `--with-ci`. This repo's own CI just validates the plugin.

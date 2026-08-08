@@ -2,7 +2,7 @@
 
 This repository is a **template** that brings a Spec-Driven Development (SDD) + Test-Driven Development (TDD) agentic workflow to any of your projects. It ships as a Claude Code **plugin** (`agentic-sdd`) and as a copyable `.claude/` folder. This file is the single source of truth for how the agents, skills, commands, hooks, and rules fit together.
 
-> Stack this workflow targets: **React, React Native, Node.js (Express / Fastify), NestJS, Next.js, C# / ASP.NET Core Web APIs, Avalonia (XAML) desktop, Python (Django / DRF, FastAPI, Flask), PostgreSQL, MongoDB**, tested with **Jest/Vitest**, **xUnit**, and **pytest** (unit) and **Playwright / Detox / Supertest / Testcontainers / WebApplicationFactory / Avalonia.Headless / Appium / httpx** (E2E/integration). Cross-platform, including **macOS (Tahoe) on Apple Silicon** — .NET work targets modern cross-platform **.NET 8/9** (arm64), not the Windows-only .NET Framework.
+> Stack this workflow targets: **React, React Native, Node.js (Express / Fastify), NestJS, Next.js, C# / ASP.NET Core Web APIs, Avalonia (XAML) desktop, .NET MAUI (cross-platform mobile/desktop, incl. Xamarin.Forms migration), Python (Django / DRF, FastAPI, Flask), PostgreSQL, MongoDB**, tested with **Jest/Vitest**, **xUnit**, and **pytest** (unit) and **Playwright / Detox / Supertest / Testcontainers / WebApplicationFactory / Avalonia.Headless / Appium / httpx** (E2E/integration). Cross-platform, including **macOS (Tahoe) on Apple Silicon** — .NET work targets modern cross-platform **.NET 8/9** (arm64), not the Windows-only .NET Framework.
 
 > **Language:** **English is the default.** Every agent and command matches the language of the conversation — respond in **Spanish only when the user writes in Spanish or explicitly asks for it**; otherwise respond in English. Generated artifacts (specs, acceptance-criteria prose, test names, code comments, commit-message descriptions, PR descriptions) follow that same working language. Regardless of language, these stay in **English by convention**: the Conventional Commits prefixes (`feat`, `fix`, …), the `AC-n` / `CONV-<area>-n` identifiers, and code / technical names (APIs, types, commands).
 
@@ -93,6 +93,7 @@ Agents are specialists Claude calls automatically (or that commands invoke). Two
 | `flask-expert` | Flask — app factory, blueprints, extensions, Marshmallow schemas, test client |
 | `dotnet-expert` | C# / ASP.NET Core Web APIs — clean architecture, EF Core, DI, xUnit (modern .NET on arm64) |
 | `avalonia-expert` | Avalonia / XAML cross-platform desktop — MVVM, compiled bindings, headless + Appium tests |
+| `maui-expert` | .NET MAUI — cross-platform mobile/desktop (iOS, Android, Windows, Mac Catalyst); MVVM, platform integration, Xamarin.Forms migration, owns its app's full unit/integration/E2E pyramid |
 | `database-expert` | PostgreSQL & MongoDB — schema, indexes, migrations, transactions, query perf |
 
 The `implementer` pulls in whichever stack expert matches the code being changed. You can also call an expert directly (e.g. "use the nestjs-expert to add a guard").
@@ -115,6 +116,7 @@ Skills are reusable playbooks the agents (and you) apply. They live in `plugins/
 | `stack-testing-recipes` | Choosing the right test tool for a specific framework |
 | `cicd-pipelines` | Generating a CI/CD pipeline — promotion model, per-target deploy recipes, security baseline |
 | `pr-description` | Writing/updating a PR title & description from commits — section catalog + style guide (loaded by `/update-pr`) |
+| `xamarin-maui-migration` | Migrating a Xamarin.Forms app to .NET MAUI — breaking-change map + incremental migration strategy (loaded by `maui-expert`) |
 | `curation` | Curating the project's conventions & advisory rules after a feature — harvest method + artifact templates |
 
 ---
@@ -158,9 +160,9 @@ agentic-workflow/
 ├── plugins/
 │   └── agentic-sdd/
 │       ├── .claude-plugin/plugin.json
-│       ├── agents/                ← 21 agents (lifecycle + stack experts)
+│       ├── agents/                ← 22 agents (lifecycle + stack experts)
 │       ├── commands/              ← 15 slash commands
-│       ├── skills/                ← 9 skills (+ references)
+│       ├── skills/                ← 10 skills (+ references)
 │       ├── hooks/                 ← hooks.json + scripts/
 │       ├── rules/                 ← 6 rule files
 │       └── settings.template.json ← settings used by the copy installer

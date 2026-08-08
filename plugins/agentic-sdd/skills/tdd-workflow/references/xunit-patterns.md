@@ -21,5 +21,10 @@
 - Install `Avalonia.Headless.XUnit`; use `[AvaloniaFact]` (not `[Fact]`) so the UI thread is set up.
 - Build the control/window, pump layout, assert on properties/bindings. Use `AutomationProperties` ids for lookups.
 
+## MAUI (unit + integration)
+- ViewModels built with `CommunityToolkit.Mvvm` carry no UI dependency — test them with plain `[Fact]`/`[Theory]`, same as any C# class.
+- For DI-registration tests, build a `MauiApp` via `MauiProgram.CreateMauiApp()` (or a test-only builder) and resolve services from `Services` to catch missing/misconfigured registrations.
+- For repository tests against SQLite, use a fresh in-memory or temp-file database per test; assert against the real driver, not a mock.
+
 ## Coverage gate
 - `dotnet test --collect:"XPlat Code Coverage"` (coverlet); enforce thresholds in CI.
