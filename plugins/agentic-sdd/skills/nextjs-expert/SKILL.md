@@ -1,6 +1,6 @@
 ---
 name: nextjs-expert
-description: Next.js App Router expertise — Server/Client Components, server actions, route handlers, rendering/caching strategy, and metadata/SEO. Load for Next.js work; react-expert covers generic React.
+description: Next.js App Router expertise — Server/Client Components, server actions, route handlers, rendering/caching strategy, and metadata/SEO. Load for Next.js work; react-expert covers generic React; remix-expert covers Remix / React Router framework mode.
 ---
 
 # Next.js (App Router)

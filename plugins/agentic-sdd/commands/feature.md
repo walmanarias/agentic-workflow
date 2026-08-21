@@ -11,7 +11,7 @@ Use the `spec-driven-development` skill as the playbook and delegate each phase 
 1. **Design (if non-trivial/new module):** invoke the `architect` agent → `docs/design/`. Skip for small changes.
 2. **Spec:** invoke `spec-writer` → `specs/<feature>.spec.md`. **Gate:** show the numbered acceptance criteria and get approval before coding.
 3. **Red:** invoke `tdd-test-writer` to write failing tests mapped to each AC. Show the failing output.
-4. **Green:** invoke `implementer` to pass the tests with clean code — it loads the relevant stack-expert skill (react / react-native / node-backend / nestjs / nextjs / django / fastapi / flask / dotnet / avalonia / maui / database) in its own context.
+4. **Green:** invoke `implementer` to pass the tests with clean code — it loads the relevant stack-expert skill (react / react-native / node-backend / nestjs / nextjs / remix / django / fastapi / flask / dotnet / avalonia / maui / database) in its own context.
 5. **Refactor:** keep tests green while improving structure.
 6. **E2E:** invoke `e2e-tester` for criteria marked (E2E).
 7. **QA (visual):** invoke `qa-visual` to capture screenshots of the user-facing flows and catch visual bugs (layout, overflow, spacing, contrast, theme). Fix Blocking + Should-fix via `implementer`, then re-inspect until clean. Skip for non-UI changes.

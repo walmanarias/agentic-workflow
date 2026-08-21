@@ -1,6 +1,6 @@
 ---
 name: stack-testing-recipes
-description: Use to pick the right testing tools and write the right kind of tests for a specific technology in the stack (React, React Native, Express, Fastify, NestJS, Next.js, Django, FastAPI, Flask, PostgreSQL, MongoDB). Trigger on "how do I test <tech>", "which test tool", or when setting up testing for a given framework.
+description: Use to pick the right testing tools and write the right kind of tests for a specific technology in the stack (React, React Native, Express, Fastify, NestJS, Next.js, Remix, Django, FastAPI, Flask, PostgreSQL, MongoDB). Trigger on "how do I test <tech>", "which test tool", or when setting up testing for a given framework.
 ---
 
 # Stack Testing Recipes
@@ -26,6 +26,11 @@ Match the test type and tool to the technology. Always follow the pyramid: many 
 ## Next.js (App Router)
 - **Unit:** Jest/Vitest + RTL for client components; test server actions/route handlers/data fns as plain functions.
 - **E2E:** Playwright for SSR, navigation, forms, and server actions.
+
+## Remix / React Router 7 (framework mode)
+- **Unit:** loaders/actions are plain functions — call them with a constructed `Request`, assert on the `Response`/data. No framework boot needed.
+- **Component:** Jest/Vitest + RTL; wrap components using `useLoaderData`/`useFetcher` in `createRemixStub` (`@remix-run/testing`, Remix v2) or `createRoutesStub` (`react-router` v7).
+- **E2E:** Playwright — include a JS-disabled pass over the critical flow (progressive enhancement is part of the contract).
 
 ## Python (general)
 - **pytest** everywhere: `fixtures` for setup, `@pytest.mark.parametrize` for cases, `pytest.raises` for errors. Unit-test services/domain logic with faked collaborators — no DB, no network. Inject clock/uuid; freeze time with a fixture, not real `datetime.now`.

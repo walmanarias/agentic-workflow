@@ -1,6 +1,6 @@
 ---
 name: react-expert
-description: React web expertise — components, hooks, state, performance, and React Testing Library tests. Load when implementing or testing React web UI. For Next.js App Router specifics use nextjs-expert; for mobile use react-native-expert.
+description: React web expertise — components, hooks, state, performance, and React Testing Library tests. Load when implementing or testing React web UI. For Next.js App Router specifics use nextjs-expert; for Remix / React Router framework mode use remix-expert (both load alongside this skill); for mobile use react-native-expert.
 ---
 
 # React (web)
