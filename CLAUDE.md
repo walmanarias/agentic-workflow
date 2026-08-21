@@ -2,7 +2,7 @@
 
 This repository is a **template** that brings a Spec-Driven Development (SDD) + Test-Driven Development (TDD) agentic workflow to any project. It ships as a Claude Code **plugin** (`agentic-sdd`) and as a copyable `.claude/` folder. This file is the operational contract the agents follow; install instructions, repository layout, and CI notes live in `README.md`.
 
-> **Stack:** React, React Native, Node.js (Express/Fastify), NestJS, Next.js, C#/ASP.NET Core Web APIs, Avalonia (XAML) desktop, .NET MAUI (incl. Xamarin.Forms migration), Python (Django/DRF, FastAPI, Flask), PostgreSQL, MongoDB. Unit tests with Jest/Vitest, xUnit, pytest; E2E with Playwright / Detox / Supertest / Testcontainers / WebApplicationFactory / Avalonia.Headless / Appium / httpx. Cross-platform incl. macOS (Tahoe) on Apple Silicon — .NET work targets modern cross-platform **.NET 8/9** (arm64), never the Windows-only .NET Framework.
+> **Stack:** React, React Native, Node.js (Express/Fastify), NestJS, Next.js, Remix (incl. React Router 7 framework mode), C#/ASP.NET Core Web APIs, Avalonia (XAML) desktop, .NET MAUI (incl. Xamarin.Forms migration), Python (Django/DRF, FastAPI, Flask), PostgreSQL, MongoDB. Unit tests with Jest/Vitest, xUnit, pytest; E2E with Playwright / Detox / Supertest / Testcontainers / WebApplicationFactory / Avalonia.Headless / Appium / httpx. Cross-platform incl. macOS (Tahoe) on Apple Silicon — .NET work targets modern cross-platform **.NET 8/9** (arm64), never the Windows-only .NET Framework.
 
 > **Language:** English is the default — respond in **Spanish only when the user writes in Spanish or explicitly asks for it**. Generated artifacts (specs, test names, comments, commit/PR descriptions) follow the working language, but Conventional Commits prefixes (`feat`, `fix`, …), the `AC-n` / `CONV-<area>-n` ids, and code/technical names always stay in English.
 
@@ -62,11 +62,11 @@ Artifacts on disk are the interface between phases. Every agent writes its full 
 | `refactorer` | Behavior-preserving cleanup under green tests | source files |
 | `cicd-engineer` | GitHub Actions pipelines; staging→approval→prod | `.github/workflows/` |
 
-**Stack expertise lives in skills, not agents.** The `implementer`, `tdd-test-writer`, and `e2e-tester` load the matching stack skill into their own context instead of spawning a second agent: `react-expert`, `react-native-expert`, `node-backend-expert`, `nestjs-expert`, `nextjs-expert`, `django-expert`, `fastapi-expert`, `flask-expert`, `dotnet-expert`, `avalonia-expert`, `maui-expert`, `database-expert`. Asking to "use the nestjs-expert" loads that skill.
+**Stack expertise lives in skills, not agents.** The `implementer`, `tdd-test-writer`, and `e2e-tester` load the matching stack skill into their own context instead of spawning a second agent: `react-expert`, `react-native-expert`, `node-backend-expert`, `nestjs-expert`, `nextjs-expert`, `remix-expert`, `django-expert`, `fastapi-expert`, `flask-expert`, `dotnet-expert`, `avalonia-expert`, `maui-expert`, `database-expert`. Asking to "use the nestjs-expert" loads that skill. Meta-framework skills layer on top of `react-expert` — for Next.js or Remix work, load both: the meta-framework skill owns the route/data layer, `react-expert` owns the component layer.
 
 ## Skills
 
-Workflow playbooks in `plugins/agentic-sdd/skills/`: `spec-driven-development` (the loop + spec template), `tdd-workflow` (Red/Green/Refactor), `e2e-testing`, `visual-qa`, `clean-code`, `stack-testing-recipes`, `cicd-pipelines`, `pr-description` (loaded by `/update-pr`), `xamarin-maui-migration` (loaded by the `maui-expert` skill), `curation` — plus the 12 stack-expert skills listed above. Deep reference material sits in each skill's `references/` and is read only on demand.
+Workflow playbooks in `plugins/agentic-sdd/skills/`: `spec-driven-development` (the loop + spec template), `tdd-workflow` (Red/Green/Refactor), `e2e-testing`, `visual-qa`, `clean-code`, `stack-testing-recipes`, `cicd-pipelines`, `pr-description` (loaded by `/update-pr`), `xamarin-maui-migration` (loaded by the `maui-expert` skill), `curation` — plus the 13 stack-expert skills listed above. Deep reference material sits in each skill's `references/` and is read only on demand.
 
 ## Hooks (enforcing quality gates)
 

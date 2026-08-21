@@ -1,6 +1,6 @@
 # Agentic Workflow — Spec-Driven Development + TDD
 
-A reusable Claude Code workflow that enforces **Spec-Driven Development (SDD)** and **Test-Driven Development (TDD)** across a full-stack TypeScript/JavaScript, **C#/.NET**, and **Python** stack: **React, React Native, Node.js (Express/Fastify), NestJS, Next.js, C# / ASP.NET Core Web APIs, Avalonia (XAML) desktop, .NET MAUI (cross-platform mobile/desktop), Python (Django/DRF, FastAPI, Flask), PostgreSQL, MongoDB**.
+A reusable Claude Code workflow that enforces **Spec-Driven Development (SDD)** and **Test-Driven Development (TDD)** across a full-stack TypeScript/JavaScript, **C#/.NET**, and **Python** stack: **React, React Native, Node.js (Express/Fastify), NestJS, Next.js, Remix (incl. React Router 7 framework mode), C# / ASP.NET Core Web APIs, Avalonia (XAML) desktop, .NET MAUI (cross-platform mobile/desktop), Python (Django/DRF, FastAPI, Flask), PostgreSQL, MongoDB**.
 
 It ships as a Claude Code **plugin** (`agentic-sdd`) *and* as a copyable `.claude/` folder, so you can install it in any repo and start shipping clean, tested, maintainable code. Cross-platform, including **macOS (Tahoe) on Apple Silicon** — .NET work targets modern cross-platform **.NET 8/9** (arm64-native), not the Windows-only .NET Framework.
 
@@ -12,7 +12,7 @@ It ships as a Claude Code **plugin** (`agentic-sdd`) *and* as a copyable `.claud
 
 - **10 lifecycle agents** — `architect`, `spec-writer`, `tdd-test-writer`, `implementer`, `e2e-tester`, `qa-visual`, `code-reviewer`, `curator`, `refactorer`, `cicd-engineer`.
 - **15 commands** — `/feature`, `/plan`, `/spec`, `/tdd`, `/implement`, `/e2e`, `/qa`, `/review`, `/curate`, `/refactor`, `/cicd`, `/update-pr`, `/triage-copilot`, `/triage-reviews`, `/ship`.
-- **22 skills** — 10 workflow playbooks (`spec-driven-development`, `tdd-workflow`, `e2e-testing`, `visual-qa`, `clean-code`, `stack-testing-recipes`, `cicd-pipelines`, `pr-description`, `xamarin-maui-migration`, `curation`) + 12 **stack-expert skills** (React, React Native, Node/Express/Fastify, NestJS, Next.js, Django/DRF, FastAPI, Flask, C#/ASP.NET Core, Avalonia/XAML, .NET MAUI, PostgreSQL/MongoDB). Stack expertise ships as skills rather than agents so `implementer`, `tdd-test-writer`, and `e2e-tester` load it into their own context instead of spawning a second agent — same knowledge, far fewer tokens. "Use the nestjs-expert" still works; it loads the skill.
+- **23 skills** — 10 workflow playbooks (`spec-driven-development`, `tdd-workflow`, `e2e-testing`, `visual-qa`, `clean-code`, `stack-testing-recipes`, `cicd-pipelines`, `pr-description`, `xamarin-maui-migration`, `curation`) + 13 **stack-expert skills** (React, React Native, Node/Express/Fastify, NestJS, Next.js, Remix/React Router 7, Django/DRF, FastAPI, Flask, C#/ASP.NET Core, Avalonia/XAML, .NET MAUI, PostgreSQL/MongoDB). Stack expertise ships as skills rather than agents so `implementer`, `tdd-test-writer`, and `e2e-tester` load it into their own context instead of spawning a second agent — same knowledge, far fewer tokens. "Use the nestjs-expert" still works; it loads the skill.
 - **Enforcing, polyglot hooks** — block focused tests/`debugger`/`Debugger.Break()`/`breakpoint()`, format/lint changed files (ESLint, `dotnet format`, or `ruff`), and gate `git commit` on the toolchains the repo has (JS: lint + types + tests; .NET: format + build `-warnaserror` + test; Python: ruff + mypy + pytest).
 - **6 rule files** — workflow, testing, clean code, structure, security, git hygiene.
 - **CI templates** — a build-and-test GitHub Actions workflow (Node + .NET on macOS Apple Silicon) you can drop into target repos with `--with-ci`. This repo's own CI just validates the plugin.
@@ -30,7 +30,7 @@ agentic-workflow/
 │       ├── .claude-plugin/plugin.json
 │       ├── agents/                ← 10 lifecycle agents
 │       ├── commands/              ← 15 slash commands
-│       ├── skills/                ← 22 skills (10 playbooks + 12 stack experts)
+│       ├── skills/                ← 23 skills (10 playbooks + 13 stack experts)
 │       ├── hooks/                 ← hooks.json + scripts/
 │       ├── rules/                 ← 6 rule files
 │       └── settings.template.json ← settings used by the copy installer
