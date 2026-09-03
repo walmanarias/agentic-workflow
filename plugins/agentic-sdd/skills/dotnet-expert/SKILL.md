@@ -24,7 +24,7 @@ Build clean, testable **ASP.NET Core** Web APIs on **modern cross-platform .NET 
 - Persistence via EF Core or Dapper behind a repository/`DbContext` boundary — apply the `database-expert` skill for schema/index/migration design (PostgreSQL/MongoDB). No N+1; use `AsNoTracking` for reads; explicit transactions for multi-write invariants.
 
 ## Code style (StyleCop Analyzers)
-Enforce style with **[StyleCop.Analyzers](https://github.com/DotNetAnalyzers/StyleCopAnalyzers/blob/master/DOCUMENTATION.md)** — a Roslyn analyzer package, not a separate CLI step: reference it in every project (`PrivateAssets="all"`), commit a shared `stylecop.json` (documentation settings, company name, per-rule overrides) plus severities in `.editorconfig`/`.globalconfig`. Because it runs as build-time analyzers, its warnings ride the existing `dotnet build -warnaserror` gate (`hooks/pre-commit-gate.sh`) automatically — no extra hook step needed.
+Enforce style with **[StyleCop.Analyzers](https://github.com/DotNetAnalyzers/StyleCopAnalyzers/blob/master/DOCUMENTATION.md)** — a Roslyn analyzer package, not a separate CLI step: reference it in every project (`PrivateAssets="all"`), commit a shared `stylecop.json` (documentation settings, company name, per-rule overrides) plus severities in `.editorconfig`/`.globalconfig`. Because it runs as build-time analyzers, its warnings ride the existing `dotnet build -warnaserror` gate (`hooks/scripts/pre-commit-gate.sh`) automatically — no extra hook step needed.
 
 Apply its rule categories deliberately rather than accepting every default:
 - **Spacing (SA1000s)** — consistent whitespace around keywords, operators, and casts.
