@@ -1,6 +1,6 @@
 ---
 name: stack-testing-recipes
-description: Use to pick the right testing tools and write the right kind of tests for a specific technology in the stack (React, React Native, Express, Fastify, NestJS, Next.js, Remix, Django, FastAPI, Flask, PostgreSQL, MongoDB). Trigger on "how do I test <tech>", "which test tool", or when setting up testing for a given framework.
+description: Use to pick the right testing tools and write the right kind of tests for a specific technology in the stack (React, React Native, Angular, Express, Fastify, NestJS, Next.js, Remix, Django, FastAPI, Flask, PostgreSQL, MongoDB). Trigger on "how do I test <tech>", "which test tool", or when setting up testing for a given framework.
 ---
 
 # Stack Testing Recipes
@@ -14,6 +14,10 @@ Match the test type and tool to the technology. Always follow the pyramid: many 
 ## React Native
 - **Component:** React Native Testing Library + Jest (accessibility queries).
 - **E2E:** Detox or Maestro on simulator/device.
+
+## Angular
+- **Unit/component:** Jasmine + Karma (CLI default) or Jest + `@testing-library/angular`/`jest-preset-angular` on a migrated repo; `TestBed` for a minimal standalone testing module. Mock HTTP with `HttpTestingController` (`provideHttpClientTesting()`).
+- **E2E:** Playwright or Cypress (Protractor is retired).
 
 ## Express / Fastify
 - **Unit:** test services in isolation with faked repositories.

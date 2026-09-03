@@ -5,7 +5,7 @@ description: Use when writing or updating a pull request title and description f
 
 # PR Description
 
-Turn a branch's commits into a scannable PR title + description. Add a section **only** when the commits actually contain that kind of change, so one playbook fits any stack (React, React Native, Node/Express/Fastify, NestJS, Next.js, C#/ASP.NET Core, Avalonia, .NET MAUI, PostgreSQL/MongoDB) — UI-only sections (Accessibility, i18n) appear only for front-end work.
+Turn a branch's commits into a scannable PR title + description. Add a section **only** when the commits actually contain that kind of change, so one playbook fits any stack (React, React Native, Angular, Node/Express/Fastify, NestJS, Next.js, C#/ASP.NET Core, Avalonia, .NET MAUI, PostgreSQL/MongoDB) — UI-only sections (Accessibility, i18n) appear only for front-end work.
 
 ## Title
 
@@ -26,7 +26,7 @@ Emoji by change type: ✨ feature · 🐛 fix · 🔄 refactor · 🎨 style/ui 
 | Section | Add when commits touch… |
 |---|---|
 | 📐 Business Rules | logic / behavior / "when → then", decision trees |
-| 🧪 Test Coverage | test files or test keywords (jest / vitest / xunit / playwright / detox / appium) |
+| 🧪 Test Coverage | test files or test keywords (jest / vitest / jasmine / karma / xunit / playwright / detox / appium) |
 | ♿ Accessibility | UI changes, aria / keyboard / screen-reader |
 | 🌍 Internationalization | `locales/**`, i18n / translation keys |
 | 🔌 API / Contract | HTTP endpoints, DTOs, GraphQL, contracts |

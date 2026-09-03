@@ -10,7 +10,7 @@ Verify whole flows through real interfaces. Complement unit tests; don't duplica
 ## Pick the tool by stack
 | Stack | Tool | Notes |
 |---|---|---|
-| Next.js / Remix / React web | **Playwright** (or Cypress) | Drive the browser; assert by role/text; test SSR + navigation + forms/actions. Remix: run the critical flow with JS disabled too (progressive enhancement) |
+| Next.js / Remix / React / Angular web | **Playwright** (or Cypress) | Drive the browser; assert by role/text; test SSR + navigation + forms/actions. Remix: run the critical flow with JS disabled too (progressive enhancement) |
 | React Native | **Detox** or **Maestro** | Simulator/device flows; RN Testing Library for component-integration |
 | Express / Fastify / NestJS API | **Supertest** / **Pactum** | Hit the real app instance; real/containerized DB |
 | Service-to-service contracts | **Pact** | Consumer-driven contract tests |

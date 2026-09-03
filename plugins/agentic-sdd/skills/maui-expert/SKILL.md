@@ -36,6 +36,9 @@ Apply the `xamarin-maui-migration` skill. Inventory the current project first (T
 - Use `CollectionView`/`CarouselView` with virtualization over the legacy `ListView`; cache images; avoid layout thrash on the UI thread — offload work and marshal back via `MainThread.BeginInvokeOnMainThread`.
 - Use Hot Reload during iteration; verify on real devices/simulators before calling a screen done — the simulator/emulator hides real performance and gesture issues.
 
+## Code style
+- Follow `dotnet-expert`'s **Code style (StyleCop Analyzers)** section for ViewModels/services/code-behind; XAML markup itself isn't covered by StyleCop, so keep it readable via consistent indentation and attribute ordering (name/key attributes first, then layout, then bindings/events).
+
 ## Security
 - No secrets in source — `SecureStorage`/platform keystores only, per `rules/30-security.md`.
 - Certificate pinning for HTTP calls handling sensitive data where warranted; validate all input at service boundaries, never trust deep-link or push-notification payloads blindly.

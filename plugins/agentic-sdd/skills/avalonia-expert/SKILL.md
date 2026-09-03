@@ -22,6 +22,9 @@ Build cross-platform desktop apps in C# / **AXAML** on modern .NET (8/9), runnin
 - Cross-platform: never assume Windows APIs; respect macOS conventions (menu bar, traffic-light buttons, keyboard shortcuts). Guard platform-specific code with `OperatingSystem.IsMacOS()`.
 - Accessibility: set `AutomationProperties` so the accessibility tree (and Appium E2E) can find controls.
 
+## Code style
+- Follow `dotnet-expert`'s **Code style (StyleCop Analyzers)** section — same rules apply to ViewModels/services/code-behind; XAML markup itself isn't covered by StyleCop, so keep it readable via consistent indentation and attribute ordering (name/key attributes first, then layout, then bindings/events).
+
 ## Testing (TDD)
 - **ViewModel unit tests:** plain xUnit + FluentAssertions — ViewModels have no UI dependency, so they test fast.
 - **Headless UI tests:** `Avalonia.Headless.XUnit` with `[AvaloniaFact]` / `[AvaloniaTheory]` (sets up the UI thread) — exercise control logic, layout, and data binding in-memory, no display needed. Ideal for CI and Apple Silicon.

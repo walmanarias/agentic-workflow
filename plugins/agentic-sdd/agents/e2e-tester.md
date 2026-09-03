@@ -8,7 +8,7 @@ model: sonnet
 You write **end-to-end and integration tests** that verify whole flows through real interfaces, complementing (not duplicating) unit tests.
 
 ## Choose the tool by stack
-- **Next.js / Remix / React (web):** Playwright (preferred) or Cypress — drive the browser, assert on user-visible behavior and accessibility roles. For Remix / React Router framework mode, also run the critical flow with JavaScript disabled — progressive enhancement (`<Form>` posts, redirects) is part of the contract.
+- **Next.js / Remix / React / Angular (web):** Playwright (preferred) or Cypress — drive the browser, assert on user-visible behavior and accessibility roles. For Remix / React Router framework mode, also run the critical flow with JavaScript disabled — progressive enhancement (`<Form>` posts, redirects) is part of the contract.
 - **React Native:** Detox or Maestro for device/simulator flows; React Native Testing Library for component-integration.
 - **Node / Express / Fastify / NestJS (HTTP APIs):** Supertest or Pactum against the real app instance; spin up real or containerized PostgreSQL/MongoDB (Testcontainers) rather than mocking the DB.
 - **Contracts between services:** Pact (consumer-driven contract tests).

@@ -2,8 +2,8 @@
   "$schema": "https://json.schemastore.org/claude-code-plugin.json",
   "name": "agentic-sdd",
   "displayName": "Agentic SDD (Spec-Driven + TDD)",
-  "version": "1.4.0",
-  "description": "Spec-Driven Development lifecycle with TDD and E2E testing. Ships lifecycle agents (spec, tdd, implement, e2e, qa, review, curate, refactor, cicd, architect), stack-expert skills (React, React Native, Node/Express/Fastify, NestJS, Next.js, Remix incl. React Router 7 framework mode, Django, FastAPI, Flask, C#/ASP.NET Core, Avalonia/XAML desktop, .NET MAUI mobile/desktop incl. Xamarin.Forms migration, PostgreSQL, MongoDB), workflow skills, slash commands, and enforcing quality-gate hooks for clean, maintainable, scalable code. Cross-platform incl. macOS Apple Silicon.",
+  "version": "1.5.0",
+  "description": "Spec-Driven Development lifecycle with TDD and E2E testing. Ships lifecycle agents (spec, tdd, implement, e2e, qa, review, curate, refactor, cicd, architect), stack-expert skills (React, React Native, Angular, Node/Express/Fastify, NestJS, Next.js, Remix incl. React Router 7 framework mode, Django, FastAPI, Flask, C#/ASP.NET Core with StyleCop Analyzers code style, Avalonia/XAML desktop, .NET MAUI mobile/desktop incl. Xamarin.Forms migration, PostgreSQL, MongoDB), workflow skills, slash commands, and enforcing quality-gate hooks for clean, maintainable, scalable code. Cross-platform incl. macOS Apple Silicon.",
   "author": {
     "name": "Walman",
     "email": "walmanarias@outlook.com"
@@ -16,6 +16,7 @@
     "clean-code",
     "react",
     "react-native",
+    "angular",
     "nodejs",
     "express",
     "fastify",
@@ -26,6 +27,7 @@
     "csharp",
     "dotnet",
     "aspnetcore",
+    "stylecop",
     "avalonia",
     "xaml",
     "maui",
