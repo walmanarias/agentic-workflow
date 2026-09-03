@@ -1,6 +1,6 @@
 ---
 name: dotnet-expert
-description: C# / ASP.NET Core Web API expertise — clean architecture, minimal APIs or controllers, EF Core, DI, validation, and xUnit + WebApplicationFactory testing on modern cross-platform .NET (8/9). Load for .NET backend work; avalonia-expert and maui-expert cover .NET UI stacks.
+description: C# / ASP.NET Core Web API expertise — clean architecture, minimal APIs or controllers, EF Core, DI, validation, StyleCop Analyzers code style, and xUnit + WebApplicationFactory testing on modern cross-platform .NET (8/9). Load for .NET backend work; avalonia-expert and maui-expert cover .NET UI stacks and share this skill's code-style section.
 ---
 
 # C# / ASP.NET Core Web APIs
@@ -22,6 +22,18 @@ Build clean, testable **ASP.NET Core** Web APIs on **modern cross-platform .NET 
 - Records for immutable DTOs/value objects; expression-bodied members where clear; pattern matching over type checks.
 - Use `ProblemDetails` for consistent error responses; global exception handling middleware; structured logging (Serilog/`ILogger`).
 - Persistence via EF Core or Dapper behind a repository/`DbContext` boundary — apply the `database-expert` skill for schema/index/migration design (PostgreSQL/MongoDB). No N+1; use `AsNoTracking` for reads; explicit transactions for multi-write invariants.
+
+## Code style (StyleCop Analyzers)
+Enforce style with **[StyleCop.Analyzers](https://github.com/DotNetAnalyzers/StyleCopAnalyzers/blob/master/DOCUMENTATION.md)** — a Roslyn analyzer package, not a separate CLI step: reference it in every project (`PrivateAssets="all"`), commit a shared `stylecop.json` (documentation settings, company name, per-rule overrides) plus severities in `.editorconfig`/`.globalconfig`. Because it runs as build-time analyzers, its warnings ride the existing `dotnet build -warnaserror` gate (`hooks/scripts/pre-commit-gate.sh`) automatically — no extra hook step needed.
+
+Apply its rule categories deliberately rather than accepting every default:
+- **Spacing (SA1000s)** — consistent whitespace around keywords, operators, and casts.
+- **Readability (SA1100s)** — e.g. SA1101 (`this.` qualification) and explicit precedence in non-obvious expressions; many teams disable SA1101 as noise — pick one answer repo-wide.
+- **Ordering (SA1200s)** — `using`s inside the namespace by default (SA1200), `System.*` first (SA1208), alphabetical (SA1210); members ordered const → static fields → instance fields → constructors → properties → methods, each block by access level then static-before-instance (SA1201–SA1204, SA1214–SA1215). SA1200's default fights file-scoped namespaces (`namespace Foo;`) paired with usings placed above them — the .NET SDK's own default (`IDE0065`) for modern projects. If the repo follows that convention, set `stylecop.json`'s `orderingRules.usingDirectivesPlacement` to `outsideNamespace` (or `preserve` to stop enforcing placement) instead of fighting the default.
+- **Naming (SA1300s)** — PascalCase for types, constants, and non-private members (SA1300, SA1303–SA1304); `I`-prefixed interfaces (SA1302); camelCase locals/parameters (SA1312–SA1313); no Hungarian notation or `m_`/`s_` prefixes (SA1305, SA1308). SA1309 (no leading underscore on fields) fights the now-common `_camelCase` private-field convention — reconfigure it in `stylecop.json` rather than silently violating it everywhere.
+- **Maintainability (SA1400s)** — explicit access modifiers always declared (SA1400); fields private, exposed via properties (SA1401); one type and one namespace per file (SA1402–SA1403); suppressions require a justification (SA1404); dead code removed (SA1409).
+- **Layout (SA1500s)** — braces on their own line and never omitted; one statement/declaration per line; consistent blank-line usage.
+- **Documentation (SA1600s)** — XML doc comments on public API and a file header (SA1633) — only enforced once `<GenerateDocumentationFile>true</GenerateDocumentationFile>` is set; skip this category for internal-only tooling.
 
 ## Testing (TDD, xUnit)
 - **Unit:** xUnit + FluentAssertions; mock collaborators with NSubstitute/Moq at real seams; test domain/application logic without booting the host.
