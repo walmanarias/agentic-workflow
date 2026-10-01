@@ -1,20 +1,32 @@
-name: Validate plugin
+name: Test plugin
 
 # This repo is a TEMPLATE / plugin marketplace — it has no application code.
-# This workflow validates the agentic-sdd plugin itself so the template stays
-# installable: manifests parse, agent/command/skill frontmatter is present,
-# hook scripts are valid shell, and the copy installer works.
+# This workflow tests the agentic-sdd plugin itself: hook/tool behavior, consistency of the
+# docs with the files on disk, manifests + frontmatter, shell quality, example pipelines,
+# and the copy installer.
 on:
   push:
     branches: [main, master]
   pull_request:
 
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   validate:
-    name: Validate agentic-sdd plugin
+    name: Test agentic-sdd plugin
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
+      - name: Install test dependencies
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq shellcheck jq
+          python3 -m pip install --quiet pyyaml
 
       - name: JSON manifests parse
         run: |
@@ -22,62 +34,34 @@ jobs:
           for f in .claude-plugin/marketplace.json \
                    plugins/agentic-sdd/.claude-plugin/plugin.json \
                    plugins/agentic-sdd/hooks/hooks.json \
-                   plugins/agentic-sdd/settings.template.json; do
+                   plugins/agentic-sdd/settings.template.json \
+                   plugins/agentic-sdd/tools/stacks.json; do
             python3 -c "import json,sys; json.load(open('$f'))" && echo "ok  $f"
           done
 
       - name: YAML workflows parse
         run: |
           python3 - <<'PY'
-          import glob, yaml, sys
+          import glob, yaml
           for f in (glob.glob('.github/workflows/*.yml') + glob.glob('templates/*.yml')
                     + glob.glob('plugins/agentic-sdd/skills/*/references/examples/*.yml')):
               yaml.safe_load(open(f)); print('ok ', f)
           PY
 
-      - name: actionlint example pipelines
+      - name: Consistency (loop line, counts, versions, stack registry, frontmatter)
+        run: bash scripts/check-consistency.sh
+
+      - name: shellcheck (strict)
+        run: shellcheck -x -S warning -P plugins/agentic-sdd/hooks/scripts plugins/agentic-sdd/hooks/scripts/*.sh scripts/*.sh tests/*.sh
+
+      - name: Python tools compile
+        run: python3 -m py_compile plugins/agentic-sdd/tools/*.py plugins/agentic-sdd/hooks/scripts/*.py
+
+      - name: Hook, tool and installer behavior
+        run: bash tests/run.sh
+
+      - name: actionlint example + template pipelines
         run: |
           shopt -s nullglob
-          files=(plugins/agentic-sdd/skills/*/references/examples/*.yml)
-          if [ ${#files[@]} -eq 0 ]; then
-            echo "No example workflows to lint."
-            exit 0
-          fi
+          files=(plugins/agentic-sdd/skills/*/references/examples/*.yml templates/*.yml .github/workflows/*.yml)
           docker run --rm -v "$PWD:/repo" --workdir /repo rhysd/actionlint:1.7.7 -color "${files[@]}"
-
-      - name: Agent / command / skill frontmatter present
-        run: |
-          set -e
-          for f in plugins/agentic-sdd/agents/*.md \
-                   plugins/agentic-sdd/commands/*.md \
-                   plugins/agentic-sdd/skills/*/SKILL.md; do
-            head -1 "$f" | grep -q '^---' || { echo "MISSING frontmatter: $f"; exit 1; }
-          done
-          echo "frontmatter ok"
-
-      - name: Hook scripts and installer are valid shell
-        run: |
-          set -e
-          for f in plugins/agentic-sdd/hooks/scripts/*.sh scripts/install.sh; do
-            bash -n "$f" && echo "ok  $f"
-          done
-
-      - name: shellcheck
-        run: |
-          sudo apt-get update -qq && sudo apt-get install -y shellcheck
-          shellcheck -S warning plugins/agentic-sdd/hooks/scripts/*.sh scripts/install.sh || true
-
-      - name: Copy installer runs end-to-end
-        run: |
-          set -e
-          TMP="$(mktemp -d)/app"; mkdir -p "$TMP"
-          echo '{"scripts":{}}' > "$TMP/package.json"
-          bash scripts/install.sh "$TMP" --with-ci
-          test -f "$TMP/.claude/commands/feature.md"
-          test -f "$TMP/.claude/agents/implementer.md"
-          test -f "$TMP/.claude/agents/cicd-engineer.md"
-          test -f "$TMP/.claude/skills/dotnet-expert/SKILL.md"
-          test -f "$TMP/.claude/skills/cicd-pipelines/SKILL.md"
-          test -f "$TMP/.github/workflows/ci.yml"
-          python3 -c "import json; json.load(open('$TMP/.claude/settings.json'))"
-          echo "installer ok"

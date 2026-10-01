@@ -1,8 +1,10 @@
 name: CI
 
-# Build-and-test gate for repos using the agentic-sdd workflow. Mirrors the
+# Build-test-security gate for repos using the agentic-sdd workflow. Mirrors the
 # local quality gate (lint/type/test for JS, format/build/test for .NET,
-# ruff/mypy/pytest for Python).
+# ruff/mypy/pytest for Python) — always the FULL suites, since the local gate
+# only runs what a commit touches — plus a dependency audit per stack and a
+# secret scan.
 # Runs on macOS Apple Silicon (macos-14 is arm64) so results match local dev.
 # Each job auto-detects whether its stack is present and no-ops otherwise,
 # so this single file works for JS-only, .NET-only, Python-only, and polyglot repos.
@@ -12,6 +14,9 @@ on:
   push:
     branches: [main, master]
   pull_request:
+
+permissions:
+  contents: read
 
 concurrency:
   group: ci-${{ github.ref }}
@@ -53,6 +58,9 @@ jobs:
       - name: E2E tests
         if: steps.detect.outputs.found == 'true'
         run: npm run test:e2e --if-present
+      - name: Dependency audit (high+)
+        if: steps.detect.outputs.found == 'true'
+        run: npm audit --audit-level=high --omit=dev
 
   dotnet:
     name: .NET (C# / Avalonia)
@@ -87,6 +95,11 @@ jobs:
       - name: Test (unit + headless Avalonia + integration)
         if: steps.detect.outputs.found == 'true'
         run: dotnet test --no-build --verbosity normal --collect:"XPlat Code Coverage"
+      - name: Dependency audit (vulnerable packages)
+        if: steps.detect.outputs.found == 'true'
+        run: |
+          out="$(dotnet list package --vulnerable --include-transitive 2>&1)"; echo "$out"
+          if echo "$out" | grep -q "has the following vulnerable packages"; then exit 1; fi
       # Appium-based Avalonia E2E and Testcontainers integration tests need a
       # display/daemon or container runtime; enable on a self-hosted arm64 runner.
 
@@ -136,6 +149,23 @@ jobs:
       - name: Tests (pytest)
         if: steps.detect.outputs.found == 'true'
         run: if command -v pytest >/dev/null; then pytest; else echo "pytest not installed — skipping"; fi
+      - name: Dependency audit (pip-audit)
+        if: steps.detect.outputs.found == 'true'
+        run: |
+          python -m pip install --quiet pip-audit
+          if [ -f requirements.txt ]; then pip-audit -r requirements.txt; else pip-audit; fi
       # Django: set DJANGO_SETTINGS_MODULE (+ SECRET_KEY) here and add a
       # `python manage.py migrate` step. Testcontainers-backed integration
       # tests need a container runtime; enable on a self-hosted arm64 runner.
+
+  secrets:
+    name: Secret scan (gitleaks)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: gitleaks
+        # The gitleaks CLI via its official image — no license key needed (the gitleaks
+        # GitHub Action requires one for organization repos).
+        run: docker run --rm -v "$PWD:/repo" zricethezav/gitleaks:v8.21.2 detect --source /repo --redact --no-banner
