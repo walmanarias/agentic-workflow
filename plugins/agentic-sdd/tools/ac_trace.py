@@ -24,9 +24,9 @@ import sys
 
 SKIP_DIRS = {"node_modules", ".git", "bin", "obj", "dist", "build", ".next", ".venv", "venv", "__pycache__", "coverage"}
 TEST_RE = re.compile(
-    r"(\.(test|spec|e2e)\.[cm]?[jt]sx?$)|(/__tests__/)|(^|/)(e2e|tests?)/|(^|/)test_[^/]*\.py$|_test\.py$|(^|/)conftest\.py$"
-    r"|\.Tests/|\.UITests/|Tests?\.cs$")
-E2E_RE = re.compile(r"(^|/)(e2e|playwright|cypress|detox|maestro|uitests?)(/|$)|\.e2e\.|\.UITests/|e2e", re.I)
+    r"(\.(test|spec|e2e|cy)\.[cm]?[jt]sx?$)|(\.(test|spec)\.py$)|(/__tests__/)|(^|/)(e2e|tests?|cypress|playwright)/|(^|/)test_[^/]*\.py$|_test\.py$"
+    r"|(^|/)conftest\.py$|Tests/")
+E2E_RE = re.compile(r"(^|/)(e2e|playwright|cypress|detox|maestro|uitests?)(/|$)|\.(e2e|cy)\.|\.(UI|Integration|E2E|Acceptance)Tests/|e2e", re.I)
 CODE_EXT = (".ts", ".tsx", ".js", ".jsx", ".mjs", ".cjs", ".mts", ".cts", ".py", ".cs", ".yaml", ".yml", ".feature")
 
 
@@ -45,20 +45,32 @@ def default_base():
     return None
 
 
+def resolve_spec(path):
+    """specs/<f>/ → specs/<f>/spec.md; also accepts the legacy specs/<f>.spec.md."""
+    cands = [path]
+    p = path.rstrip("/")
+    if os.path.isdir(p):
+        cands = [os.path.join(p, "spec.md")]
+    cands += [p + ".spec.md", p + "/spec.md"]
+    for c in cands:
+        if os.path.isfile(c):
+            return c
+    print(f"ac_trace: no spec found at {path} (tried {', '.join(cands)})", file=sys.stderr)
+    sys.exit(2)
+
+
 def parse_spec(path):
-    if os.path.isdir(path):
-        for name in ("spec.md",):
-            if os.path.isfile(os.path.join(path, name)):
-                path = os.path.join(path, name)
-                break
-        else:
-            sys.exit(f"ac_trace: no spec.md in {path}")
+    path = resolve_spec(path)
     with open(path, encoding="utf-8") as fh:
         text = fh.read()
     m = re.search(r"^##\s+Acceptance criteria.*?$(.*?)(?=^##\s|\Z)", text, re.M | re.S | re.I)
     section = m.group(1) if m else text
     acs = {}
     for line in section.splitlines():
+        stripped = line.strip()
+        # Template guidance (blockquotes) and retired ACs (~~AC-4~~ … retired) need no test.
+        if stripped.startswith(">") or "retired" in stripped.lower() or re.search(r"~~\s*\**AC-\d+", stripped):
+            continue
         for ac in re.findall(r"\bAC-(\d+)\b", line):
             key = f"AC-{ac}"
             acs.setdefault(key, False)

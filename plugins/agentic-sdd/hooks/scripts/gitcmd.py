@@ -1,19 +1,28 @@
 #!/usr/bin/env python3
 """Parse a shell command line and report the git commit / push invocations in it.
 
-Used by the agentic-sdd Bash hooks. Prints one line per invocation:
-    COMMIT <dir> <no_verify:0|1>
-    PUSH <force:0|1> <no_verify:0|1>
-<dir> is the directory passed with `git -C <dir>` (or "." when absent).
-Exit 0 always; prints nothing for commands that don't commit or push.
+Used by the agentic-sdd Bash hooks. Prints one TAB-separated line per invocation, the
+directory last (it may contain spaces):
+    COMMIT <no_verify> <all> <pathspec> <add_before> <dir>
+    PUSH   <force> <no_verify>
+Flags are 0/1. <all> = -a/--all; <pathspec> = files named on the command line, -i or -o;
+<add_before> = a `git add` ran earlier in the same command line (so the index the hook sees
+is not what will be committed). <dir> is resolved from `cd` and `git -C` (~ and $VARS
+expanded) against argv[2] (the hook's cwd) when given; "." when unknown.
+Exit 0 on success, 3 when the command can't be parsed (caller falls back to a regex).
 """
+import os
 import shlex
 import sys
 
-SEPARATORS = {"&&", "||", ";", "|", "&", "\n", "(", ")", ";;"}
-# Short options of `git commit` that take a value (the rest of the cluster or the next token).
-COMMIT_VALUE_OPTS = set("mFCcStu")
+OPS = set(";&|()\n")
+# Short options of `git commit` whose value is mandatory (rest of the cluster or next token).
+COMMIT_VALUE_OPTS = set("mFCct")
+COMMIT_LONG_VALUE = {"--message", "--file", "--reuse-message", "--reedit-message", "--fixup", "--squash",
+                     "--author", "--date", "--template", "--cleanup", "--trailer", "--pathspec-from-file"}
 GLOBAL_VALUE_OPTS = {"-C", "-c", "--git-dir", "--work-tree", "--namespace", "--exec-path"}
+WRAPPERS = {"sudo", "command", "env", "time", "nohup", "exec"}
+SHELLS = {"bash", "sh", "zsh"}
 
 
 def split_commands(cmd):
@@ -23,7 +32,7 @@ def split_commands(cmd):
     lex.commenters = ""
     current = []
     for tok in lex:
-        if tok in SEPARATORS or set(tok) <= set(";&|()\n"):
+        if tok and set(tok) <= OPS:
             if current:
                 yield current
             current = []
@@ -33,84 +42,123 @@ def split_commands(cmd):
         yield current
 
 
+def is_no_verify(a):
+    return a.startswith("--no-veri") and "--no-verify".startswith(a)
+
+
 def parse_commit(args):
-    no_verify = False
+    nv = all_ = pathspec = False
     i = 0
     while i < len(args):
         a = args[i]
         if a == "--":
+            pathspec = pathspec or i + 1 < len(args)
             break
-        if a == "--no-verify":
-            no_verify = True
+        if is_no_verify(a):
+            nv = True
+        elif a in ("--all",):
+            all_ = True
+        elif a in ("--include", "--only"):
+            pathspec = True
         elif a.startswith("--"):
-            if "=" not in a and a in ("--message", "--file", "--reuse-message", "--reedit-message",
-                                       "--fixup", "--squash", "--author", "--date", "--template",
-                                       "--cleanup", "--trailer", "--pathspec-from-file"):
+            if "=" not in a and a in COMMIT_LONG_VALUE:
                 i += 1
         elif a.startswith("-") and len(a) > 1:
             cluster = a[1:]
             for j, ch in enumerate(cluster):
                 if ch == "n":
-                    no_verify = True
+                    nv = True
+                elif ch == "a":
+                    all_ = True
+                elif ch in "io":
+                    pathspec = True
                 if ch in COMMIT_VALUE_OPTS:
                     if j == len(cluster) - 1:
-                        i += 1  # value is the next token
+                        i += 1
                     break
+                if ch in "Su":  # optional value, only ever attached (-S<key>, -u<mode>)
+                    break
+        else:
+            pathspec = True  # a bare argument is a pathspec
         i += 1
-    return no_verify
+    return nv, all_, pathspec
 
 
 def parse_push(args):
-    force = no_verify = False
+    force = nv = False
     for a in args:
         if a in ("--force", "--force-with-lease", "--force-if-includes", "--mirror") or a.startswith("--force-with-lease="):
             force = True
-        elif a == "--no-verify":
-            no_verify = True
+        elif is_no_verify(a):
+            nv = True
         elif a.startswith("-") and not a.startswith("--") and "f" in a[1:]:
             force = True
         elif a.startswith("+") and len(a) > 1:
-            force = True  # +refspec force-pushes that ref
-    return force, no_verify
+            force = True
+    return force, nv
 
 
-def main():
-    if len(sys.argv) < 2:
-        return
-    try:
-        commands = list(split_commands(sys.argv[1]))
-    except ValueError:
-        return
-    base = None  # directory from a preceding `cd <dir>` in the same command line
-    for toks in commands:
-        if len(toks) >= 2 and toks[0] == "cd":
-            base = toks[1] if base is None or toks[1].startswith("/") else base.rstrip("/") + "/" + toks[1]
-            continue
-        # Drop leading env assignments and wrappers like `sudo`, `command`, `env`.
-        while toks and ("=" in toks[0] and not toks[0].startswith("-") or toks[0] in ("sudo", "command", "env", "time", "nohup")):
+def resolve(base, d):
+    d = os.path.expandvars(os.path.expanduser(d))
+    if os.path.isabs(d):
+        return os.path.normpath(d)
+    return os.path.normpath(os.path.join(base, d)) if base else d
+
+
+def scan(cmd, base, out, depth=0):
+    add_seen = False
+    for toks in split_commands(cmd):
+        while toks and (("=" in toks[0] and not toks[0].startswith("-")) or toks[0] in WRAPPERS):
             toks = toks[1:]
-        if not toks or toks[0].rsplit("/", 1)[-1] != "git":
+        if not toks:
             continue
-        i, cwd = 1, "."
+        prog = toks[0].rsplit("/", 1)[-1]
+        if prog == "cd" and len(toks) >= 2:
+            base = resolve(base, toks[1])
+            continue
+        if prog in SHELLS and depth < 2:
+            for k, t in enumerate(toks[1:], 1):
+                if t == "-c" and k + 1 < len(toks):
+                    scan(toks[k + 1], base, out, depth + 1)
+                    break
+            continue
+        if prog != "git":
+            continue
+        i, cwd = 1, base
         while i < len(toks) and toks[i].startswith("-"):
             opt = toks[i]
             if opt in GLOBAL_VALUE_OPTS:
                 if opt == "-C" and i + 1 < len(toks):
-                    cwd = toks[i + 1]
+                    cwd = resolve(cwd, toks[i + 1])
                 i += 2
             else:
                 i += 1
         if i >= len(toks):
             continue
         sub, rest = toks[i], toks[i + 1:]
-        if base is not None and not cwd.startswith("/"):
-            cwd = base if cwd == "." else base.rstrip("/") + "/" + cwd
-        if sub == "commit":
-            print(f"COMMIT {shlex.quote(cwd)} {int(parse_commit(rest))}")
+        if sub in ("add", "rm", "mv", "stage"):
+            add_seen = True
+        elif sub == "commit":
+            nv, all_, ps = parse_commit(rest)
+            out.append("\t".join(["COMMIT", str(int(nv)), str(int(all_)), str(int(ps)), str(int(add_seen)), cwd or "."]))
         elif sub == "push":
             force, nv = parse_push(rest)
-            print(f"PUSH {int(force)} {int(nv)}")
+            out.append("\t".join(["PUSH", str(int(force)), str(int(nv))]))
+
+
+def main():
+    if len(sys.argv) < 2:
+        return 0
+    base = sys.argv[2] if len(sys.argv) > 2 and sys.argv[2] else None
+    out = []
+    try:
+        scan(sys.argv[1], base, out)
+    except ValueError:
+        return 3
+    if out:
+        print("\n".join(out))
+    return 0
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())

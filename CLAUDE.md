@@ -43,14 +43,14 @@ specs/<feature>/plan.md     slices T-1…T-n (1–3 ACs each, vertical, walking 
 specs/<feature>/status.md   phase · slice → commit · loop rounds · blockers · PR  (resume point)
 specs/<feature>/review.md   code-reviewer report (latest round)
 specs/<feature>/qa.md       visual QA report
-specs/fixes/<slug>.md       /fix notes (repro, root cause, AC-1)
+specs/fix-<slug>/           /fix — spec.md (repro, root cause, AC-1) + status.md, same tools
 docs/design/<feature>.md, docs/adr/NNNN-*.md        architect
 docs/conventions.md, docs/curation/<date>-<f>.md    curator
 ```
 
 ## Context & token discipline
 
-Artifacts on disk are the interface between phases. Every agent writes its full output to its artifact and returns only a compact summary — file paths, `AC-n`/`T-n` ids, verdict/counts. Pass paths between phases; never re-echo a subagent's output into the orchestrating thread. Each agent starts from the artifacts named in its task and widens its search only when they don't answer the question. Screenshots stay inside `qa-visual`'s context — only text findings + paths come back.
+Artifacts on disk are the interface between phases. Every agent writes its full output to its artifact and returns only a compact summary — file paths, `AC-n`/`T-n` ids, verdict/counts. Pass paths between phases; never re-echo a subagent's output into the orchestrating thread. Artifacts are committed with the work they describe (spec on approval, plan, then `status.md` with each slice commit). Each agent starts from the artifacts named in its task and widens its search only when they don't answer the question. Screenshots stay inside `qa-visual`'s context — only text findings + paths come back.
 
 ## Loop limits
 
@@ -117,12 +117,14 @@ Workflow playbooks in `plugins/agentic-sdd/skills/`: `spec-driven-development` (
 |---|---|---|
 | `SessionStart` | `session-start.sh` | Loop reminder, detected stack, tools path, in-flight features to resume |
 | `PreToolUse` (Edit/Write) | `guard-edits.sh` | **Blocks** focused/skipped tests, debugger statements, blanket lint/type suppressions |
-| `PreToolUse` (Edit/Write) | `role-guard.sh` | **Blocks** an agent writing outside its role (uses the hook input's `agent_type`) |
+| `PreToolUse` (Edit/Write/NotebookEdit) | `role-guard.sh` | **Blocks** an agent writing outside its role (uses the hook input's `agent_type`) |
 | `PreToolUse` (Bash) | `bash-guard.sh` | **Blocks** `git commit --no-verify`/`-n` and force pushes from agents |
 | `PreToolUse` (Bash `git commit`) | `pre-commit-gate.sh` | **Blocks the commit** on weakened tests, secrets, focus/debug markers, or failing lint/types/tests (JS per package; .NET format+build `-warnaserror`+test; Python ruff+mypy+pytest) |
 | `PostToolUse` (Edit/Write) | `post-edit-quality.sh` | Formats the changed file (ESLint / `dotnet format whitespace` / ruff/black); RED-tolerant for new tests |
 
-The gate is **polyglot** and runs only the toolchains the repo has. `AGENTIC_SDD_GATE=affected` (default) gates only the stacks a commit touches, with JS lint/tests scoped to the staged files; `full` runs everything on every commit. CI and `/ship` always run the full suites. Hooks never run network installs. `sdd-allow-skip: <reason>` on a line marks a deliberate skip; `Test-Change: <reason>` in the commit message marks a deliberate test removal.
+The gate is **polyglot** and runs only the toolchains the repo has. `AGENTIC_SDD_GATE=affected` (default) gates only the stacks a commit touches, with JS lint/tests scoped to the staged files; `full` runs everything on every commit. CI and `/ship` always run the full suites. Hooks never run network installs. The gate checks what will actually be committed — the index, or the whole working tree vs HEAD when the command also stages (`git add … && git commit`, `-a`, pathspecs). Escape hatches are deliberate and visible in history: `sdd-allow-skip: <reason>` on a line (a justified skipped test), `sdd-allow-secret: <reason>` on a line (a fake key in a fixture), `Test-Change: <reason>` in the commit message (deleting tests / removing assertions). Concluding a merge skips the test-weakening check (the other side's changes were gated on their own branch).
+
+**Known limit:** the role guard covers the file-editing tools (Edit/Write/MultiEdit/NotebookEdit); an agent with Bash could still write files through the shell. The commit gate is the backstop.
 
 ## Settings (env)
 

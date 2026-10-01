@@ -1,7 +1,7 @@
 ---
 description: Refactor code without changing behavior, guarded by green tests.
 argument-hint: <target code / smell>
-allowed-tools: Read, Write, Edit, Grep, Glob, Bash
+allowed-tools: Read, Write, Edit, Grep, Glob, Bash, Agent
 ---
 
 Invoke the `refactorer` agent for: **$ARGUMENTS**

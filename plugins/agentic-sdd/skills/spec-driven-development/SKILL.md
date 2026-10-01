@@ -43,9 +43,10 @@ specs/<feature>/
   review.md    code-reviewer report (latest round)
   qa.md        visual QA report
 docs/design/<feature>.md · docs/adr/NNNN-*.md · docs/curation/<date>-<feature>.md
-specs/fixes/<slug>.md       (/fix)
+specs/fix-<slug>/            (/fix — same files, size: bug)
 ```
-Legacy `specs/<feature>.spec.md` files are still read; new work uses the folder.
+Legacy `specs/<feature>.spec.md` files are still read; new work uses the folder. Every artifact is
+committed with the slice or fix it belongs to — the working tree is clean when the PR opens.
 
 ## Rules
 - No production code before an approved spec and a failing test for the behavior.

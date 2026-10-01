@@ -186,13 +186,26 @@ rel_path() {
 
 # is_any_test_file <path>: test code or test-support files in any supported stack.
 is_any_test_file() {
-  case "$1" in
-    *.md|*.mdx) return 1;;
-    *.test.*|*.spec.*|*.e2e.*|*/__tests__/*|*/__mocks__/*|__tests__/*|__mocks__/*) return 0;;
-    */e2e/*|e2e/*|*/tests/*|tests/*|*/test/*|test/*|*/fixtures/*|fixtures/*|*/testdata/*) return 0;;
+  local p="$1" base="${1##*/}"
+  case "$p" in *.md|*.mdx) return 1;; esac
+  # *.test.* / *.spec.* / *.e2e.* only for code files (not openapi.spec.yaml, foo.spec.md).
+  case "$base" in
+    *.test.*|*.spec.*|*.e2e.*|*.cy.*)
+      case "$base" in *.ts|*.tsx|*.js|*.jsx|*.mjs|*.cjs|*.mts|*.cts|*.vue|*.svelte|*.py|*.cs|*.snap) return 0;; esac ;;
+  esac
+  case "$p" in
+    */src/e2e/*|src/e2e/*) return 1;;   # e.g. end-to-end *encryption* code in src/
+  esac
+  case "$p" in
+    */__tests__/*|__tests__/*|*/__mocks__/*|__mocks__/*|*/__fixtures__/*|__fixtures__/*|*/__snapshots__/*) return 0;;
+    */mocks/*|mocks/*|*test-utils*|*test-helpers*|*testing-utils*) return 0;;
+    */e2e/*|e2e/*|*/tests/*|tests/*|*/test/*|test/*|*/testdata/*|cypress/*|*/cypress/*|playwright/*|*/playwright/*) return 0;;
     test_*.py|*/test_*.py|*_test.py|conftest.py|*/conftest.py|pytest.ini|*/pytest.ini) return 0;;
-    *.Tests/*|*.Tests.csproj|*Tests.cs|*Test.cs|*.UITests/*) return 0;;
-    jest.config.*|*/jest.config.*|vitest.config.*|*/vitest.config.*|playwright.config.*|*/playwright.config.*|cypress.config.*|*/cypress.config.*|karma.conf.*|*/karma.conf.*|.detoxrc*|*/.detoxrc*|.maestro/*|*/.maestro/*) return 0;;
+    *Tests/*|*Tests.csproj) return 0;;   # .NET test projects: X.Tests, X.UnitTests, X.IntegrationTests, X.UITests
+    *setupTests.*|*/test-setup.*|test-setup.*|*/vitest.setup.*|vitest.setup.*|*/jest.setup.*|jest.setup.*) return 0;;
+    jest.config.*|*/jest.config.*|vitest.config.*|*/vitest.config.*|vitest.workspace.*|*/vitest.workspace.*) return 0;;
+    playwright.config.*|*/playwright.config.*|cypress.config.*|*/cypress.config.*|karma.conf.*|*/karma.conf.*) return 0;;
+    .detoxrc*|*/.detoxrc*|.maestro/*|*/.maestro/*) return 0;;
   esac
   return 1
 }
@@ -204,11 +217,17 @@ SKIP_RE_JS='(^|[^A-Za-z0-9_$.])(x(it|test|describe)|f(it|describe)|(it|test|desc
 SKIP_RE_CS='(Fact|Theory|Test|TestMethod|AvaloniaFact|AvaloniaTheory)[[:space:]]*\([^)]*Skip[[:space:]]*=|\[Ignore|\[Explicit'
 SKIP_RE_PY='@pytest\.mark\.(skip|skipif|xfail)|pytest\.skip[[:space:]]*\(|@unittest\.(skip|expectedFailure)'
 # shellcheck disable=SC2034
-FOCUS_RE='\.only[[:space:]]*\(|(^|[^A-Za-z0-9_])debugger[[:space:]]*;|Debugger[[:space:]]*\.[[:space:]]*Break[[:space:]]*\(|pdb\.set_trace[[:space:]]*\(|(^|[^A-Za-z0-9_.])breakpoint[[:space:]]*\('
+# Focus / debugger markers per language (the gate applies each only to matching files).
+FOCUS_RE_JS_TEST='(^|[^A-Za-z0-9_$])(it|test|describe|context|suite)\.only[[:space:]]*\(|(^|[^A-Za-z0-9_$])f(it|describe)[[:space:]]*\('
+FOCUS_RE_JS='(^|[^A-Za-z0-9_])debugger[[:space:]]*;'
+# shellcheck disable=SC2034
+FOCUS_RE_PY='pdb\.set_trace[[:space:]]*\(|(^|[^A-Za-z0-9_.])breakpoint[[:space:]]*\(\)'
+# shellcheck disable=SC2034
+FOCUS_RE_CS='Debugger[[:space:]]*\.[[:space:]]*Break[[:space:]]*\('
 # shellcheck disable=SC2034
 ASSERT_RE='expect[[:space:]]*\(|assert|Assert\.|\.Should\(|\.should[.(]|verify[[:space:]]*\(|toHaveBeenCalled'
 # shellcheck disable=SC2034
-SECRET_RE='AKIA[0-9A-Z]{16}|-----BEGIN ([A-Z]+ )?PRIVATE KEY-----|ghp_[A-Za-z0-9]{36}|github_pat_[A-Za-z0-9_]{40,}|xox[baprs]-[A-Za-z0-9-]{10,}|sk-[A-Za-z0-9]{32,}|sk_live_[A-Za-z0-9]{20,}|AIza[0-9A-Za-z_-]{35}'
+SECRET_RE='AKIA[0-9A-Z]{16}|-----BEGIN ([A-Z]+ )?PRIVATE KEY-----|gh[pousr]_[A-Za-z0-9]{36}|github_pat_[A-Za-z0-9_]{40,}|xox[baprs]-[A-Za-z0-9-]{10,}|(^|[^A-Za-z0-9])sk-(ant-|proj-|svcacct-)?[A-Za-z0-9_-]{32,}|(^|[^A-Za-z0-9])[rs]k_live_[A-Za-z0-9]{20,}|AIza[0-9A-Za-z_-]{35}'
 
 # skip_re_for <path>: the skip regex for a test file's language (empty if none).
 skip_re_for() {
@@ -239,23 +258,29 @@ npm_dep_in() {
   grep -q "\"$2\"[[:space:]]*:" "$1/package.json" 2>/dev/null
 }
 
-# git_cmd_info <command>: parse a Bash command line and print one line per git
-# invocation of interest:  COMMIT <dir> <no_verify 0|1>   |   PUSH <force 0|1> <no_verify 0|1>
+# git_cmd_info <command> [base-dir]: parse a Bash command line (gitcmd.py) and print one
+# TAB-separated line per git invocation of interest:
+#   COMMIT <no_verify> <all> <pathspec> <add_before> <dir>      PUSH <force> <no_verify>
+# Falls back to a coarse regex when python is missing or the command can't be parsed.
 git_cmd_info() {
   local py; py="$(python_cmd)"
   if [ -n "$py" ]; then
-    "$py" "$(sdd_scripts_dir)/gitcmd.py" "$1" 2>/dev/null && return 0
+    "$py" "$(sdd_scripts_dir)/gitcmd.py" "$1" "${2:-}" 2>/dev/null && return 0
   fi
-  # Fallback (no python): coarse regex.
-  local c="$1"
-  if printf '%s' "$c" | grep -Eq '(^|[;&|[:space:]])git([[:space:]]+-[cC][[:space:]]+[^[:space:]]+)*[[:space:]]+commit([[:space:]]|$)'; then
-    local nv=0; printf '%s' "$c" | grep -Eq -- '--no-verify|[[:space:]]-[a-zA-Z]*n[a-zA-Z]*([[:space:]]|$)' && nv=1
-    printf 'COMMIT . %s\n' "$nv"
+  local c="$1" base="${2:-.}" tab=$'\t'
+  if printf '%s' "$c" | grep -Eq '(^|[;&|[:space:]"'"'"'])git([[:space:]]+-[cC][[:space:]]+[^[:space:]]+)*[[:space:]]+commit([[:space:]]|$)'; then
+    local nv=0 all=0 add=0
+    printf '%s' "$c" | grep -Eq -- '--no-veri|[[:space:]]-[a-zA-Z]*n[a-zA-Z]*([[:space:]]|$)' && nv=1
+    printf '%s' "$c" | grep -Eq -- '--all|[[:space:]]-[a-zA-Z]*a[a-zA-Z]*([[:space:]]|$)' && all=1
+    printf '%s' "$c" | grep -Eq 'git[[:space:]]+(add|rm|mv)[[:space:]]' && add=1
+    # Unparseable: assume the worst about what gets committed (pathspec=1).
+    printf 'COMMIT%s%s%s%s%s1%s%s%s%s\n' "$tab" "$nv" "$tab" "$all" "$tab" "$tab" "$add" "$tab" "$base"
   fi
-  if printf '%s' "$c" | grep -Eq '(^|[;&|[:space:]])git([[:space:]]+-[cC][[:space:]]+[^[:space:]]+)*[[:space:]]+push([[:space:]]|$)'; then
+  if printf '%s' "$c" | grep -Eq '(^|[;&|[:space:]"'"'"'])git([[:space:]]+-[cC][[:space:]]+[^[:space:]]+)*[[:space:]]+push([[:space:]]|$)'; then
     local f=0 nv=0
-    printf '%s' "$c" | grep -Eq -- '--force|[[:space:]]-f([[:space:]]|$)|[[:space:]]\+[^[:space:]]+' && f=1
-    printf '%s' "$c" | grep -Eq -- '--no-verify' && nv=1
-    printf 'PUSH %s %s\n' "$f" "$nv"
+    printf '%s' "$c" | grep -Eq -- '--force|--mirror|[[:space:]]-[a-zA-Z]*f[a-zA-Z]*([[:space:]]|$)|[[:space:]]\+[^[:space:]]+' && f=1
+    printf '%s' "$c" | grep -Eq -- '--no-veri' && nv=1
+    printf 'PUSH%s%s%s%s\n' "$tab" "$f" "$tab" "$nv"
   fi
+  return 0
 }

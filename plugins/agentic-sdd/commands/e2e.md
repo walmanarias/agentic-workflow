@@ -1,7 +1,7 @@
 ---
 description: Add reliable end-to-end / integration tests for a flow.
 argument-hint: <user flow or feature>
-allowed-tools: Read, Write, Edit, Grep, Glob, Bash
+allowed-tools: Read, Write, Edit, Grep, Glob, Bash, Agent
 ---
 
 Invoke the `e2e-tester` agent for: **$ARGUMENTS**

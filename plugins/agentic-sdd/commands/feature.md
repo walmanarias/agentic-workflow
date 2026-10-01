@@ -23,11 +23,12 @@ commits, and the human gates. Stop and ask the user only at the gates (🚦).
 
 ## 1. Spec — `spec-writer` → `specs/<feature>/spec.md`
 🚦 Show the numbered ACs, the size, and open questions; get approval. Record `Approved` + version in
-the spec and in `status.md`.
+the spec, then commit it: `docs(spec): <feature> v1`.
 
 ## 2. Plan — `/plan`
 - *feature/large:* `architect` → `docs/design/<feature>.md` + ADRs. 🚦 Show the 3–6 key decisions; get approval.
-- Always: `planner` → `specs/<feature>/plan.md` + `status.md` (slices of 1–3 ACs).
+- Always: `planner` → `specs/<feature>/plan.md` + `status.md` (slices of 1–3 ACs). Commit with the
+  design docs: `docs(plan): <feature>`.
 
 ## 3. Slices — for each `todo` slice T-n, in plan order
 1. **RED:** `tdd-test-writer` scoped to T-n's ACs. Confirm they fail for the right reason.
@@ -35,20 +36,23 @@ the spec and in `status.md`.
    `Stack →` line). Tests stay green through the refactor.
 3. **Trace:** `python3 "${CLAUDE_PLUGIN_ROOT}/tools/ac_trace.py" specs/<feature>` — T-n's ACs must
    show OK (gaps from later slices are expected).
-4. **Commit:** `git add` the slice's files; `git commit -m "feat(<scope>): <slice> (AC-x, AC-y)"`.
-   The gate runs; if it blocks, fix the cause (via the right agent) — never bypass.
-5. Update `status.md`: T-n → `done` + sha; phase → next slice.
+4. **Status:** update `status.md`: T-n → `done`; phase → next slice.
+5. **Commit:** `git add` the slice's files **and** `specs/<feature>/status.md` in one command, then
+   `git commit -m "feat(<scope>): <slice> (AC-x, AC-y)"` in a separate command. The gate runs; if it
+   blocks, fix the cause (via the right agent) — never bypass. The sha is in `git log`.
 
 **Spec wrong mid-slice?** Stop. `spec-writer` amends (version bump, status Draft) → 🚦 re-approval →
 `planner` re-slices → then tests change deliberately (`Test-Change:` trailer).
 
-## 4. E2E — `e2e-tester` for every `(E2E)` AC → commit `test(e2e): …`.
+## 4. E2E — `e2e-tester` for every `(E2E)` AC → commit `test(e2e): …` (with `status.md`).
 
 ## 5. Visual QA — `qa-visual` (UI changes only) → `specs/<feature>/qa.md`. Blocking + Should-fix go
 to `implementer`; re-inspect only the fixed screens. Commit fixes.
 
 ## 6. Review — `code-reviewer` on `merge-base..HEAD` → `specs/<feature>/review.md`. Blocking +
 Should-fix go back to `implementer` (or `refactorer` for pure structure), then re-review the delta.
+Commit the fixes together with `review.md` / `qa.md` / `status.md` — artifacts are always committed,
+so the working tree is clean for the PR.
 
 ## 7. Open the PR — `/create-pr` (push + `gh pr create` + description). Phase → `pr-open`.
 Then **pause**: tell the user the PR is open and that `/feature <feature>` resumes after reviewers

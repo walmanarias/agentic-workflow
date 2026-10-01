@@ -21,7 +21,7 @@ import sys
 import xml.etree.ElementTree as ET
 
 SRC_EXT = (".ts", ".tsx", ".js", ".jsx", ".mjs", ".cjs", ".mts", ".cts", ".py", ".cs")
-TEST_RE = re.compile(r"(\.(test|spec|e2e)\.)|(/__tests__/)|(^|/)(e2e|tests?)/|(^|/)test_[^/]*\.py$|_test\.py$|conftest\.py$|\.Tests/|Tests?\.cs$|\.d\.ts$")
+TEST_RE = re.compile(r"(\.(test|spec|e2e|cy)\.)|(/__tests__/)|(^|/)(e2e|tests?|cypress|playwright)/|(^|/)test_[^/]*\.py$|_test\.py$|conftest\.py$|Tests/|\.d\.ts$")
 IGNORE_DIRS = ("node_modules/", "/bin/", "/obj/", ".venv/", "venv/", "dist/", "build/")
 
 
@@ -45,8 +45,14 @@ def norm(p):
 
 
 def load_reports(paths):
-    """Return {path: (covered_lines, total_lines)} merged across reports."""
+    """Return {path: (covered_lines, total_lines)} merged across reports.
+
+    Cobertura reports carry line numbers, so overlapping reports (unit + integration test
+    projects, re-runs) are merged as a union of covered lines. Istanbul json-summary has only
+    counts; when a file appears in several summaries the best one wins.
+    """
     data = {}
+    lines_all, lines_hit = {}, {}
     for rp in paths:
         try:
             if rp.endswith(".json"):
@@ -56,7 +62,10 @@ def load_reports(paths):
                     if path == "total":
                         continue
                     lines = stats.get("lines", {})
-                    data[norm(path)] = (lines.get("covered", 0), lines.get("total", 0))
+                    cur = (lines.get("covered", 0), lines.get("total", 0))
+                    prev = data.get(norm(path))
+                    if prev is None or (prev[1] and cur[1] and cur[0] / cur[1] > prev[0] / prev[1]):
+                        data[norm(path)] = cur
             else:
                 root = ET.parse(rp).getroot()
                 sources = [norm(s.text or "") for s in root.iter("source")]
@@ -65,14 +74,17 @@ def load_reports(paths):
                     lines = cls.find("lines")
                     if lines is None:
                         continue
-                    hits = [int(l.get("hits", "0")) for l in lines.iter("line")]
-                    cov, tot = sum(1 for h in hits if h > 0), len(hits)
-                    keys = [fn] + [norm(os.path.join(s, fn)) for s in sources if s]
-                    for k in keys:
-                        c0, t0 = data.get(k, (0, 0))
-                        data[k] = (c0 + cov, t0 + tot)
+                    keys = {fn} | {norm(os.path.join(s, fn)) for s in sources if s}
+                    for line in lines.iter("line"):
+                        n = line.get("number")
+                        for k in keys:
+                            lines_all.setdefault(k, set()).add(n)
+                            if int(line.get("hits", "0")) > 0:
+                                lines_hit.setdefault(k, set()).add(n)
         except (OSError, ValueError, ET.ParseError):
             continue
+    for k, all_lines in lines_all.items():
+        data[k] = (len(lines_hit.get(k, set())), len(all_lines))
     return data
 
 

@@ -4,6 +4,8 @@
 # restricted. Only agentic-sdd's own agents are guarded (bare name or `agentic-sdd:` prefix).
 # Exit 2 => blocked with the reason fed back to the agent.
 # Escape hatch for humans: AGENTIC_SDD_ROLE_GUARD=off in settings env.
+# Limitation: it guards the file-editing tools (Edit/Write/MultiEdit/NotebookEdit); an agent
+# with Bash could still write files through the shell — the commit gate is the backstop.
 DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"; source "$DIR/lib.sh"
 [ "${AGENTIC_SDD_ROLE_GUARD:-on}" = "off" ] && exit 0
 read_hook_input
@@ -16,6 +18,7 @@ case "$agent" in
 esac
 
 file="$(json_get '.tool_input.file_path')"
+[ -z "$file" ] && file="$(json_get '.tool_input.notebook_path')"
 [ -z "$file" ] && exit 0
 rel="$(rel_path "$file")"
 

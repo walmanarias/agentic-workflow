@@ -60,7 +60,11 @@ jobs:
         run: npm run test:e2e --if-present
       - name: Dependency audit (high+)
         if: steps.detect.outputs.found == 'true'
-        run: npm audit --audit-level=high --omit=dev
+        run: |
+          if [ -f package-lock.json ]; then npm audit --audit-level=high --omit=dev
+          elif [ -f pnpm-lock.yaml ]; then npx --yes pnpm audit --audit-level high --prod
+          elif [ -f yarn.lock ]; then echo "yarn.lock found — run 'yarn npm audit' (Berry) or 'yarn audit' (v1) in your pipeline"
+          else echo "No lockfile — skipping dependency audit"; fi
 
   dotnet:
     name: .NET (C# / Avalonia)
@@ -168,4 +172,6 @@ jobs:
       - name: gitleaks
         # The gitleaks CLI via its official image — no license key needed (the gitleaks
         # GitHub Action requires one for organization repos).
-        run: docker run --rm -v "$PWD:/repo" zricethezav/gitleaks:v8.21.2 detect --source /repo --redact --no-banner
+        # Run as the runner's user so git inside the container doesn't flag the mount as
+        # "dubious ownership".
+        run: docker run --rm -u "$(id -u):$(id -g)" -v "$PWD:/repo" zricethezav/gitleaks:v8.21.2 detect --source /repo --redact --no-banner

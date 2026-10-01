@@ -28,6 +28,30 @@ rules are enforced by hooks rather than only by prompts.
   scans for secrets (plus gitleaks when installed).
 - `tools/ac_trace.py` and `tools/coverage_check.py` back `/ship`'s traceability and coverage items.
 
+### Hardening (from an adversarial review of this release)
+- The gate checks what will actually be committed: `git add … && git commit`, `-a`, pathspecs and
+  `-i/-o` are gated against the working tree vs HEAD (+ untracked files), not the stale index.
+- Robust command parsing: paths with spaces / non-ASCII / `~` / `$VAR`, `bash -c "…"`,
+  `-S`/`-u` attached values, abbreviated `--no-verif`, and an unparseable command falls back to a
+  regex instead of disabling the guards. The hook input's `cwd` is honored.
+- Focus/debug markers are checked per language (no more blocks on Django `.only()`, SCSS
+  `breakpoint()`, or Markdown); secret regex covers `sk-ant-…` / `sk-proj-…` keys, avoids
+  `task-<hex>` false positives, and supports `sdd-allow-secret: <reason>`.
+- Non-ASCII filenames (core.quotePath), concluding a merge, bash 3.2 empty arrays (macOS),
+  `.vue`/`.svelte`-only commits, and a commit message containing `-name` no longer misbehave.
+- Test/production path classification fixed both ways (MSW `mocks/`, `setupTests`, `test-utils`,
+  cypress/playwright support, `*.UnitTests` projects ↔ `AbTest.cs`, `openapi.spec.yaml`,
+  `src/e2e/`, Django fixtures); NotebookEdit is guarded too.
+- RED tolerance also ignores the type-aware `@typescript-eslint/no-unsafe-*` cascade in a test whose
+  import doesn't exist yet; ESLint is only invoked where it is configured.
+- `ac_trace.py` ignores retired ACs and template guidance, reads the legacy layout, exits 2 on a
+  missing spec; `coverage_check.py` merges overlapping Cobertura reports by line.
+- `/fix` uses `specs/fix-<slug>/`; workflow artifacts are committed with the work; commands that
+  delegate to agents allow the Agent tool; `install.sh` deep-merges `settings.json` (it used to
+  replace the project's permission and hook arrays).
+- CI template: npm audit only with a package-lock (pnpm audit for pnpm), gitleaks runs as the
+  runner user.
+
 ### Speed & practicality
 - `AGENTIC_SDD_GATE=affected` (default): only the touched stacks; JS lint + related tests per
   package (monorepo-aware). `full` restores 1.x behavior.

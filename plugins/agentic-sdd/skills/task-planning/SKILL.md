@@ -35,9 +35,9 @@ Use `references/plan-template.md`. Then create or update `specs/<feature>/status
 ## The per-slice cycle (what `/feature` runs for each slice)
 1. `tdd-test-writer` — failing tests for the slice's ACs only (RED, fails for the right reason).
 2. `implementer` — minimum code to pass, then refactor on green (GREEN → REFACTOR).
-3. Orchestrator — run `ac_trace.py` for the slice's ACs, then commit
-   `feat(<scope>): <slice title> (AC-x, AC-y)`; the pre-commit gate must pass.
-4. Update `status.md`: slice → `done` + commit sha.
+3. Orchestrator — run `ac_trace.py` for the slice's ACs and mark the slice `done` in `status.md`.
+4. Commit the slice and `status.md` together: `feat(<scope>): <slice title> (AC-x, AC-y)`; the
+   pre-commit gate must pass (stage and commit in separate commands).
 
 ## When the spec turns out wrong mid-slice
 Stop the slice. `spec-writer` amends the spec (bumps `Version`, records the change in the spec's

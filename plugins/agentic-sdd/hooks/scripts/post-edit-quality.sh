@@ -11,21 +11,30 @@ case "$file" in *node_modules*|*/dist/*|*/build/*|*/.next/*|*/bin/*|*/obj/*|*/.v
 [ -f "$file" ] || exit 0
 
 # Rules that legitimately fail during RED: a new test imports a module that doesn't exist yet.
-RED_RULES='import/no-unresolved,import-x/no-unresolved,n/no-missing-import,node/no-missing-import,import/named,import-x/named'
+# When a test imports a module that doesn't exist yet, type-aware rules cascade (the import is
+# `any`), so those are ignored too — but only in a file that has an unresolved import.
+RED_ROOT_RULES='import/no-unresolved,import-x/no-unresolved,n/no-missing-import,node/no-missing-import,import/named,import-x/named'
+RED_CASCADE_PREFIXES='@typescript-eslint/no-unsafe-,@typescript-eslint/no-redundant-type-constituents,@typescript-eslint/no-unsafe'
 
 # --- JavaScript / TypeScript: ESLint --fix on the changed file (nearest package with ESLint) ---
 if is_js_file "$file"; then
   command -v npx >/dev/null 2>&1 || exit 0
   root="$(nearest_dir_with "$file" package.json)"; [ -z "$root" ] && root="$(project_root)"
+  # Only when ESLint is actually configured for this file (biome/next-lint repos are left alone).
+  [ -n "$(nearest_dir_with "$file" eslint.config.js eslint.config.mjs eslint.config.cjs eslint.config.ts eslint.config.mts .eslintrc .eslintrc.js .eslintrc.cjs .eslintrc.json .eslintrc.yml .eslintrc.yaml)" ] || exit 0
   ( cd "$root" && npx --no-install eslint --version >/dev/null 2>&1 ) || exit 0
   out="$( cd "$root" && npx --no-install eslint --fix "$file" 2>&1 )"; status=$?
   if [ $status -ne 0 ] && is_any_test_file "$(rel_path "$file")"; then
     # RED tolerance: ignore unresolved-import errors in test files; anything else still blocks.
     remaining="$( cd "$root" && npx --no-install eslint --format json "$file" 2>/dev/null | node -e '
       let s="";process.stdin.on("data",d=>s+=d).on("end",()=>{try{
-        const ignore=new Set(process.argv[1].split(","));
-        const r=JSON.parse(s);let n=0;for(const f of r)for(const m of f.messages)if(m.severity===2&&!ignore.has(m.ruleId))n++;
-        console.log(n);}catch{console.log(-1)}})' "$RED_RULES" )"
+        const roots=new Set(process.argv[1].split(",")),cascade=process.argv[2].split(",");
+        const r=JSON.parse(s);let n=0;
+        for(const f of r){const errs=f.messages.filter(m=>m.severity===2);
+          const red=errs.some(m=>roots.has(m.ruleId));
+          for(const m of errs){const id=m.ruleId||"";
+            if(red&&(roots.has(id)||cascade.some(p=>id.startsWith(p))))continue;n++;}}
+        console.log(n);}catch{console.log(-1)}})' "$RED_ROOT_RULES" "$RED_CASCADE_PREFIXES" )"
     [ "$remaining" = "0" ] && exit 0
   fi
   if [ $status -ne 0 ]; then

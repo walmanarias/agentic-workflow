@@ -65,8 +65,19 @@ SETTINGS="$DEST/settings.json"
 if [ -f "$SETTINGS" ] && [ "$FORCE" != "--force" ]; then
   if command -v jq >/dev/null 2>&1; then
     tmp="$(mktemp)"
-    jq -s '.[0] * .[1]' "$SETTINGS" "$TEMPLATE" > "$tmp" && mv "$tmp" "$SETTINGS"
-    echo "  ~ settings.json (merged with existing)"
+    # Deep merge: objects merge key by key, arrays are concatenated without duplicates (so the
+    # project's own permissions and hooks survive), scalars take the template's value.
+    jq -s '
+      def dedupe: reduce .[] as $x ([]; if any(.[]; . == $x) then . else . + [$x] end);
+      def deepmerge($a; $b):
+        if ($a|type) == "object" and ($b|type) == "object" then
+          reduce ((($a|keys_unsorted) + ($b|keys_unsorted)) | unique)[] as $k ({};
+            .[$k] = (if ($a|has($k)) and ($b|has($k)) then deepmerge($a[$k]; $b[$k])
+                     elif ($b|has($k)) then $b[$k] else $a[$k] end))
+        elif ($a|type) == "array" and ($b|type) == "array" then ($a + $b) | dedupe
+        else $b end;
+      deepmerge(.[0]; .[1])' "$SETTINGS" "$TEMPLATE" > "$tmp" && mv "$tmp" "$SETTINGS"
+    echo "  ~ settings.json (deep-merged with existing: your permissions and hooks are kept)"
   else
     cp "$TEMPLATE" "$DEST/settings.agentic-sdd.json"
     echo "  ! existing settings.json kept; wrote settings.agentic-sdd.json — merge the \"hooks\" and \"permissions\" keys manually (or install jq)."

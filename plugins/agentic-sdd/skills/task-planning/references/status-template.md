@@ -7,9 +7,9 @@
 - **PR:** —
 
 ## Slices
-| Slice | ACs | State | Commit |
-|---|---|---|---|
-| T-1 | AC-1 | todo | |
+| Slice | ACs | State |
+|---|---|---|
+| T-1 | AC-1 | todo |
 
 ## Loop rounds (max $AGENTIC_SDD_MAX_ROUNDS, default 3)
 - qa: 0 · review: 0 · triage: 0

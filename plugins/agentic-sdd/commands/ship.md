@@ -1,7 +1,7 @@
 ---
 description: Ship the PR — verify the Definition of Done and CI, get the human's explicit go, merge, and watch the deploy.
 argument-hint: '[feature or PR number]'
-allowed-tools: Bash, Read, Grep, Glob, Edit, Skill
+allowed-tools: Bash, Read, Grep, Glob, Edit, Skill, Agent
 ---
 
 Ship: **$ARGUMENTS** (default: the current branch's PR).

@@ -108,7 +108,7 @@ From your local checkout of this template:
 bash scripts/install.sh /path/to/your/repo
 ```
 
-This copies `agents/`, `commands/`, `skills/`, `hooks/`, `tools/`, and `rules/` into `<repo>/.claude/` (rewriting `${CLAUDE_PLUGIN_ROOT}` references to `.claude`), writes `.claude/settings.json` (merged with any existing one when `jq` is available — template values win on conflicts), and adds a starter `CLAUDE.md` if the repo doesn't already have one. The `.claude/` folder is meant to be **committed** to the target repo.
+This copies `agents/`, `commands/`, `skills/`, `hooks/`, `tools/`, and `rules/` into `<repo>/.claude/` (rewriting `${CLAUDE_PLUGIN_ROOT}` references to `.claude`), writes `.claude/settings.json` (deep-merged with any existing one when `jq` is available — your permissions and hooks are kept, arrays are combined, template values win only on scalar conflicts), and adds a starter `CLAUDE.md` if the repo doesn't already have one. The `.claude/` folder is meant to be **committed** to the target repo.
 
 Flags:
 
@@ -126,7 +126,7 @@ cd /path/to/agentic-workflow && git pull      # 1. update the template itself
 bash scripts/install.sh /path/to/your/repo    # 2. re-apply it (add --with-ci to refresh CI)
 ```
 
-Re-running **fully replaces** `agents/`, `commands/`, `skills/`, `tools/`, and the template's `rules/` (so renamed or removed files are cleaned up, not left stale) while **keeping your curated `9x-*` rules**, and re-applies the hooks. Your `settings.json` is re-merged — pass `--force` to overwrite it. ⚠️ The `jq` merge replaces overlapping **arrays** wholesale, so re-check `permissions` if you customized them. Then commit the refreshed `.claude/`.
+Re-running **fully replaces** `agents/`, `commands/`, `skills/`, `tools/`, and the template's `rules/` (so renamed or removed files are cleaned up, not left stale) while **keeping your curated `9x-*` rules**, and re-applies the hooks. Your `settings.json` is re-merged — pass `--force` to overwrite it. Then commit the refreshed `.claude/`.
 
 ## CI: two separate things
 
@@ -156,7 +156,11 @@ No production code before a failing test. Never weaken a test to pass. One slice
 - **Order:** `/spec` now comes before `/plan`, and `/plan` produces a **slice plan** (plus the architect's design only for feature/large changes). `/curate` moved after `/triage`. New: `/create-pr`, `/triage`, `/fix`; `/ship` now merges after your confirmation.
 - **Layout:** specs live in `specs/<feature>/spec.md` next to `plan.md`, `status.md`, `review.md`, `qa.md`. Legacy `specs/<feature>.spec.md` files are still read.
 - **Gate:** the commit gate is scoped to the touched stacks by default — set `AGENTIC_SDD_GATE=full` for the 1.x behavior. Hook messages are English by default — set `AGENTIC_SDD_LANG=es` for Spanish.
-- **Test changes:** removing tests or assertions now needs a `Test-Change: <reason>` commit trailer.
+- **Test changes:** removing tests or assertions now needs a `Test-Change: <reason>` commit trailer; a deliberate skip needs `sdd-allow-skip: <reason>` on the line, a fake key in a fixture `sdd-allow-secret: <reason>`.
+- **Fixes:** `/fix` keeps its spec and status in `specs/fix-<slug>/`, so `/review`, `/ship` and `ac_trace.py` work the same as for features.
+- **Artifacts are committed:** the spec on approval, the plan, and `status.md` with every slice commit — the working tree is clean when `/create-pr` runs.
+- **Copy installs:** re-running `install.sh` now deep-merges `settings.json` (your permissions and hooks are kept).
+- **Note for this repo's contributors:** if you dogfood the plugin here, the fixture secrets in `tests/run.sh` carry `sdd-allow-secret:` markers so the gate lets them through.
 
 ## License
 

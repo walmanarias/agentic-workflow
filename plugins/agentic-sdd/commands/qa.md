@@ -1,7 +1,7 @@
 ---
 description: Visually QA a user-facing flow — capture screenshots and catch visual bugs functional tests miss.
 argument-hint: <user flow or screen>
-allowed-tools: Read, Write, Grep, Glob, Bash
+allowed-tools: Read, Write, Grep, Glob, Bash, Agent
 ---
 
 Invoke the `qa-visual` agent for: **$ARGUMENTS**
