@@ -24,7 +24,8 @@ commands=$(find "$P/commands" -name '*.md' | wc -l | tr -d ' ')
 skills=$(find "$P/skills" -mindepth 1 -maxdepth 1 -type d | wc -l | tr -d ' ')
 experts=$(find "$P/skills" -mindepth 1 -maxdepth 1 -type d -name '*-expert' | wc -l | tr -d ' ')
 playbooks=$((skills - experts))
-has() { sed 's/\*\*//g' "$ROOT/$1" | grep -q -- "$2"; }
+# No pipe into `grep -q` here: with pipefail its early exit SIGPIPEs sed and flakes the check.
+has() { local c; c="$(sed 's/\*\*//g' "$ROOT/$1")"; [[ "$c" == *"$2"* ]]; }
 for f in README.md plugins/agentic-sdd/README.md; do
   has "$f" "$agents lifecycle agents" || err "$f: expected '$agents lifecycle agents'"
   has "$f" "$playbooks workflow playbooks" || err "$f: expected '$playbooks workflow playbooks'"
