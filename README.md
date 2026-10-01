@@ -143,6 +143,20 @@ The hooks degrade gracefully — missing tooling is skipped, never failed. For t
 - **.NET:** a `.sln`/`.csproj`, the .NET 8/9 SDK (`dotnet`), and a `*.Tests` xUnit project. For Testcontainers-backed integration tests, a container runtime (Docker Desktop or Colima/Podman) running on arm64. For Avalonia Appium E2E on macOS, grant the test runner Accessibility permission (System Settings → Privacy & Security → Accessibility).
 - **Python:** a `pyproject.toml`/`setup.py`/`requirements.txt`, plus the tools the project adopts — `ruff` (lint + format), `mypy` (types), and `pytest` (with a `tests/` dir or `conftest.py`). Django adds `pytest-django` + `DJANGO_SETTINGS_MODULE`; integration tests reuse the same arm64 container runtime via Testcontainers.
 
+## Configuration
+
+Set these in the target repo's `.claude/settings.json` `env` (the copy installer writes the defaults):
+
+| Variable | Default | Meaning |
+| --- | --- | --- |
+| `AGENTIC_SDD_LANG` | `en` | Hook message language (`en` / `es`) |
+| `AGENTIC_SDD_GATE` | `affected` | Commit gate scope: `affected` (touched stacks, related tests) or `full` (everything, every commit) |
+| `AGENTIC_SDD_COVERAGE` | `80` | Changed-files line-coverage threshold checked by `/ship` |
+| `AGENTIC_SDD_MAX_ROUNDS` | `3` | Max QA / review / triage fix-rounds before handing back to you |
+| `AGENTIC_SDD_ROLE_GUARD` | `on` | `off` disables the per-agent write scopes (for humans debugging the workflow) |
+
+The settings template also narrows permissions: routine test/lint/git/gh-read commands are allowed, `git push` and `gh pr merge` always ask, and `--no-verify`, force pushes and destructive `gh` calls are denied.
+
 ## The workflow in one line
 
 /spec → /plan → [per slice: /tdd → /implement → commit] → /e2e → /qa → /review → /create-pr → /triage → /curate → /ship
@@ -161,6 +175,17 @@ No production code before a failing test. Never weaken a test to pass. One slice
 - **Artifacts are committed:** the spec on approval, the plan, and `status.md` with every slice commit — the working tree is clean when `/create-pr` runs.
 - **Copy installs:** re-running `install.sh` now deep-merges `settings.json` (your permissions and hooks are kept).
 - **Note for this repo's contributors:** if you dogfood the plugin here, the fixture secrets in `tests/run.sh` carry `sdd-allow-secret:` markers so the gate lets them through.
+
+## Developing this template
+
+```bash
+bash tests/run.sh                    # behavioral tests: every hook, tool and the installer
+bash scripts/check-consistency.sh    # loop line, counts, versions, stack registry, frontmatter
+claude plugin validate --strict plugins/agentic-sdd
+claude plugin eval plugins/agentic-sdd --allow-tools Write Edit --scaffold   # prompt evals (costs model calls)
+```
+
+Adding a stack = one entry in `plugins/agentic-sdd/tools/stacks.json` + the `skills/<name>-expert/` folder; the consistency check fails if either is missing. See [`CHANGELOG.md`](./CHANGELOG.md) for what changed per version.
 
 ## License
 
