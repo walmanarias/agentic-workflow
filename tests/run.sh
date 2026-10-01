@@ -37,6 +37,8 @@ expect "blocks pytest xfail"               2 hook guard-edits.sh "$(edit_payload
 expect "blocks xunit Skip="                2 hook guard-edits.sh "$(edit_payload "$WORK/App.Tests/FooTests.cs" '[Fact(Skip = "flaky")]')"
 expect "blocks debugger"                   2 hook guard-edits.sh "$(edit_payload "$WORK/src/a.ts" "debugger;")"
 expect "allows clean edit"                 0 hook guard-edits.sh "$(edit_payload "$WORK/src/a.ts" "export const x = 1;")"
+BIG="$(printf 'debugger;\n'; for i in $(seq 1 3500); do printf 'export const v%s = %s;\n' "$i" "$i"; done)"
+expect "large edit: early match not lost"  2 hook guard-edits.sh "$(edit_payload "$WORK/src/big.ts" "$BIG")"
 expect "blocks legacy MultiEdit edits[]"   2 hook guard-edits.sh "$(json '{"tool_name":"MultiEdit","tool_input":{"file_path":"'"$WORK"'/a.test.ts","edits":[{"old_string":"a","new_string":"describe.skip(\"x\", () => {})"}]}}')"
 
 echo "role-guard"
