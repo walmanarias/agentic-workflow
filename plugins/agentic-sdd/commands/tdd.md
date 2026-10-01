@@ -1,10 +1,12 @@
 ---
-description: Write failing tests (RED) for a spec or behavior — TDD step.
-argument-hint: <spec file or behavior>
-allowed-tools: Read, Write, Edit, Grep, Glob, Bash
-model: sonnet
+description: Write failing tests (RED) for one slice of the plan — or for a spec/behavior.
+argument-hint: <slice id (T-n) | spec path | behavior>
 ---
 
 Invoke the `tdd-test-writer` agent for: **$ARGUMENTS**
 
-Follow the `tdd-workflow` skill. Read the spec, map each acceptance criterion to failing tests that reference the AC id, using the repo's runner (Jest/Vitest). Do NOT write production code. Run the suite and show that the new tests fail for the right reason. Provide a checklist mapping AC-n -> test(s), then hand off to `/implement`.
+Follow the `tdd-workflow` skill. Scope to the slice's ACs when a slice id is given (read
+`specs/<feature>/plan.md`). Use the repo's runner — Jest/Vitest, Jasmine/Karma, xUnit, or pytest
+(the session's `Stack →` line names it). Reference the AC id in every test name. Do NOT write
+production code (the role guard blocks it). Run the suite and show that the new tests fail for the
+right reason. Return the `AC-n → test` map, then hand off to `/implement`.

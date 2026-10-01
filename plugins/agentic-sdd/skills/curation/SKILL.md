@@ -1,6 +1,6 @@
 ---
 name: curation
-description: Use after /review and before /ship to curate the project's living conventions and advisory rules — harvest durable decisions from the feature just built, give feedback on the work and the process, and record conventions (docs/conventions.md) and advisory project rules (.claude/rules/9x-*).
+description: Use after /triage and before /ship to curate the project's living conventions and advisory rules — harvest durable decisions from the feature just built, give feedback on the work and the process, and record conventions (docs/conventions.md) and advisory project rules (.claude/rules/9x-*).
 ---
 
 # Curation
@@ -14,12 +14,14 @@ Curation is **advisory**: it writes docs and rules only. It never edits hooks or
 blocks a commit. A human decides when a convention hardens into an enforced gate.
 
 ## When to run
-- Standard loop: `/review → /curate → /ship`, once per feature.
+- Standard loop: `/create-pr → /triage → /curate → /ship`, once per feature — after review feedback exists, so the retrospective learns from it; the result is committed into the same PR.
 - Standalone: any time you want to harvest conventions from recent work.
 
 ## Inputs
 - The spec (`specs/*`) and its acceptance criteria.
-- The reviewed diff and the `code-reviewer` findings.
+- The branch diff and `specs/<feature>/review.md` (the `code-reviewer` findings).
+- The PR review threads — Copilot and human comments, and how they were triaged. Comments that recur across PRs are the strongest convention candidates.
+- `specs/<feature>/status.md` — loop rounds (QA/review/triage) signal process friction.
 - The existing `docs/conventions.md` and `.claude/rules/9x-*` (may not exist yet — that's fine).
 
 ## The method

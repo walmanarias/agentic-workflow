@@ -31,7 +31,7 @@ Emoji by change type: ✨ feature · 🐛 fix · 🔄 refactor · 🎨 style/ui 
 | 🌍 Internationalization | `locales/**`, i18n / translation keys |
 | 🔌 API / Contract | HTTP endpoints, DTOs, GraphQL, contracts |
 | 🗄️ Database & Migrations | migrations, schema / model / index changes |
-| 📑 Spec & Acceptance Criteria | a `specs/<feature>.spec.md` on the branch |
+| 📑 Spec & Acceptance Criteria | a `specs/<feature>/spec.md` (or legacy `specs/<feature>.spec.md`) on the branch |
 | 🔗 Related Work | references to other PRs (#NNN) |
 
 ## Always preserve (when updating an existing PR)

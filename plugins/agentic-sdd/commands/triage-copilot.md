@@ -7,14 +7,14 @@ model: sonnet
 
 Triage the **GitHub Copilot** code-review comments on a pull request: judge each suggestion on its merits, then either implement it (following our TDD + clean-code rules) or decline it with a courteous, reasoned reply — and resolve the thread. Optional context: **$ARGUMENTS**
 
-> **Where this fits:** run after a PR is open and Copilot has reviewed it (typically after `/update-pr`). This is distinct from `/review`, which is *our own* reviewer over the diff; here you are responding to an external automated reviewer.
+> **Where this fits:** run after a PR is open and Copilot has reviewed it (after `/create-pr`; `/triage` runs this and `/triage-reviews` together). This is distinct from `/review`, which is *our own* reviewer over the diff; here you are responding to an external automated reviewer.
 
 ## Prerequisites
 - GitHub CLI installed and authenticated (`gh auth status`). If not, stop and tell the user to run `gh auth login`.
 - You are on the PR's branch (or the PR number/URL is given in `$ARGUMENTS`).
 
 ## Default behavior (safe)
-- You **make changes on the current branch and commit** them (commits pass the gated pre-commit hook). You do **not** push, merge, or force-anything — leave that to the user.
+- You **make changes on the current branch and commit** them (commits pass the gated pre-commit hook). You do **not** merge or force-anything; pushing happens in `/triage` (plain `git push`).
 - You reply to every Copilot thread you act on, and **resolve** threads you've addressed (applied or reasoned-declined). You **leave unresolved** anything that needs a human decision.
 - Never blindly apply a suggestion. Never weaken, skip, or delete a test to satisfy one.
 
@@ -92,8 +92,8 @@ mutation($threadId:ID!){
 
 ## Step 4 — Commit, verify, report
 
-- Run the gate before committing: lint/type-check/tests (JS) or `dotnet format`/`build -warnaserror`/`test` (.NET). Everything must be green. The pre-commit hook enforces this; don't bypass it.
-- Do not push or merge — tell the user the branch is updated and ready to push/review.
+- Run the gate before committing: lint/type-check/tests (JS), `dotnet format`/`build -warnaserror`/`test` (.NET), or ruff/mypy/pytest (Python). Everything must be green. The pre-commit hook enforces this; don't bypass it.
+- Do not merge; `/triage` pushes the fixes (never `--force`) and refreshes the description.
 - End with a summary table:
 
 ```markdown

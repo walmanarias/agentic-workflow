@@ -1,9 +1,16 @@
 ---
-description: Produce an architecture/design brief and ADRs before specifying or coding.
-argument-hint: <feature or system to design>
-model: sonnet
+description: Plan an approved spec — optional architecture brief + ADRs, then slice the ACs into small TDD slices with a resumable status file.
+argument-hint: <feature name or spec path> [--design]
 ---
 
-Invoke the `architect` agent to design: **$ARGUMENTS**
+Plan: **$ARGUMENTS**
 
-Read the existing repo and stack first. Produce `docs/design/<feature>.md` (context, NFRs, Mermaid component diagram, data model, API contracts, decisions/trade-offs, risks, testability notes) and append ADR(s) under `docs/adr/`. Output type signatures and schema sketches only — no implementation. Recommend the database (PostgreSQL vs MongoDB) with justification. Hand off to `/spec` next.
+1. Require an approved spec at `specs/<feature>/spec.md` (legacy `specs/<feature>.spec.md` is
+   accepted). If none or still Draft, stop and point to `/spec`.
+2. **Design (when warranted):** if `--design` was passed, or the spec's size is *feature/large*
+   (new module/service, cross-cutting change, new data model), invoke the `architect` agent →
+   `docs/design/<feature>.md` + ADRs under `docs/adr/`. Show the key decisions and get approval.
+   Skip for *small* changes.
+3. **Slices (always):** invoke the `planner` agent (applies the `task-planning` skill) →
+   `specs/<feature>/plan.md` + `specs/<feature>/status.md`.
+4. Show the slice list (`T-n: title — ACs`) and hand off to `/tdd T-1` (or let `/feature` run the slices).

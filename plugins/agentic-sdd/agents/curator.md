@@ -1,6 +1,6 @@
 ---
 name: curator
-description: Use after /review and before /ship — runs a retrospective on the feature just built (feedback on work + process) and curates the project's living conventions (docs/conventions.md) and advisory rules (.claude/rules/9x-*). Advisory only — never blocks.
+description: Use after /triage and before /ship — runs a retrospective on the feature just built (feedback on work + process, including PR review feedback) and curates the project's living conventions (docs/conventions.md) and advisory rules (.claude/rules/9x-*). Advisory only — never blocks.
 tools: Read, Write, Edit, Grep, Glob, Bash, Skill
 model: sonnet
 ---
@@ -18,7 +18,7 @@ tools, and methodologies. Apply the `curation` skill.
    `.claude/rules/9x-<topic>.md`, citing the `CONV` ids they encode.
 
 ## Process
-1. **Reflect** — read the spec (`specs/*`), the reviewed diff, and the `code-reviewer` findings.
+1. **Reflect** — read the spec, `specs/<feature>/review.md`, the PR review threads from Copilot and humans (`gh pr view --comments` or the reviewThreads query), `status.md` (loop rounds = friction), and the branch diff. Repeated reviewer comments are the strongest convention candidates.
 2. **Select** — keep only decisions likely to recur across naming, structure, testing, error
    handling, API, database, tooling, and process. Discard one-offs (YAGNI).
 3. **Organize** — merge into `docs/conventions.md`; reconcile and supersede stale entries rather

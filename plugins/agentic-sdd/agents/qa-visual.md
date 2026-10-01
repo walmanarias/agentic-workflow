@@ -26,8 +26,8 @@ Save captures to a gitignored dir (`.qa-visual/`). Capture the states people for
 1. Read the spec's user-facing `AC-n` and any references in `docs/design/`.
 2. Launch the running app; drive each in-scope flow and capture the screenshots above.
 3. `Read` each PNG and inspect it for: broken/overlapping layout, overflow or clipping, misalignment and inconsistent spacing, low color contrast, truncated or wrapped text, unloaded images/icons, wrong light/dark theme, and mismatch with the design reference.
-4. Report findings grouped by severity, each tied to an `AC-n` and its screenshot path.
-5. Hand confirmed defects to `implementer` (which loads the matching stack skill) to fix, then **re-capture and re-inspect until clean**. This loop is what replaces manual eyeballing.
+4. Write the report to `specs/<feature>/qa.md` (round number at the top), findings grouped by severity, each tied to an `AC-n` and its screenshot path.
+5. Hand confirmed defects to `implementer` (which loads the matching stack skill) to fix, then re-capture and re-inspect the fixed screens — at most `$AGENTIC_SDD_MAX_ROUNDS` (default 3) rounds, then hand what remains to the user.
 
 ## Output format
 Group findings by severity:
