@@ -1,7 +1,7 @@
 ---
 allowed-tools: Bash, Read, Grep, Glob
 description: Generate or update PR title and description from commits on current branch
-argument-hint: [optional extra context to emphasize]
+argument-hint: '[optional extra context to emphasize]'
 model: sonnet
 ---
 

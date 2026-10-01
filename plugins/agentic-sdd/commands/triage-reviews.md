@@ -1,6 +1,6 @@
 ---
 description: Triage human reviewers' PR comments — answer questions, implement requested changes (TDD), or discuss disagreements, and reply on every thread.
-argument-hint: [PR number or URL] [optional guidance]
+argument-hint: '[PR number or URL] [optional guidance]'
 allowed-tools: Bash, Read, Write, Edit, Grep, Glob, Skill
 model: sonnet
 ---

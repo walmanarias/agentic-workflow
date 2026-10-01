@@ -6,12 +6,13 @@
     "name": "Walman",
     "email": "walmanarias@outlook.com"
   },
-  "version": "1.0.0",
+  "version": "2.0.0",
   "plugins": [
     {
       "name": "agentic-sdd",
       "source": "./plugins/agentic-sdd",
-      "description": "Spec-Driven Development with TDD and E2E. Lifecycle agents plus stack-expert skills for React, React Native, Angular, Node/Express/Fastify, NestJS, Next.js, Remix/React Router 7, Django, FastAPI, Flask, C#/ASP.NET Core (StyleCop Analyzers), Avalonia/XAML desktop, .NET MAUI mobile/desktop, PostgreSQL and MongoDB, with clean-code review and enforcing hooks. Cross-platform incl. macOS Apple Silicon."
+      "description": "Spec-Driven Development with slice-based TDD, E2E, visual QA, review, PR, triage, curation and ship. Lifecycle agents plus stack-expert skills for React, React Native, Angular, Node/Express/Fastify, NestJS, Next.js, Remix/React Router 7, Django, FastAPI, Flask, C#/ASP.NET Core (StyleCop Analyzers), Avalonia/XAML desktop, .NET MAUI mobile/desktop, PostgreSQL and MongoDB, with hooks that enforce the hard rules. Cross-platform incl. macOS Apple Silicon.",
+      "version": "2.0.0"
     }
   ]
 }

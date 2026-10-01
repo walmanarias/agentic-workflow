@@ -2,8 +2,8 @@
   "$schema": "https://json.schemastore.org/claude-code-plugin.json",
   "name": "agentic-sdd",
   "displayName": "Agentic SDD (Spec-Driven + TDD)",
-  "version": "1.5.0",
-  "description": "Spec-Driven Development lifecycle with TDD and E2E testing. Ships lifecycle agents (spec, tdd, implement, e2e, qa, review, curate, refactor, cicd, architect), stack-expert skills (React, React Native, Angular, Node/Express/Fastify, NestJS, Next.js, Remix incl. React Router 7 framework mode, Django, FastAPI, Flask, C#/ASP.NET Core with StyleCop Analyzers code style, Avalonia/XAML desktop, .NET MAUI mobile/desktop incl. Xamarin.Forms migration, PostgreSQL, MongoDB), workflow skills, slash commands, and enforcing quality-gate hooks for clean, maintainable, scalable code. Cross-platform incl. macOS Apple Silicon.",
+  "version": "2.0.0",
+  "description": "Spec-Driven Development lifecycle with slice-based TDD, E2E, visual QA, review, PR, triage, curation and ship. Lifecycle agents (spec, architect, planner, tdd, implement, e2e, qa, review, curate, refactor, cicd), stack-expert skills from one registry (React, React Native, Angular, Node/Express/Fastify, NestJS, Next.js, Remix / React Router 7, Django, FastAPI, Flask, C#/ASP.NET Core with StyleCop Analyzers, Avalonia, .NET MAUI, PostgreSQL, MongoDB), workflow skills, slash commands, and hooks that enforce the hard rules: role separation, no skipped/weakened tests, no gate bypass, gated commits. Cross-platform incl. macOS Apple Silicon.",
   "author": {
     "name": "Walman",
     "email": "walmanarias@outlook.com"
@@ -46,6 +46,12 @@
     "appium",
     "testcontainers",
     "macos",
-    "apple-silicon"
+    "apple-silicon",
+    "python",
+    "django",
+    "fastapi",
+    "flask",
+    "pytest",
+    "traceability"
   ]
 }

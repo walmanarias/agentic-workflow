@@ -1,6 +1,6 @@
 ---
 description: Retrospective on the feature — feedback on the work + process (including PR review feedback), and curate the project's living conventions & advisory rules.
-argument-hint: [scope or feature]
+argument-hint: '[scope or feature]'
 ---
 
 Invoke the `curator` agent to curate: **$ARGUMENTS** (default: the current feature).

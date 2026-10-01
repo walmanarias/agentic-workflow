@@ -1,6 +1,6 @@
 ---
 description: Ship the PR — verify the Definition of Done and CI, get the human's explicit go, merge, and watch the deploy.
-argument-hint: [feature or PR number]
+argument-hint: '[feature or PR number]'
 allowed-tools: Bash, Read, Grep, Glob, Edit, Skill
 ---
 

@@ -1,6 +1,6 @@
 ---
 description: Triage all open review feedback on the PR — Copilot first, then human reviewers — then refresh the description.
-argument-hint: [PR number or URL] [optional guidance]
+argument-hint: '[PR number or URL] [optional guidance]'
 allowed-tools: Bash, Read, Write, Edit, Grep, Glob, Skill
 model: sonnet
 ---

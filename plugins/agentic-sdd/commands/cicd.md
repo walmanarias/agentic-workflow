@@ -1,6 +1,6 @@
 ---
 description: Generate or update a full GitHub Actions CI/CD pipeline (build → test → deploy) for this project.
-argument-hint: [deploy target and/or app path; optional environment model]
+argument-hint: '[deploy target and/or app path; optional environment model]'
 allowed-tools: Read, Write, Edit, Grep, Glob, Bash
 ---
 

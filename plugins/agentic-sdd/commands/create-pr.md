@@ -1,6 +1,6 @@
 ---
 description: Push the feature branch and open (or refresh) its pull request with a generated title and description.
-argument-hint: [feature] [--draft] [extra context for the description]
+argument-hint: '[feature] [--draft] [extra context for the description]'
 allowed-tools: Bash, Read, Grep, Glob, Edit, Skill
 model: sonnet
 ---

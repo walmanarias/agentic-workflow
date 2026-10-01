@@ -1,6 +1,6 @@
 ---
 description: Review the branch (merge-base..HEAD plus uncommitted changes) for correctness, tests, clean code, security, and performance.
-argument-hint: [optional scope, base ref, or PR]
+argument-hint: '[optional scope, base ref, or PR]'
 ---
 
 Invoke the `code-reviewer` agent to review: **$ARGUMENTS**
