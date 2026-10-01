@@ -218,9 +218,10 @@ is_any_test_file() {
 SKIP_RE_JS='(^|[^A-Za-z0-9_$.])(x(it|test|describe)|f(it|describe)|(it|test|describe|context|suite)\.(skip|todo))[[:space:]]*\(|\.describe\.skip[[:space:]]*\(|\.fixme[[:space:]]*\('
 SKIP_RE_CS='(Fact|Theory|Test|TestMethod|AvaloniaFact|AvaloniaTheory)[[:space:]]*\([^)]*Skip[[:space:]]*=|\[Ignore|\[Explicit'
 SKIP_RE_PY='@pytest\.mark\.(skip|skipif|xfail)|pytest\.skip[[:space:]]*\(|@unittest\.(skip|expectedFailure)'
-# shellcheck disable=SC2034
 # Focus / debugger markers per language (the gate applies each only to matching files).
+# shellcheck disable=SC2034
 FOCUS_RE_JS_TEST='(^|[^A-Za-z0-9_$])(it|test|describe|context|suite)\.only[[:space:]]*\(|(^|[^A-Za-z0-9_$])f(it|describe)[[:space:]]*\('
+# shellcheck disable=SC2034
 FOCUS_RE_JS='(^|[^A-Za-z0-9_])debugger[[:space:]]*;'
 # shellcheck disable=SC2034
 FOCUS_RE_PY='pdb\.set_trace[[:space:]]*\(|(^|[^A-Za-z0-9_.])breakpoint[[:space:]]*\(\)'
