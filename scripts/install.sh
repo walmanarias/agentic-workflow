@@ -36,11 +36,22 @@ mkdir -p "$DEST"
 echo "Installing agentic-sdd into $DEST ..."
 
 # Copy components.
-for d in agents commands skills rules; do
-  rm -rf "$DEST/$d"
+for d in agents commands skills tools; do
+  rm -rf "${DEST:?}/${d:?}"
   cp -R "$PLUGIN/$d" "$DEST/$d"
   echo "  + $d/"
 done
+# rules/: replace the template's rules (00–89) but keep the project's curated 9x rules.
+mkdir -p "$DEST/rules"
+find "$DEST/rules" -maxdepth 1 -name '[0-8][0-9]-*.md' -delete
+cp "$PLUGIN/rules/"*.md "$DEST/rules/"
+echo "  + rules/ (curated 9x-* rules preserved)"
+
+# Plugin content references ${CLAUDE_PLUGIN_ROOT}; in a copy install that root is .claude/.
+find "$DEST/agents" "$DEST/commands" "$DEST/skills" -name '*.md' -print0 \
+  | xargs -0 sed -i.agentic-bak 's#\${CLAUDE_PLUGIN_ROOT}#.claude#g'
+find "$DEST" -name '*.agentic-bak' -delete
+chmod +x "$DEST/tools/"*.py 2>/dev/null || true
 
 # Hooks: copy scripts and make them executable.
 mkdir -p "$DEST/hooks/scripts"
@@ -54,8 +65,19 @@ SETTINGS="$DEST/settings.json"
 if [ -f "$SETTINGS" ] && [ "$FORCE" != "--force" ]; then
   if command -v jq >/dev/null 2>&1; then
     tmp="$(mktemp)"
-    jq -s '.[0] * .[1]' "$SETTINGS" "$TEMPLATE" > "$tmp" && mv "$tmp" "$SETTINGS"
-    echo "  ~ settings.json (merged with existing)"
+    # Deep merge: objects merge key by key, arrays are concatenated without duplicates (so the
+    # project's own permissions and hooks survive), scalars take the template's value.
+    jq -s '
+      def dedupe: reduce .[] as $x ([]; if any(.[]; . == $x) then . else . + [$x] end);
+      def deepmerge($a; $b):
+        if ($a|type) == "object" and ($b|type) == "object" then
+          reduce ((($a|keys_unsorted) + ($b|keys_unsorted)) | unique)[] as $k ({};
+            .[$k] = (if ($a|has($k)) and ($b|has($k)) then deepmerge($a[$k]; $b[$k])
+                     elif ($b|has($k)) then $b[$k] else $a[$k] end))
+        elif ($a|type) == "array" and ($b|type) == "array" then ($a + $b) | dedupe
+        else $b end;
+      deepmerge(.[0]; .[1])' "$SETTINGS" "$TEMPLATE" > "$tmp" && mv "$tmp" "$SETTINGS"
+    echo "  ~ settings.json (deep-merged with existing: your permissions and hooks are kept)"
   else
     cp "$TEMPLATE" "$DEST/settings.agentic-sdd.json"
     echo "  ! existing settings.json kept; wrote settings.agentic-sdd.json — merge the \"hooks\" and \"permissions\" keys manually (or install jq)."
@@ -72,7 +94,8 @@ if [ ! -f "$TARGET/CLAUDE.md" ]; then
 
 This project uses the **agentic-sdd** Spec-Driven Development + TDD workflow.
 See `.claude/rules/` for the enforced rules and run `/feature <description>` to start.
-Workflow: /plan -> /spec -> /tdd -> /implement -> /e2e -> /review -> /update-pr -> /ship.
+Loop: /spec → /plan → [per slice: /tdd → /implement → commit] → /e2e → /qa → /review → /create-pr → /triage → /curate → /ship
+Bugs and small fixes: `/fix <description>`.
 MD
   echo "  + CLAUDE.md (starter)"
 fi
@@ -88,6 +111,12 @@ if [ -n "$WITH_CI" ]; then
     cp "$SRC_DIR/templates/github-ci.yml" "$CI_DEST"
     echo "  + .github/workflows/ci.yml (Node/.NET build + test)"
   fi
+fi
+
+# Keep visual-QA captures out of git.
+if [ -d "$TARGET/.git" ] && ! grep -qx '.qa-visual/' "$TARGET/.gitignore" 2>/dev/null; then
+  printf '\n# agentic-sdd visual QA captures\n.qa-visual/\n' >> "$TARGET/.gitignore"
+  echo "  + .gitignore (.qa-visual/)"
 fi
 
 echo "Done. Open $TARGET with Claude and run /feature to begin."

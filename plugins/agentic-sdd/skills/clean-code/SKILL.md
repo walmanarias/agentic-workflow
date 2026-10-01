@@ -1,6 +1,6 @@
 ---
 name: clean-code
-description: Use when writing, reviewing, or refactoring code to apply clean-code, SOLID, and maintainability standards for TypeScript/JavaScript. Trigger on "clean code", "refactor", "code smell", "maintainable", "SOLID", "review", or whenever assessing whether code is well-written.
+description: Use when writing, reviewing, or refactoring code to apply clean-code, SOLID, and maintainability standards across the stack — TypeScript/JavaScript, C#/.NET, and Python. Trigger on "clean code", "refactor", "code smell", "maintainable", "SOLID", "review", or whenever assessing whether code is well-written.
 ---
 
 # Clean Code Standards
@@ -19,7 +19,7 @@ Code is read far more than written. Optimize for the next reader.
 - Organize files into folders by layer and feature/domain — never a flat dump. Follow the ecosystem's idiomatic layout and the repo's existing conventions, and apply design patterns (repository, factory, strategy, ports & adapters) only where they earn their keep.
 
 ## Errors & types
-- Handle errors explicitly; never swallow. Throw/return typed errors; validate at boundaries. Avoid `any`; model states with discriminated unions; make illegal states unrepresentable.
+- Handle errors explicitly; never swallow. Throw/return typed errors; validate at boundaries. Make illegal states unrepresentable: TS — no `any`, discriminated unions; C# — nullable reference types on, records/sealed hierarchies; Python — type hints checked by mypy, dataclasses/enums, no bare `except:`.
 
 ## Smells to remove
 - Duplication, long functions, deep nesting, primitive obsession, feature envy, shotgun surgery, god objects, leaky abstractions, dead/commented-out code, magic numbers, boolean blindness.

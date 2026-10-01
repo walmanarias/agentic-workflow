@@ -1,17 +1,17 @@
 ---
-description: Retrospective on the feature just built — feedback on the work + process, and curate the project's living conventions & advisory rules.
-argument-hint: [scope or feature]
-allowed-tools: Read, Write, Edit, Grep, Glob, Bash
-model: sonnet
+description: Retrospective on the feature — feedback on the work + process (including PR review feedback), and curate the project's living conventions & advisory rules.
+argument-hint: '[scope or feature]'
 ---
 
-Invoke the `curator` agent to curate: **$ARGUMENTS** (default: the feature/diff just reviewed).
+Invoke the `curator` agent to curate: **$ARGUMENTS** (default: the current feature).
 
-Apply the `curation` skill. Reflect on the work and the process, then harvest durable decisions
-into `docs/conventions.md` (organized by area, each with a `CONV-<area>-n` id and provenance) and
-promote the strongest into advisory `.claude/rules/9x-*` rules that cite the conventions they
-encode. Persist the retrospective to `docs/curation/<date>-<feature>.md`.
+Runs **after `/triage`, before `/ship`** — so the retrospective includes what reviewers (Copilot and
+humans) said, the richest source of conventions. Apply the `curation` skill. Inputs: the spec,
+`specs/<feature>/review.md`, the PR review threads (`gh pr view --comments` / the reviewThreads
+query), `status.md` (loop rounds = friction signal), and the branch diff. Harvest durable decisions
+into `docs/conventions.md` (`CONV-<area>-n` ids + provenance), promote the strongest into advisory
+`.claude/rules/9x-*` rules, and persist the retrospective to `docs/curation/<date>-<feature>.md`.
 
-Advisory only: write docs and rules under `docs/` and `.claude/rules/`. Never edit hooks/gates,
-never touch production code or tests, and never block a commit. Runs after `/review`, before
-`/ship`.
+Advisory only: write docs and rules under `docs/` and `.claude/rules/` (the role guard enforces
+it). Never edit hooks/gates, production code or tests, and never block a commit. Commit the result
+(`docs: curate conventions (<feature>)`) and push so it lands in the same PR.

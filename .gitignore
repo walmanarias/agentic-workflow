@@ -11,3 +11,6 @@ coverage/
 
 # Locally downloaded actionlint binary (CI uses the pinned Docker image instead)
 /actionlint
+__pycache__/
+*.pyc
+.stage-tmp/

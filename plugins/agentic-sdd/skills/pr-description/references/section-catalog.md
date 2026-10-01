@@ -96,7 +96,7 @@ Add if the branch implements a spec under `specs/` (Spec-Driven Development).
 ```markdown
 ## 📑 Spec & Acceptance Criteria
 
-- Spec: `specs/<feature>.spec.md`
+- Spec: `specs/<feature>/spec.md`
 - Covers: AC-1, AC-2, … (each mapped to a passing test)
 ```
 

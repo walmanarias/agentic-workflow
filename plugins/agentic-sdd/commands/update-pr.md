@@ -1,13 +1,13 @@
 ---
 allowed-tools: Bash, Read, Grep, Glob
 description: Generate or update PR title and description from commits on current branch
-argument-hint: [optional extra context to emphasize]
+argument-hint: '[optional extra context to emphasize]'
 model: sonnet
 ---
 
 Generate or update the current PR's title and description by analyzing the branch's commits. Apply the **`pr-description`** skill for the section catalog, emoji/style guide, and worked examples — load its `references/section-catalog.md` only when you need a specific section's exact format.
 
-> **Where this fits:** run `/update-pr` after `/review` and before `/ship` — once the change is reviewed and tests are green, generate/refresh the PR description, then `/ship` verifies the Definition of Done. Sections appear only when the commits actually contain the relevant changes, so this works for any stack; UI-only sections (Accessibility, i18n) show up only for front-end changes.
+> **Where this fits:** `/create-pr` uses this procedure when it opens the PR; run `/update-pr` directly whenever commits are added afterwards (e.g. after `/triage`) so `/ship` sees a current description. Sections appear only when the commits actually contain the relevant changes, so this works for any stack; UI-only sections (Accessibility, i18n) show up only for front-end changes.
 
 ## Usage
 
@@ -37,7 +37,7 @@ Parse conventional-commit types (feat / fix / refactor / …), the components to
 gh pr view --json number,title,body,url 2>/dev/null
 ```
 
-If a PR exists, **preserve verbatim**: every `<img>` / video / Loom link, any `## 💬 Designer Feedback` section, and manual notes. Merge new content in; never drop existing media. If none exists, generate fresh content (the user creates it with `gh pr create`).
+If a PR exists, **preserve verbatim**: every `<img>` / video / Loom link, any `## 💬 Designer Feedback` section, and manual notes. Merge new content in; never drop existing media. If none exists, generate fresh content and use `/create-pr` to open it.
 
 ### 3. Generate title + body
 

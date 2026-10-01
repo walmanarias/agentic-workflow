@@ -1,20 +1,20 @@
 ---
 description: Triage human reviewers' PR comments — answer questions, implement requested changes (TDD), or discuss disagreements, and reply on every thread.
-argument-hint: [PR number or URL] [optional guidance]
+argument-hint: '[PR number or URL] [optional guidance]'
 allowed-tools: Bash, Read, Write, Edit, Grep, Glob, Skill
 model: sonnet
 ---
 
 Triage the **human reviewer** comments on a pull request: answer questions, implement clearly-correct change requests (following our TDD + clean-code rules), and respond thoughtfully to anything you disagree with — replying on every thread. Optional context: **$ARGUMENTS**
 
-> **Where this fits:** run when teammates have reviewed your PR (after `/update-pr`). For the automated reviewer, use `/triage-copilot`. The key difference: **humans have context and authority you don't.** Default to respect — implement what's clearly right, ask or discuss when you disagree, and never dismiss a reviewer by silently resolving their thread.
+> **Where this fits:** run when teammates have reviewed your PR (after `/create-pr`; `/triage` runs this after `/triage-copilot`). For the automated reviewer, use `/triage-copilot`. The key difference: **humans have context and authority you don't.** Default to respect — implement what's clearly right, ask or discuss when you disagree, and never dismiss a reviewer by silently resolving their thread.
 
 ## Prerequisites
 - GitHub CLI installed and authenticated (`gh auth status`). If not, stop and tell the user to run `gh auth login`.
 - You are on the PR's branch (or the PR number/URL is given in `$ARGUMENTS`).
 
 ## Default behavior (safe + deferential)
-- You **make changes on the current branch and commit** them (gated by the pre-commit hook). You do **not** push, merge, or force-anything.
+- You **make changes on the current branch and commit** them (gated by the pre-commit hook). You do **not** merge or force-anything; pushing happens in `/triage` (plain `git push`).
 - You **reply to every thread**. You **resolve only threads where you applied the requested change** (and only if your team's convention allows the author to resolve — when unsure, reply and leave it for the reviewer). You **never** resolve a thread by declining a human's request; disagreements stay open for discussion.
 - Never weaken, skip, or delete a test to satisfy a comment.
 
@@ -81,7 +81,7 @@ mutation($threadId:ID!){ resolveReviewThread(input:{threadId:$threadId}){ thread
 ```
 
 ## Step 4 — Commit, verify, report
-- Run the gate (lint/type/test or dotnet format/build/test) — all green — before committing. Don't bypass the hook. Don't push or merge.
+- Run the gate (lint/type/test, dotnet format/build/test, or ruff/mypy/pytest) — all green — before committing. Don't bypass the hook. Don't merge; `/triage` pushes the fixes (never `--force`).
 - Summary table:
 
 ```markdown

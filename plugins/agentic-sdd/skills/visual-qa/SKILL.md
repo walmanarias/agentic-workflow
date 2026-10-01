@@ -36,7 +36,7 @@ Screenshots are the most expensive tokens in the whole loop — spend them delib
 - Mismatch with the design reference in `docs/design/`.
 
 ## Report format
-Group findings **Blocking / Should-fix / Nit**, each tied to an `AC-n` and its screenshot path, with a concrete fix. End with a verdict (Pass / Pass-with-nits / Fail). Hand Blocking + Should-fix to `implementer`, then re-capture and re-inspect until clean.
+Group findings **Blocking / Should-fix / Nit**, each tied to an `AC-n` and its screenshot path, with a concrete fix. End with a verdict (Pass / Pass-with-nits / Fail). Write the report to `specs/<feature>/qa.md`. Hand Blocking + Should-fix to `implementer`, then re-capture and re-inspect the fixed screens — at most `$AGENTIC_SDD_MAX_ROUNDS` (default 3) rounds; then hand what remains to the user.
 
 ## Token discipline
 `Read` PNGs only inside the QA agent's own context; return **text findings + screenshot paths** to the caller, never the images.

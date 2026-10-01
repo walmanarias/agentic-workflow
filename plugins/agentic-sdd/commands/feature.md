@@ -1,25 +1,78 @@
 ---
-description: Run the full Spec-Driven Development + TDD loop for a feature, end to end.
-argument-hint: <feature description>
-model: sonnet
+description: Run the full Spec-Driven Development + TDD loop for a feature, end to end — or resume one that is in flight.
+argument-hint: <feature description | existing feature name to resume>
 ---
 
 Drive the complete SDD + TDD lifecycle for: **$ARGUMENTS**
 
-Use the `spec-driven-development` skill as the playbook and delegate each phase to the right subagent. Stop and ask the user only at the approval gates.
+/spec → /plan → [per slice: /tdd → /implement → commit] → /e2e → /qa → /review → /create-pr → /triage → /curate → /ship
 
-1. **Design (if non-trivial/new module):** invoke the `architect` agent → `docs/design/`. Skip for small changes.
-2. **Spec:** invoke `spec-writer` → `specs/<feature>.spec.md`. **Gate:** show the numbered acceptance criteria and get approval before coding.
-3. **Red:** invoke `tdd-test-writer` to write failing tests mapped to each AC. Show the failing output.
-4. **Green:** invoke `implementer` to pass the tests with clean code — it loads the relevant stack-expert skill (react / react-native / angular / node-backend / nestjs / nextjs / remix / django / fastapi / flask / dotnet / avalonia / maui / database) in its own context.
-5. **Refactor:** keep tests green while improving structure.
-6. **E2E:** invoke `e2e-tester` for criteria marked (E2E).
-7. **QA (visual):** invoke `qa-visual` to capture screenshots of the user-facing flows and catch visual bugs (layout, overflow, spacing, contrast, theme). Fix Blocking + Should-fix via `implementer`, then re-inspect until clean. Skip for non-UI changes.
-8. **Review:** invoke `code-reviewer`; address Blocking + Should-fix.
-9. **Curate:** invoke `curator` to feed back on the work + process and update the project's conventions (`docs/conventions.md`) and advisory rules (`.claude/rules/9x-*`). Advisory only — never blocks.
-10. **Describe:** run `/update-pr` to generate/refresh the PR title and description from the branch commits (stack-aware; preserves existing media).
-11. **Verify:** confirm every AC maps to a passing test, coverage/lint/type gates pass, and the spec's Definition of Done is met. Summarize what shipped.
+Playbooks: `spec-driven-development` (the loop), `task-planning` (slices + status file). Delegate
+each phase to its subagent; you are the orchestrator — you own `specs/<feature>/status.md`, the
+commits, and the human gates. Stop and ask the user only at the gates (🚦).
 
-Never write production code before a failing test exists. Never weaken a test to make it pass.
+## 0. Resume or start
+- If `specs/<feature>/status.md` exists (or the argument names an in-flight feature listed at
+  session start), **resume** at its `Phase` — don't redo finished work.
+- Otherwise **size** the request:
+  - *trivial* (no behavior change: copy, config, docs) → make the change, commit through the gate, stop.
+  - *bug* → hand over to `/fix`.
+  - *small* (≤ 3 ACs, one module) → loop without the architect.
+  - *feature / large* (new module/service, cross-cutting, new data model) → loop with the architect.
+- Create the branch `feat/<feature>` from an up-to-date default branch (never work on `main`).
 
-**Keep the loop token-frugal:** each subagent returns a compact summary (file paths + `AC-n` ids + verdict/counts), not full file contents, diffs, or run logs. Pass those paths/ids between phases; don't re-echo a subagent's output into this thread. The `qa-visual` phase returns findings + screenshot paths only — never the screenshots.
+## 1. Spec — `spec-writer` → `specs/<feature>/spec.md`
+🚦 Show the numbered ACs, the size, and open questions; get approval. Record `Approved` + version in
+the spec, then commit it: `docs(spec): <feature> v1`.
+
+## 2. Plan — `/plan`
+- *feature/large:* `architect` → `docs/design/<feature>.md` + ADRs. 🚦 Show the 3–6 key decisions; get approval.
+- Always: `planner` → `specs/<feature>/plan.md` + `status.md` (slices of 1–3 ACs). Commit with the
+  design docs: `docs(plan): <feature>`.
+
+## 3. Slices — for each `todo` slice T-n, in plan order
+1. **RED:** `tdd-test-writer` scoped to T-n's ACs. Confirm they fail for the right reason.
+2. **GREEN → REFACTOR:** `implementer` scoped to T-n (loads the stack skills from the session's
+   `Stack →` line). Tests stay green through the refactor.
+3. **Trace:** `python3 "${CLAUDE_PLUGIN_ROOT}/tools/ac_trace.py" specs/<feature>` — T-n's ACs must
+   show OK (gaps from later slices are expected).
+4. **Status:** update `status.md`: T-n → `done`; phase → next slice.
+5. **Commit:** `git add` the slice's files **and** `specs/<feature>/status.md` in one command, then
+   `git commit -m "feat(<scope>): <slice> (AC-x, AC-y)"` in a separate command. The gate runs; if it
+   blocks, fix the cause (via the right agent) — never bypass. The sha is in `git log`.
+
+**Spec wrong mid-slice?** Stop. `spec-writer` amends (version bump, status Draft) → 🚦 re-approval →
+`planner` re-slices → then tests change deliberately (`Test-Change:` trailer).
+
+## 4. E2E — `e2e-tester` for every `(E2E)` AC → commit `test(e2e): …` (with `status.md`).
+
+## 5. Visual QA — `qa-visual` (UI changes only) → `specs/<feature>/qa.md`. Blocking + Should-fix go
+to `implementer`; re-inspect only the fixed screens. Commit fixes.
+
+## 6. Review — `code-reviewer` on `merge-base..HEAD` → `specs/<feature>/review.md`. Blocking +
+Should-fix go back to `implementer` (or `refactorer` for pure structure), then re-review the delta.
+Commit the fixes together with `review.md` / `qa.md` / `status.md` — artifacts are always committed,
+so the working tree is clean for the PR.
+
+## 7. Open the PR — `/create-pr` (push + `gh pr create` + description). Phase → `pr-open`.
+Then **pause**: tell the user the PR is open and that `/feature <feature>` resumes after reviewers
+(Copilot / teammates) have commented.
+
+## 8. Triage — `/triage` (Copilot first, then humans). Phase → `triage`.
+
+## 9. Curate — `curator`, now that the review feedback exists. Commit `docs: curate conventions (<feature>)`, push.
+
+## 10. Ship — `/ship`: DoD gate + green CI + 🚦 explicit merge confirmation → merge → deploy check.
+
+## Loop limits
+QA, review and triage fix-rounds each stop after `$AGENTIC_SDD_MAX_ROUNDS` (default **3**). Count
+them in `status.md`; at the limit, stop and hand the remaining findings to the user with a
+recommendation instead of looping again.
+
+## Hard rules
+- Never write production code before a failing test exists. Never weaken a test to make it pass.
+- Never `--no-verify`, never force-push, never merge without the user's explicit yes.
+
+**Token-frugal:** each subagent returns a compact summary (paths + `AC-n` ids + verdict/counts).
+Pass paths/ids between phases; don't re-echo subagent output. `qa-visual` returns findings +
+screenshot paths only — never images.
