@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 # Shared helpers for agentic-sdd hooks. Designed to be safe across any repo:
 # if tooling is missing, helpers degrade gracefully instead of blocking.
-set -uo pipefail
+# No pipefail on purpose: hooks pipe text into `grep -q`, whose early exit would SIGPIPE the
+# writer and turn a match into a failure (missed violations on large edits).
+set -u
 
 # Read all of stdin once into HOOK_INPUT (hook payload is JSON).
 read_hook_input() { HOOK_INPUT="$(cat 2>/dev/null || true)"; }

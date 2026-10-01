@@ -49,12 +49,12 @@ else
 fi
 staged="$( { g "${diff_args[@]}" --name-only --diff-filter=ACMR; [ -n "$untracked" ] && printf '%s\n' "$untracked"; } | grep -v '^$' | sort -u )"
 deleted="$(g "${diff_args[@]}" --name-only --diff-filter=D)"
-is_untracked() { [ -n "$untracked" ] && printf '%s\n' "$untracked" | grep -qxF -- "$1"; }
+is_untracked() { [ -n "$untracked" ] && grep -qxF -- "$1" <<< "$untracked"; }
 added_lines()   { if is_untracked "$1"; then grep -I '' -- "$1" 2>/dev/null | sed 's/^/+/'; else g "${diff_args[@]}" -U0 -- "$1" | grep -E '^\+' | grep -Ev '^\+\+\+ '; fi; }
 removed_lines() { is_untracked "$1" && return 0; g "${diff_args[@]}" -U0 -- "$1" | grep -E '^-' | grep -Ev '^--- '; }
 
 test_change=0
-printf '%s' "$cmd" | grep -q 'Test-Change:' && test_change=1
+grep -q 'Test-Change:' <<< "$cmd" && test_change=1
 merging=0
 [ -f "$(g rev-parse --git-path MERGE_HEAD)" ] && merging=1
 
@@ -111,7 +111,7 @@ if [ "$test_change" = "0" ] && [ "$merging" = "0" ]; then
 fi
 
 # ------------------------------------------------------------- which stacks does this commit touch?
-touches() { printf '%s\n' "$staged" | grep -Eq "$1"; }
+touches() { grep -Eq "$1" <<< "$staged"; }   # here-string: no pipe → no SIGPIPE under pipefail
 JS_RE='\.(ts|tsx|js|jsx|mjs|cjs|mts|cts|vue|svelte)$|(^|/)(package\.json|tsconfig[^/]*\.json|\.eslintrc[^/]*|eslint\.config\.[^/]+|jest\.config\.[^/]+|vitest\.config\.[^/]+)$'
 JS_SRC_RE='\.(ts|tsx|js|jsx|mjs|cjs|mts|cts|vue|svelte)$'
 NET_RE='\.(cs|csproj|sln|slnx|props|targets|axaml|xaml|editorconfig)$|(^|/)global\.json$'
@@ -159,7 +159,7 @@ elif touches "$JS_RE"; then
       [ -z "$f" ] && continue
       [ "$(nearest_dir_with "$root/$f" package.json)" = "$p" ] || continue
       case "$f" in *package.json|*tsconfig*|*eslint*|*jest.config*|*vitest.config*) config=1 ;; esac
-      printf '%s' "$f" | grep -Eq "$JS_SRC_RE" && files+=("${root}/${f}")
+      grep -Eq "$JS_SRC_RE" <<< "$f" && files+=("${root}/${f}")
     done <<< "$(printf '%s\n' "$staged" | grep -E "$JS_RE")"
     if [ "$config" = "1" ] || [ ${#files[@]} -eq 0 ]; then js_gate_pkg "$p"; else js_gate_pkg "$p" "${files[@]}"; fi
   done <<< "$pkgs"
