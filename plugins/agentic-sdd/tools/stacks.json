@@ -1,0 +1,27 @@
+{
+  "$comment": "Single registry of stack-expert skills. session-start detects the repo's stack from these markers; agents load the matching skills. Adding a stack = one entry here + the skill folder (CI checks both exist).",
+  "skills": {
+    "react-expert":        { "label": "React (web)",                        "npm": ["react-dom"] },
+    "nextjs-expert":       { "label": "Next.js (App Router)",               "npm": ["next"], "with": ["react-expert"] },
+    "remix-expert":        { "label": "Remix v2 / React Router 7 framework", "npm": ["@remix-run/react", "@react-router/dev"], "with": ["react-expert"] },
+    "react-native-expert": { "label": "React Native / Expo",                "npm": ["react-native", "expo"] },
+    "angular-expert":      { "label": "Angular",                            "npm": ["@angular/core"] },
+    "nestjs-expert":       { "label": "NestJS",                             "npm": ["@nestjs/core"] },
+    "node-backend-expert": { "label": "Node (Express / Fastify)",           "npm": ["express", "fastify"] },
+    "django-expert":       { "label": "Django / DRF",                       "py": ["django", "djangorestframework"] },
+    "fastapi-expert":      { "label": "FastAPI",                            "py": ["fastapi"] },
+    "flask-expert":        { "label": "Flask",                              "py": ["flask"] },
+    "dotnet-expert":       { "label": "C# / ASP.NET Core (.NET 8/9)",       "csproj": ["Microsoft.NET.Sdk"] },
+    "avalonia-expert":     { "label": "Avalonia (XAML desktop)",            "csproj": ["Avalonia"], "with": ["dotnet-expert"] },
+    "maui-expert":         { "label": ".NET MAUI (mobile/desktop)",         "csproj": ["<UseMaui>true", "Microsoft.Maui"], "with": ["dotnet-expert"] },
+    "database-expert":     { "label": "PostgreSQL / MongoDB",
+                             "npm": ["pg", "postgres", "prisma", "@prisma/client", "typeorm", "mongoose", "mongodb", "drizzle-orm", "knex", "sequelize", "@mikro-orm/core"],
+                             "py": ["psycopg", "psycopg2", "psycopg2-binary", "asyncpg", "sqlalchemy", "pymongo", "motor", "beanie"],
+                             "csproj": ["Npgsql", "MongoDB.Driver", "Microsoft.EntityFrameworkCore"] }
+  },
+  "runners": {
+    "npm":    { "vitest": "vitest", "jest": "jest", "jasmine-core": "jasmine/karma", "@playwright/test": "playwright", "detox": "detox", "cypress": "cypress" },
+    "py":     { "pytest": "pytest" },
+    "csproj": { "xunit": "xunit", "Appium.WebDriver": "appium", "Avalonia.Headless.XUnit": "avalonia-headless" }
+  }
+}

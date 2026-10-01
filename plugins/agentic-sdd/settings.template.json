@@ -8,37 +8,93 @@
       "Grep",
       "Glob",
       "Bash(npm run *)",
-      "Bash(pnpm *)",
-      "Bash(yarn *)",
-      "Bash(bun *)",
-      "Bash(npx *)",
-      "Bash(dotnet *)",
-      "Bash(jest *)",
-      "Bash(vitest *)",
-      "Bash(playwright *)",
-      "Bash(tsc *)",
-      "Bash(eslint *)",
+      "Bash(npm test*)",
+      "Bash(pnpm run *)",
+      "Bash(pnpm test*)",
+      "Bash(yarn run *)",
+      "Bash(yarn test*)",
+      "Bash(bun run *)",
+      "Bash(bun test*)",
+      "Bash(npx --no-install *)",
+      "Bash(npx eslint *)",
+      "Bash(npx tsc *)",
+      "Bash(npx vitest *)",
+      "Bash(npx jest *)",
+      "Bash(npx playwright *)",
+      "Bash(npx prettier *)",
+      "Bash(dotnet build*)",
+      "Bash(dotnet test*)",
+      "Bash(dotnet format*)",
+      "Bash(dotnet restore*)",
+      "Bash(dotnet list *)",
+      "Bash(pytest*)",
+      "Bash(python -m pytest*)",
+      "Bash(python3 -m pytest*)",
+      "Bash(ruff *)",
+      "Bash(mypy *)",
+      "Bash(python3 *ac_trace.py*)",
+      "Bash(python3 *coverage_check.py*)",
+      "Bash(python3 *detect_stack.py*)",
       "Bash(git status*)",
       "Bash(git diff*)",
+      "Bash(git log*)",
+      "Bash(git show*)",
       "Bash(git add*)",
       "Bash(git commit*)",
-      "Bash(git log*)",
-      "Bash(gh pr *)",
-      "Bash(gh api *)",
+      "Bash(git branch*)",
+      "Bash(git switch*)",
+      "Bash(git checkout -b *)",
+      "Bash(git fetch*)",
+      "Bash(git merge-base*)",
+      "Bash(git rev-parse*)",
+      "Bash(git symbolic-ref*)",
+      "Bash(gh pr view*)",
+      "Bash(gh pr list*)",
+      "Bash(gh pr diff*)",
+      "Bash(gh pr checks*)",
+      "Bash(gh pr create*)",
+      "Bash(gh pr edit*)",
+      "Bash(gh pr ready*)",
+      "Bash(gh run list*)",
+      "Bash(gh run view*)",
+      "Bash(gh run watch*)",
       "Bash(gh repo view*)",
+      "Bash(gh api graphql*)",
       "Bash(gh auth status)"
+    ],
+    "ask": [
+      "Bash(git push*)",
+      "Bash(gh pr merge*)",
+      "Bash(npm install*)",
+      "Bash(dotnet add *)",
+      "Bash(pip install*)"
     ],
     "deny": [
       "Read(./.env)",
       "Read(./.env.*)",
       "Read(./**/*.pem)",
+      "Read(./**/*.key)",
       "Read(./**/secrets/**)",
       "Bash(rm -rf *)",
-      "Bash(git push --force*)"
+      "Bash(git push --force*)",
+      "Bash(git push -f*)",
+      "Bash(git push --force-with-lease*)",
+      "Bash(git push * --force)",
+      "Bash(git push * -f)",
+      "Bash(git commit --no-verify*)",
+      "Bash(git commit -n *)",
+      "Bash(git reset --hard*)",
+      "Bash(gh repo delete*)",
+      "Bash(gh api -X DELETE*)",
+      "Bash(gh api --method DELETE*)"
     ]
   },
   "env": {
-    "AGENTIC_SDD": "1"
+    "AGENTIC_SDD": "1",
+    "AGENTIC_SDD_LANG": "en",
+    "AGENTIC_SDD_GATE": "affected",
+    "AGENTIC_SDD_COVERAGE": "80",
+    "AGENTIC_SDD_MAX_ROUNDS": "3"
   },
   "hooks": {
     "SessionStart": [
@@ -58,6 +114,10 @@
           {
             "type": "command",
             "command": "bash \"$CLAUDE_PROJECT_DIR/.claude/hooks/scripts/guard-edits.sh\""
+          },
+          {
+            "type": "command",
+            "command": "bash \"$CLAUDE_PROJECT_DIR/.claude/hooks/scripts/role-guard.sh\""
           }
         ]
       },
@@ -66,7 +126,12 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash \"$CLAUDE_PROJECT_DIR/.claude/hooks/scripts/pre-commit-gate.sh\""
+            "command": "bash \"$CLAUDE_PROJECT_DIR/.claude/hooks/scripts/bash-guard.sh\""
+          },
+          {
+            "type": "command",
+            "command": "bash \"$CLAUDE_PROJECT_DIR/.claude/hooks/scripts/pre-commit-gate.sh\"",
+            "timeout": 900
           }
         ]
       }
